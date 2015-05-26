@@ -1,0 +1,39 @@
+/* CSS declarations go here */
+body {
+	font-family: Helvetica;
+}
+input, button {
+	font-size: 2em;
+}
+ul {
+	list-style-type: none;
+}
+.pizza-item {
+	font-size: 2em;
+	position: relative;
+}
+.pizza-item small {
+	font-size: 0.5em;
+}
+.pizza-item small:hover {
+	cursor: pointer;
+	color: #ee0000;
+	text-decoration: line-through;
+}
+.pizza-item span.name:hover {
+	color: #09cdda;
+	cursor: pointer;
+}
+.pizza-item span.name:hover:after {
+	content: "order same: " attr(data-name);
+	background: #bada55;
+	color: black;
+	padding: 3px;
+	border: 2px solid #222;
+	position: absolute;
+	top: -1em;
+	left: 4em;
+}
+.timer {
+	font-size: 3em;
+}

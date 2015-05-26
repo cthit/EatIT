@@ -1,0 +1,43 @@
+<head>
+  <title>bITe</title>
+</head>
+
+<body>
+  <h1>bITe!</h1>
+  {{#if error}}
+  	No session for this id, <a href="/">create new?</a>
+  {{else}}
+  <ul class="pizzas">
+  	{{#each items}}
+  	  {{> pizza}}
+  	{{/each}}
+  </ul>
+
+  <form class="new-pizza">
+  	<input type="text" name="pizza" placeholder="Beställning" value="">
+  	<input type="text" name="nick" placeholder="Nick" value="">
+  	<!-- <input type="text" name="comment" placeholder="Kommentar"> -->
+  	<button>Submit</button>
+  </form>
+  {{> timer}}
+  <audio id="audio" preload="auto" src="https://cdn.rawgit.com/tholman/elevator.js/da89ba613b75c3712a459302681270aa17d8b0f8/demo/music/ding.mp3"></audio>
+  {{/if}}
+</body>
+<template name="pizza">
+	<li class="pizza-item">
+		{{count}} <span class="name" data-name="{{name}}">{{name}}</span>
+		{{#each items}}
+			<small data-id="{{id}}">{{nick}}</small>
+		{{/each}}
+	</li>
+</template>
+<template name="timer">
+	{{#if timer_started}}
+		<span class="timer">{{display_time}}</span>
+	{{else}}
+		<form class="start-timer">
+			<input type="integer" name="minutes" />
+			<button>Start</button>
+		</form>
+	{{/if}}
+</template>
