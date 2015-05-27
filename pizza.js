@@ -37,10 +37,15 @@ if (Meteor.isClient) {
     }
     if (order) {
       Session.set('order', order._id);
+      Session.set('url', window.location.href);
     }
   });
+  Session.set('url', window.location.href);
 
   Template.body.helpers({
+    url: function() {
+      return Session.get('url');
+    },
     items: function () {
       var items = OrderItems.find({order: Session.get('order')}).fetch();
       var pizzas = {};

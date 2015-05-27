@@ -8,6 +8,7 @@
   {{#if error}}
     No session for this id, <a href="/">create new?</a>
   {{else}}
+  Share this link with your friends: <a href="{{url}}">{{url}}</a>
   <ul class="pizzas">
     {{#each items}}
       {{> pizza}}
