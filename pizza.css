@@ -1,10 +1,26 @@
 /* CSS declarations go here */
 body {
 	font-family: Helvetica;
+	background: #68c0b1;
+	color: #0d3e5a;
 }
 body.animated {
 	-webkit-animation: color-shift 500ms ease-out infinite alternate;
 	animation: color-shift 500ms ease-out infinite alternate;
+}
+
+@media only screen and (max-device-width: 700px) {
+	input {
+		width: 70%;
+	}
+	button {
+		margin-bottom: 2em;
+	}
+}
+input {
+	background: transparent;
+	border: 2px solid #0d3e5a;
+	color: #0d3e5a;
 }
 input, button {
 	font-size: 2em;
@@ -19,21 +35,21 @@ ul {
 .pizza-item small {
 	font-size: 0.5em;
 }
-.pizza-item small:hover {
+.pizza-item small.deletable:hover {
 	cursor: pointer;
 	color: #ee0000;
 	text-decoration: line-through;
 }
 .pizza-item span.name:hover {
-	color: #09cdda;
+	color: #f36c71;
 	cursor: pointer;
 }
 .pizza-item span.name:hover:after {
 	content: "order same: " attr(data-name);
-	background: #bada55;
+	background: #f36c71;
 	color: black;
 	padding: 3px;
-	border: 2px solid #222;
+	border: 2px solid #0d3e5a;
 	position: absolute;
 	top: -1em;
 	left: 4em;
@@ -71,4 +87,42 @@ ul {
 	to {
 		background: #92E9FF;
 	}
+}
+
+button {
+	background-color:#599bb3;
+	-moz-border-radius:42px;
+	-webkit-border-radius:42px;
+	border-radius:42px;
+	border:2px solid #29668f;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:20px;
+	padding:12px 15px;
+	text-decoration:none;
+}
+button:hover {
+	background-color:#408c99;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+
+::-webkit-input-placeholder {
+   color: #599bb3;
+}
+
+:-moz-placeholder { /* Firefox 18- */
+   color: #599bb3;
+}
+
+::-moz-placeholder {  /* Firefox 19+ */
+   color: #599bb3;
+}
+
+:-ms-input-placeholder {
+   color: #599bb3;
 }

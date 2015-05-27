@@ -61,10 +61,7 @@ if (Meteor.isClient) {
     error: function() {
       return Session.get('error');
     },
-    timer_started: function() {
-      var order = Orders.findOne(Session.get('order'));
-      return Boolean(order && order.timer_end);
-    }
+    timer_started: timer_started
   });
 
   Template.body.events({
@@ -93,7 +90,7 @@ if (Meteor.isClient) {
       var name = $(event.target).data('name');
       $('.new-pizza [name="pizza"]').val(name).next().focus();
     },
-    "click .pizza-item small": function(event) {
+    "click .pizza-item small.deletable": function(event) {
       var id = $(event.target).data('id');
       OrderItems.remove({_id: id});
     }
@@ -105,6 +102,10 @@ if (Meteor.isClient) {
     var mins = parseInt(seconds / 60);
     seconds = seconds % 60;
     return [mins, seconds];
+  }
+  function timer_started() {
+      var order = Orders.findOne(Session.get('order'));
+      return Boolean(order && order.timer_end);
   }
   function format_time(time) {
     var prefix = '';
@@ -122,6 +123,11 @@ if (Meteor.isClient) {
 
     return prefix + time.join(':');
   }
+  Template.pizza.helpers({
+    classname: function() {
+      return timer_started() ? '' : 'deletable';
+    }
+  });
   Template.timer.created = function() {
     this.handle = Meteor.setInterval(function() {
       var time = time_left();
@@ -141,10 +147,7 @@ if (Meteor.isClient) {
     display_time: function() {
       return Session.get('time_left');
     },
-    timer_started: function() {
-      var order = Orders.findOne(Session.get('order'));
-      return Boolean(order && order.timer_end);
-    }
+    timer_started: timer_started
   });
   Template.timer.events({
     "submit .start-timer": function(event) {
