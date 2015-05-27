@@ -2,6 +2,10 @@
 body {
 	font-family: Helvetica;
 }
+body.animated {
+	-webkit-animation: color-shift 500ms ease-out infinite alternate;
+	animation: color-shift 500ms ease-out infinite alternate;
+}
 input, button {
 	font-size: 2em;
 }
@@ -36,4 +40,35 @@ ul {
 }
 .timer {
 	font-size: 3em;
+	margin-left: 2em;
+}
+.animated .timer {
+	-webkit-animation: bounce 500ms ease-out infinite alternate;
+	animation: bounce 500ms ease-out infinite alternate;
+}
+
+@keyframes bounce {
+	from {
+		transform: translateY(0px);
+	}
+	to {
+		transform: translateY(80px);
+	}
+}
+@-webkit-keyframes bounce {
+	from {
+		-webkit-transform: translateY(0px);
+	}
+	to {
+		-webkit-transform: translateY(80px);
+	}
+}
+
+@keyframes color-shift {
+	from {
+		background: #f0c7ee;
+	}
+	to {
+		background: #92E9FF;
+	}
 }

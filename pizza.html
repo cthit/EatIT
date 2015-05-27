@@ -1,26 +1,45 @@
 <head>
-  <title>bITe</title>
+  <title>EatIT</title>
 </head>
 
 <body>
-  <h1>bITe!</h1>
+  <h1>EatIT!</h1>
   {{#if error}}
-  	No session for this id, <a href="/">create new?</a>
+    No session for this id, <a href="/">create new?</a>
   {{else}}
   <ul class="pizzas">
-  	{{#each items}}
-  	  {{> pizza}}
-  	{{/each}}
+    {{#each items}}
+      {{> pizza}}
+    {{/each}}
   </ul>
 
+  {{#unless timer_started}}
   <form class="new-pizza">
-  	<input type="text" name="pizza" placeholder="Beställning" value="">
-  	<input type="text" name="nick" placeholder="Nick" value="">
-  	<!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-  	<button>Submit</button>
+    <input type="text" name="pizza" placeholder="Beställning" value="">
+    <input type="text" name="nick" placeholder="Nick" value="">
+    <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
+    <button>Submit</button>
   </form>
+  {{/unless}}
   {{> timer}}
+  <div id="ytplayer"></div>
   <audio id="audio" preload="auto" src="https://cdn.rawgit.com/tholman/elevator.js/da89ba613b75c3712a459302681270aa17d8b0f8/demo/music/ding.mp3"></audio>
+  <script>
+      var tag = document.createElement('script');
+      tag.src = "https://www.youtube.com/iframe_api";
+      var firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+      var player;
+      function onYouTubeIframeAPIReady() {
+        player = new YT.Player('ytplayer', {
+          height: '390',
+          width: '640',
+          videoId: 'ZcJjMnHoIBI'
+        });
+        document.getElementById('ytplayer').style.display = 'none';
+      }
+  </script>
   {{/if}}
 </body>
 <template name="pizza">

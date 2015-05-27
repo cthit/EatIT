@@ -60,6 +60,10 @@ if (Meteor.isClient) {
     },
     error: function() {
       return Session.get('error');
+    },
+    timer_started: function() {
+      var order = Orders.findOne(Session.get('order'));
+      return Boolean(order && order.timer_end);
     }
   });
 
@@ -102,15 +106,35 @@ if (Meteor.isClient) {
     seconds = seconds % 60;
     return [mins, seconds];
   }
+  function format_time(time) {
+    var prefix = '';
+    if (time[1] < 0) {
+      prefix = '-';
+    }
+    time[0] = Math.abs(time[0]);
+    time[1] = Math.abs(time[1]);
+    if (time[1] < 10) {
+        time[1] = '0' + time[1];
+    }
+    if (isNaN(time[0])) {
+      return '';
+    }
+
+    return prefix + time.join(':');
+  }
   Template.timer.created = function() {
     this.handle = Meteor.setInterval(function() {
       var time = time_left();
-      Session.set('time_left', time.join(':'));
-      if (time[0] === 0 && time[1] === 0) {
-        console.log('stop!');
-        $('#audio')[0].play();
-        Meteor.clearInterval(this.handle);
+      if (time[0] === 0 && time[1] === 0 || (time[1] < 0 && !window.playing)) {
+        if (player && player.getPlayerState() === YT.PlayerState.CUED) {
+          console.log('stop!');
+          document.body.className += ' animated';
+          window.playing = true;
+          player.seekTo(51);
+        }
+        // Meteor.clearInterval(this.handle);
       }
+      Session.set('time_left', format_time(time));
     }.bind(this), 500);
   };
   Template.timer.helpers({
