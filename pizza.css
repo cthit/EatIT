@@ -1,6 +1,6 @@
 /* CSS declarations go here */
 body {
-    font-family: 'Montserrat',sans-serif;
+    font-family: 'Open sans',sans-serif;
     margin:0;
 }
 body.animated {
@@ -50,9 +50,12 @@ ul {
 }
 ul.pizzas {
     display:block;
-    margin-bottom: 40px;
+    margin: 40px 0 40px 0;
 }
 .pizza-item {
+    display:block;
+    width:100%;
+    padding: 10px 0 10px 0;
 	font-size: 2em;
 	position: relative;
 }
