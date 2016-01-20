@@ -1,8 +1,6 @@
 /* CSS declarations go here */
 body {
-	font-family: Helvetica;
-	background: #68c0b1;
-	color: #0d3e5a;
+    font-family: 'Montserrat',sans-serif;
 }
 body.animated {
 	-webkit-animation: color-shift 500ms ease-out infinite alternate;
