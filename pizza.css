@@ -32,6 +32,13 @@ h1#eatit-header-text {
     margin: 0 auto;
 }
 
+@media screen and (max-width: 1080px) {
+    .centered-body {
+        width: auto;
+        margin: 4px;
+    }
+}
+
 @media only screen and (max-device-width: 700px) {
 	input {
 		width: 70%;
