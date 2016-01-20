@@ -38,7 +38,7 @@ h1#eatit-header-text {
 	}
 	button {
 		margin-bottom: 2em;
-	}
+    }
 }
 input {
 	background: transparent;
@@ -61,7 +61,7 @@ ul.pizzas {
     width:100%;
     padding: 10px 5px 10px 5px;
     margin: 5px;
-	font-size: 2em;
+	font-size: 1.5em;
 	position: relative;
     background:#fff;
     border: 1px solid #ddd;
@@ -73,7 +73,7 @@ ul.pizzas {
     ;border-radius: 5px
 }
 .pizza-item small {
-	font-size: 0.5em;
+	font-size: 0.65em;
 }
 .pizza-item small.deletable:hover {
 	cursor: pointer;
