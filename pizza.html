@@ -46,8 +46,8 @@
 </body>
 <template name="pizza">
 	<li class="pizza-item">
-		{{count}} <span class="name" data-name="{{name}}">{{name}}</span>
-		{{#each items}}
+		{{length}} <span class="name" data-name="{{name}}">{{name}}</span>
+		{{#each this}}
 			<small data-id="{{id}}" class="{{classname}}">{{nick}}</small>
 		{{/each}}
 	</li>

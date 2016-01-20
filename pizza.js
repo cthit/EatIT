@@ -48,20 +48,13 @@ if (Meteor.isClient) {
     },
     items: function () {
       var items = OrderItems.find({order: Session.get('order')}).fetch();
-      var pizzas = {};
-      _.each(items, function(item) {
-        if (!pizzas[item.pizza]) {
-          pizzas[item.pizza] = {count: 0, items: []};
-        }
+      var pizzas = _.groupBy(items, function(item) { return item.pizza });
 
-        pizzas[item.pizza].count++;
-        pizzas[item.pizza].items.push({nick: item.nick, id: item._id});
-
-      });
-      return _.map(pizzas, function(value, key) {
+      pizzas = _.map(pizzas, function(value, key) {
         value.name = key;
         return value;
       });
+      return _.sortBy(pizzas, function(pizza){ return -pizza.length; });
     },
     error: function() {
       return Session.get('error');
