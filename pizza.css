@@ -16,12 +16,14 @@ h1#eatit-header-text {
     width:100%;
     background: #09cdda;
     padding: 8px 0px 8px 0px;
-    margin-bottom: 14px;
+    margin-bottom: 10px;
     -webkit-box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
     -moz-box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
     box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
 }
-
+.content {
+    padding-top: 20px;
+}
 .centered-body {
     width:1080px;
     margin: 0 auto;
@@ -45,6 +47,10 @@ input, button {
 }
 ul {
 	list-style-type: none;
+}
+ul.pizzas {
+    display:block;
+    margin-bottom: 40px;
 }
 .pizza-item {
 	font-size: 2em;
