@@ -1,10 +1,20 @@
 /* CSS declarations go here */
 body {
     font-family: 'Montserrat',sans-serif;
+    margin:0;
 }
 body.animated {
 	-webkit-animation: color-shift 500ms ease-out infinite alternate;
 	animation: color-shift 500ms ease-out infinite alternate;
+}
+h1#eatit-header-text {
+    display:block;
+    margin:0;
+}
+
+#header {
+    width:100%;
+    background: #09cdda;
 }
 
 @media only screen and (max-device-width: 700px) {
