@@ -101,6 +101,7 @@ ul.pizzas {
 
 .order-box input {
     border-width:0 0 1px 0;
+    border-style:solid #000;
     margin-left: 10px;
     margin-top: 10px;
     margin-right: 20px;
@@ -157,6 +158,30 @@ input {
 input, button {
 	font-size: 2em;
 }
+.timer-box {
+    background: #fff;
+    display:inline-block;
+    width: auto;
+    padding: 10px 8px 15px 12px;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 10px 10px 50px 10px;
+    border-radius: 3px;
+}
+.timer-box input{
+    border-width:0 0 1px 0;
+    border-style:solid #000;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 1.5em;
+    width:150px;
+}
+
 
 .timer {
 	font-size: 3em;
