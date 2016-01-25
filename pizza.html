@@ -22,12 +22,15 @@
   </ul>
 
   {{#unless timer_started}}
+  Place order
+  <div class="order-box">
   <form class="new-pizza">
     <input type="text" name="pizza" placeholder="Order" value="">
     <input type="text" name="nick" placeholder="Nick" value="">
     <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
     <button>+</button>
   </form>
+  </div>
   {{/unless}}
   {{> timer}}
   <div id="ytplayer"></div>
