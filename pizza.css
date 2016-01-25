@@ -38,23 +38,6 @@ h1#eatit-header-text {
         margin: 4px;
     }
 }
-
-@media only screen and (max-device-width: 700px) {
-	input {
-		width: 70%;
-	}
-	button {
-		margin-bottom: 2em;
-    }
-}
-input {
-	background: transparent;
-	border: 2px solid #0d3e5a;
-	color: #0d3e5a;
-}
-input, button {
-	font-size: 2em;
-}
 ul {
 	list-style-type: none;
 }
@@ -115,6 +98,24 @@ ul.pizzas {
     margin: 5px 0 20px 0;
     border-radius: 3px;
 }
+
+@media only screen and (max-device-width: 700px) {
+	input {
+		width: 70%;
+	}
+	button {
+		margin-bottom: 2em;
+    }
+}
+input {
+	background: transparent;
+	border: 2px solid #0d3e5a;
+	color: #0d3e5a;
+}
+input, button {
+	font-size: 2em;
+}
+
 .timer {
 	font-size: 3em;
 	margin-left: 2em;
