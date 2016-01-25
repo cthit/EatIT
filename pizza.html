@@ -64,11 +64,15 @@
 </template>
 <template name="timer">
 	{{#if timer_started}}
+    Time Left:
 		<span class="timer">{{display_time}}</span>
 	{{else}}
+    Enter Ordertime
+    <div class="timer-box">
 		<form class="start-timer">
 			<input type="integer" name="minutes" placeholder="Minutes" />
 			<button>Start</button>
 		</form>
+    </div>
 	{{/if}}
 </template>
