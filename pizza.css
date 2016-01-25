@@ -38,23 +38,6 @@ h1#eatit-header-text {
         margin: 4px;
     }
 }
-
-@media only screen and (max-device-width: 700px) {
-	input {
-		width: 70%;
-	}
-	button {
-		margin-bottom: 2em;
-    }
-}
-input {
-	background: transparent;
-	border: 2px solid #0d3e5a;
-	color: #0d3e5a;
-}
-input, button {
-	font-size: 2em;
-}
 ul {
 	list-style-type: none;
 }
@@ -101,6 +84,60 @@ ul.pizzas {
 	top: -1em;
 	left: 4em;
 }
+
+.order-box {
+    background: #fff;
+    width: 100%;
+    padding: 10px 8px 15px 7px;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 5px 0 50px 0;
+    border-radius: 3px;
+}
+
+.order-box input {
+    border-width:0 0 1px 0;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 1.5em;
+}
+.order-box button {
+    display:inline-block;
+    background: #09cdda;
+    width: auto;
+    height: 45px;
+    border: 0px solid #000;
+    border-radius: 5px;
+    color: black;
+    float: right;
+    position: absolute;
+    -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+}
+
+@media only screen and (max-device-width: 700px) {
+	input {
+		width: 70%;
+	}
+	button {
+		margin-bottom: 2em;
+    }
+}
+input {
+	background: transparent;
+	border: 2px solid #0d3e5a;
+	color: #0d3e5a;
+}
+input, button {
+	font-size: 2em;
+}
+
 .timer {
 	font-size: 3em;
 	margin-left: 2em;
@@ -159,17 +196,25 @@ button:active {
 }
 
 ::-webkit-input-placeholder {
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 :-ms-input-placeholder {
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
