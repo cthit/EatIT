@@ -88,7 +88,7 @@ ul.pizzas {
 .order-box {
     background: #fff;
     width: 100%;
-    padding: 8px 8px 15px 7px;
+    padding: 10px 8px 15px 7px;
     border: 1px solid #ddd;
     -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
     -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
@@ -111,11 +111,14 @@ ul.pizzas {
     background: #09cdda;
     width: auto;
     height: 45px;
-    border: 1px solid #ddd;
-    border-radius:10px;
+    border: 0px solid #000;
+    border-radius: 5px;
     color: black;
     float: right;
     position: absolute;
+    -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
 }
 
 @media only screen and (max-device-width: 700px) {
