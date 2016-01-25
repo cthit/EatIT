@@ -106,12 +106,23 @@ ul.pizzas {
     margin-right: 20px;
     font-size: 1.5em;
 }
+.order-box #button-wrapper {
+    display: inline-block;
+    position: absolute;
+    width:auto;
+    float:right;
+}
+@media screen and (max-width: 480px) {
+    .order-box #button-wrapper {
+        position: static;
+    }
+}
 .order-box button {
     background: #09cdda;
-    width: auto;
+    width: 45px;
     height: 45px;
     border: 0px solid #000;
-    border-radius: 5px;
+    border-radius: 23px;
     color: black;
     position: absolute;
     -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
