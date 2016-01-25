@@ -1,32 +1,41 @@
 <head>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css' />
   <title>EatIT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <h1>EatIT!</h1>
-  {{#if error}}
-    No session for this id, <a href="/">create new?</a>
-  {{else}}
-  Share this link with your friends: <a href="{{url}}">{{url}}</a>
-  <ul class="pizzas">
-    {{#each items}}
-      {{> pizza}}
-    {{/each}}
-  </ul>
+  <div id="header">
+    <header class="centered-body">
+      <h1 id="eatit-header-text">EatIT!</h1>
+    </header>
+  </div>
+  <div class="content centered-body">
+    {{#if error}}
+      No session for this id, <a href="/">create new?</a>
+    {{else}}
+    Share this link with your friends: <a href="{{url}}">{{url}}</a>
+    <ul class="pizzas">
+      {{#each items}}
+        {{> pizza}}
+      {{/each}}
+    </ul>
 
-  {{#unless timer_started}}
-  <form class="new-pizza">
-    <input type="text" name="pizza" placeholder="Order" value="">
-    <input type="text" name="nick" placeholder="Nick" value="">
-    <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-    <button>+</button>
-  </form>
-  {{/unless}}
-  {{> timer}}
-  <div id="ytplayer"></div>
-  <audio id="audio" preload="auto" src="https://cdn.rawgit.com/tholman/elevator.js/da89ba613b75c3712a459302681270aa17d8b0f8/demo/music/ding.mp3"></audio>
-  <script>
+    {{#unless timer_started}}
+    Place your order
+    <div class="order-box">
+      <form class="new-pizza">
+        <input type="text" name="pizza" placeholder="Order" value="" id="order">
+        <input type="text" name="nick" placeholder="Nick" value="">
+        <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
+        <div id="button-wrapper"><button class="add-order-button">Add</button></div>
+      </form>
+    </div>
+    {{/unless}}
+    {{> timer}}
+    <div id="ytplayer"></div>
+    <audio id="audio" preload="auto" src="https://cdn.rawgit.com/tholman/elevator.js/da89ba613b75c3712a459302681270aa17d8b0f8/demo/music/ding.mp3"></audio>
+    <script>
       var tag = document.createElement('script');
       tag.src = "https://www.youtube.com/iframe_api";
       var firstScriptTag = document.getElementsByTagName('script')[0];
@@ -41,8 +50,9 @@
         });
         document.getElementById('ytplayer').style.display = 'none';
       }
-  </script>
-  {{/if}}
+    </script>
+    {{/if}}
+  </div>
 </body>
 <template name="pizza">
 	<li class="pizza-item">
@@ -54,11 +64,17 @@
 </template>
 <template name="timer">
 	{{#if timer_started}}
-		<span class="timer">{{display_time}}</span>
+    Time Left:
+    <div class="timer-box">
+		  <span class="timer">{{display_time}}</span>
+    </div>
 	{{else}}
-		<form class="start-timer">
-			<input type="integer" name="minutes" placeholder="Minutes" />
-			<button>Start</button>
-		</form>
+    <label id="timer-box-label">Enter Ordertime</label>
+    <div class="timer-box">
+  		<form class="start-timer">
+  			<input type="integer" name="minutes" placeholder="Minutes" />
+  			<button>Start</button>
+  		</form>
+    </div>
 	{{/if}}
 </template>
