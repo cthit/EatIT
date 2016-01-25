@@ -101,6 +101,19 @@ ul.pizzas {
 	top: -1em;
 	left: 4em;
 }
+.order-box {
+    background: #fff;
+    width: 100%;
+    padding: 10px 8px 5px 10px;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 5px 0 20px 0;
+    border-radius: 3px;
+}
 .timer {
 	font-size: 3em;
 	margin-left: 2em;
