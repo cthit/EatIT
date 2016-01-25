@@ -65,9 +65,11 @@
 <template name="timer">
 	{{#if timer_started}}
     Time Left:
+    <div class="timer-box">
 		<span class="timer">{{display_time}}</span>
+    </div>
 	{{else}}
-    Enter Ordertime
+    <label id="timer-box-label">Enter Ordertime</label>
     <div class="timer-box">
 		<form class="start-timer">
 			<input type="integer" name="minutes" placeholder="Minutes" />

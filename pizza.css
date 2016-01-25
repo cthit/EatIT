@@ -160,8 +160,7 @@ input, button {
 }
 .timer-box {
     background: #fff;
-    display:inline-block;
-    width: auto;
+    width: 260px;
     padding: 10px 8px 15px 12px;
     border: 1px solid #ddd;
     -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
@@ -169,8 +168,6 @@ input, button {
     box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-    margin: 10px 10px 50px 10px;
-    border-radius: 3px;
 }
 .timer-box input{
     border-width:0 0 1px 0;
@@ -181,11 +178,23 @@ input, button {
     font-size: 1.5em;
     width:150px;
 }
-
-
+.timer-box button {
+    background: #09cdda;
+    width: auto;
+    height: 45px;
+    border: 0px solid #000;
+    border-radius: 5px;
+    color: black;
+    position: absolute;
+    -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+}
 .timer {
 	font-size: 3em;
-	margin-left: 2em;
+    width: 200px;
+	margin: 0 auto;
+    display: block;
 }
 .animated .timer {
 	-webkit-animation: bounce 500ms ease-out infinite alternate;
