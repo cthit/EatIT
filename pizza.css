@@ -107,14 +107,12 @@ ul.pizzas {
     font-size: 1.5em;
 }
 .order-box button {
-    display:inline-block;
     background: #09cdda;
     width: auto;
     height: 45px;
     border: 0px solid #000;
     border-radius: 5px;
     color: black;
-    float: right;
     position: absolute;
     -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
     -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
