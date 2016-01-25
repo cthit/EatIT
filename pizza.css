@@ -1,39 +1,69 @@
 /* CSS declarations go here */
 body {
-	font-family: Helvetica;
-	background: #68c0b1;
-	color: #0d3e5a;
+    font-family: 'Open sans',sans-serif;
+    background:#efefef;
+    margin:0;
 }
 body.animated {
 	-webkit-animation: color-shift 500ms ease-out infinite alternate;
 	animation: color-shift 500ms ease-out infinite alternate;
 }
+h1#eatit-header-text {
+    display:block;
+    margin:0;
+}
 
-@media only screen and (max-device-width: 700px) {
-	input {
-		width: 70%;
-	}
-	button {
-		margin-bottom: 2em;
-	}
+#header {
+    width:100%;
+    background: #09cdda;
+    padding: 8px 0px 8px 0px;
+    -webkit-box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
+    box-shadow: 0px 2px 8px 3px rgba(0,0,0,0.30);
+    position:relative;
 }
-input {
-	background: transparent;
-	border: 2px solid #0d3e5a;
-	color: #0d3e5a;
+.content {
+    padding: 20px 30px 40px 30px;
+    border-top:none;
+    height:100%
 }
-input, button {
-	font-size: 2em;
+.centered-body {
+    width:1080px;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 1080px) {
+    .centered-body {
+        width: auto;
+        margin: 4px;
+    }
 }
 ul {
 	list-style-type: none;
 }
+ul.pizzas {
+    display:block;
+    margin: 40px 0 40px 0;
+    -webkit-padding-start:0px;
+}
 .pizza-item {
-	font-size: 2em;
+    display:block;
+    width:100%;
+    padding: 4px 10px 4px 10px;
+    margin: 1px;
+	font-size: 1.5em;
 	position: relative;
+    background:#fff;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px
+    ;border-radius: 3px
 }
 .pizza-item small {
-	font-size: 0.5em;
+	font-size: 0.65em;
 }
 .pizza-item small.deletable:hover {
 	cursor: pointer;
@@ -54,9 +84,117 @@ ul {
 	top: -1em;
 	left: 4em;
 }
+
+.order-box {
+    background: #fff;
+    width: 100%;
+    padding: 10px 8px 15px 12px;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    margin: 5px 0 50px 0;
+    border-radius: 3px;
+}
+
+.order-box input {
+    border-width:0 0 1px 0;
+    border-style:solid #000;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 1.5em;
+}
+.order-box input#order{
+    width: 620px;
+}
+
+@media screen and (max-width: 1080px) {
+    .order-box input#order {
+        width:auto;
+    }
+
+}
+.order-box #button-wrapper {
+    display: inline-block;
+    position: absolute;
+    width:auto;
+    float:right;
+}
+
+@media screen and (max-width: 480px) {
+    .order-box #button-wrapper {
+        position: static;
+    }
+}
+.order-box button {
+    background: #09cdda;
+    width: auto;
+    height: 45px;
+    border: 0px solid #000;
+    border-radius: 5px;
+    color: black;
+    position: absolute;
+    -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+}
+
+@media only screen and (max-device-width: 700px) {
+	input {
+		width: 70%;
+	}
+	button {
+		margin-bottom: 2em;
+    }
+}
+input {
+	background: transparent;
+	border: 2px solid #0d3e5a;
+	color: #0d3e5a;
+}
+input, button {
+	font-size: 2em;
+}
+.timer-box {
+    background: #fff;
+    width: 260px;
+    padding: 10px 8px 15px 12px;
+    border: 1px solid #ddd;
+    -webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+}
+.timer-box input{
+    border-width:0 0 1px 0;
+    border-style:solid #000;
+    margin-left: 10px;
+    margin-top: 10px;
+    margin-right: 20px;
+    font-size: 1.5em;
+    width:150px;
+}
+.timer-box button {
+    background: #09cdda;
+    width: auto;
+    height: 45px;
+    border: 0px solid #000;
+    border-radius: 5px;
+    color: black;
+    position: absolute;
+    -webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    -moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+    box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+}
 .timer {
 	font-size: 3em;
-	margin-left: 2em;
+    width: 200px;
+	margin: 0 auto;
+    display: block;
 }
 .animated .timer {
 	-webkit-animation: bounce 500ms ease-out infinite alternate;
@@ -112,17 +250,25 @@ button:active {
 }
 
 ::-webkit-input-placeholder {
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 :-moz-placeholder { /* Firefox 18- */
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 ::-moz-placeholder {  /* Firefox 19+ */
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }
 
 :-ms-input-placeholder {
-   color: #599bb3;
+   color: #aaa;
+   font-size: 1em;
+   font-style: italic;
 }

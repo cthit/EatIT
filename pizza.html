@@ -1,10 +1,16 @@
 <head>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css' />
   <title>EatIT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body>
-  <h1>EatIT!</h1>
+    <div id="header">
+        <header class="centered-body">
+            <h1 id="eatit-header-text">EatIT!</h1>
+        </header>
+    </div>
+    <div class="content centered-body">
   {{#if error}}
     No session for this id, <a href="/">create new?</a>
   {{else}}
@@ -16,12 +22,15 @@
   </ul>
 
   {{#unless timer_started}}
+  Place your order
+  <div class="order-box">
   <form class="new-pizza">
-    <input type="text" name="pizza" placeholder="Order" value="">
+    <input type="text" name="pizza" placeholder="Order" value="" id="order">
     <input type="text" name="nick" placeholder="Nick" value="">
     <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-    <button>+</button>
+    <div id="button-wrapper"><button class="add-order-button">Add</button></div>
   </form>
+  </div>
   {{/unless}}
   {{> timer}}
   <div id="ytplayer"></div>
@@ -43,6 +52,7 @@
       }
   </script>
   {{/if}}
+  </div>
 </body>
 <template name="pizza">
 	<li class="pizza-item">
@@ -54,11 +64,17 @@
 </template>
 <template name="timer">
 	{{#if timer_started}}
+    Time Left:
+    <div class="timer-box">
 		<span class="timer">{{display_time}}</span>
+    </div>
 	{{else}}
+    <label id="timer-box-label">Enter Ordertime</label>
+    <div class="timer-box">
 		<form class="start-timer">
 			<input type="integer" name="minutes" placeholder="Minutes" />
 			<button>Start</button>
 		</form>
+    </div>
 	{{/if}}
 </template>
