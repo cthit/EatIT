@@ -108,12 +108,13 @@ ul.pizzas {
 .order-box button {
     display:inline-block;
     background: #09cdda;
-    width: 2.2em;
-    height: 2.2em;
-    border-radius: 1.1em;
+    width: auto;
+    height: 45px;
     border: 1px solid #ddd;
+    border-radius:10px;
     color: black;
     float: right;
+    position: relative;
 }
 
 @media only screen and (max-device-width: 700px) {
