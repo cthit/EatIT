@@ -117,16 +117,23 @@ ul.pizzas {
     }
 
 }
+@media only screen and (max-device-width: 700px){
+
+    .order-box input#order {
+        width:70%;
+    }
+}
 .order-box #button-wrapper {
     display: inline-block;
     position: absolute;
     width:auto;
     float:right;
+    right: 22%;
 }
 
 @media screen and (max-width: 480px) {
     .order-box #button-wrapper {
-        position: static;
+        right: 85px;
     }
 }
 .order-box button {
