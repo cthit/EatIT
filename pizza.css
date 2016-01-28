@@ -113,13 +113,10 @@ ul.pizzas {
 
 @media screen and (max-width: 1080px) {
 	.order-box input#order {
-		width:auto;
+		width:40%;
 	}
-}
-@media only screen and (max-device-width: 700px){
-
-	.order-box input#order {
-		width:70%;
+	.order-box input {
+		width:30%;
 	}
 }
 .order-box #button-wrapper {
@@ -128,6 +125,14 @@ ul.pizzas {
 	width:auto;
 	float:right;
 	right: 22%;
+}
+@media screen and (max-width; 768px) {
+	.order-box input#order {
+		width: 70%;
+	}
+	.order-box input {
+		width:60%;
+	}
 }
 
 @media screen and (max-width: 480px) {
@@ -149,9 +154,6 @@ ul.pizzas {
 }
 
 @media only screen and (max-device-width: 700px) {
-	input {
-		width: 70%;
-	}
 	button {
 	margin-bottom: 2em;
 	}
