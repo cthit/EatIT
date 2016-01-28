@@ -265,8 +265,7 @@ button:hover {
 	background-color:#408c99;
 }
 button:active {
-	position:relative;
-	top:1px;
+  background-color: #09cdda;
 }
 
 ::-webkit-input-placeholder {
