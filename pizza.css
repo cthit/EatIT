@@ -118,6 +118,7 @@ ul.pizzas {
 	right: 22%;
 }
 
+
 @media screen and (max-width: 1080px) {
 	.order-box input#order {
 		width:55%;
@@ -131,15 +132,23 @@ ul.pizzas {
 }
 @media screen and (max-width: 700px) {
 	.order-box input#order {
-		width: 70%;
+		width: 80%;
 	}
 	.order-box input {
-		width: 70%;
+		width: 80%;
 	}
-
+	.order-box #button-wrapper {
+		right: 14%;
+	}
 }
 
 @media screen and (max-width: 480px) {
+	.order-box input#order {
+		width: 60%;
+	}
+	.order-box input {
+		width: 60%;
+	}
 	.order-box #button-wrapper {
 		right: 85px;
 	}
