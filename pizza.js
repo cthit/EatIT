@@ -201,7 +201,6 @@ if (Meteor.isClient) {
           } else {
               Orders.update(Session.get('order'), { $set: {swishNbr: number}});
           }
-          console.log("Num: " + number + ", name: " + name);
           return false;
       }
   })
