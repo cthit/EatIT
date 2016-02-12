@@ -83,20 +83,19 @@
 </template>
 <template name="swish">
     <div class="timer-area">
-        <label id="swish-box-label">Enter Swish number</label>
+        <label id="swish-box-label">Swish to:</label>
         <div class="swish-box">
             <form class="submit-swish">
-                {{#if has_name }}
-                    <input type="text" name="swishName" value="{{name}}" id="swish">
+                {{#if has_number}}
+                    <label>{{name}}</label>
+                    <label>{{number}}</label>
                 {{else}}
                     <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
-                {{/if}}
-                {{#if has_number}}
-                    <input type="text" name="swishNbr" value="{{number}}" id="swish">
-                {{else}}
                     <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >
                 {{/if}}
-                <button>Submit</button>
+                {{#unless has_number}}
+                    <button>Submit</button>
+                {{/unless}}
             </form>
         </div>
     </div>

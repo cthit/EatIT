@@ -156,7 +156,7 @@ if (Meteor.isClient) {
     }
   });
   Template.swish.helpers({
-      name_placeholder: "Swish name",
+      name_placeholder: "Name (optional)",
       name: function() {
           var order = Orders.findOne(Session.get('order'));
           if (order) {
