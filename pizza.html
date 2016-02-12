@@ -33,6 +33,7 @@
     </div>
     {{/unless}}
     {{> timer}}
+    {{> swish}}
     <div id="ytplayer"></div>
     <audio id="audio" preload="auto" src="https://cdn.rawgit.com/tholman/elevator.js/da89ba613b75c3712a459302681270aa17d8b0f8/demo/music/ding.mp3"></audio>
     <script>
@@ -69,12 +70,26 @@
 		  <span class="timer">{{display_time}}</span>
     </div>
 	{{else}}
-    <label id="timer-box-label">Enter Ordertime</label>
-    <div class="timer-box">
-  		<form class="start-timer">
-  			<input type="integer" name="minutes" placeholder="Minutes" />
-  			<button>Start</button>
-  		</form>
+    <div class="timer-area">
+        <label id="timer-box-label">Enter Ordertime</label>
+        <div class="timer-box">
+            <form class="start-timer">
+                <input type="integer" name="minutes" placeholder="Minutes" />
+                <button>Start</button>
+            </form>
+        </div>
     </div>
 	{{/if}}
+</template>
+<template name="swish">
+    <div class="timer-area">
+        <label id="swish-box-label">Enter Swish number</label>
+        <div class="swish-box">
+            <form class="submit-swish">
+                <input type="text" name="swishName" placeholder="Swish name" id="swish">
+                <input type="text" name="swishNbr" placeholder="Swish number" id="swish">
+                <button>Submit</button>
+            </form>
+        </div>
+    </div>
 </template>
