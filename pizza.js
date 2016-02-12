@@ -155,6 +155,56 @@ if (Meteor.isClient) {
       return false;
     }
   });
+  Template.swish.helpers({
+      name_placeholder: "Swish name",
+      name: function() {
+          var order = Orders.findOne(Session.get('order'));
+          if (order) {
+              return order.swishName;
+          }
+      },
+      number_placeholder: "Swish number",
+      number: function() {
+          var order = Orders.findOne(Session.get('order'));
+          if (order) {
+              return order.swishNbr;
+          }
+      },
+
+      has_name: function() {
+          var order = Orders.findOne(Session.get('order'));
+          if (order) {
+              return order.swishName !== undefined;
+          }
+          return false;
+      },
+
+      has_number: function() {
+          var order = Orders.findOne(Session.get('order'));
+          if (order) {
+              return order.swishNbr !== undefined;
+          }
+          return false;
+      }
+  })
+  Template.swish.events({
+      "submit .submit-swish": function(event) {
+          var name = event.target.swishName.value.trim();
+          var number = event.target.swishNbr.value.trim();
+          if (name.length == 0) { 
+              Orders.update(Session.get('order'), { $unset: {swishName: ""}});
+          } else {
+              Orders.update(Session.get('order'), { $set: {swishName: name}});
+          }
+          if (number.length == 0) {
+              Orders.update(Session.get('order'), { $unset: {swishNbr: ""}});
+          } else {
+              Orders.update(Session.get('order'), { $set: {swishNbr: number}});
+          }
+          console.log("Num: " + number + ", name: " + name);
+          return false;
+      }
+  })
 }
 
 if (Meteor.isServer) {
