@@ -8,14 +8,14 @@
 <body>
   <div id="header">
     <header class="centered-body">
-      <h1 id="eatit-header-text">EatIT!</h1>
+      <h1 id="eatit-header-text"><a href="/">EatIT!</a></h1>
     </header>
   </div>
   <div class="content centered-body">
     {{#if error}}
       No session for this id, <a href="/">create new?</a>
     {{else}}
-    Share this link with your friends: <a href="{{url}}">{{url}}</a>
+    <h2>Share this link with your friends: <a href="{{url}}">{{url}}</a></h2>
     <ul class="pizzas">
       {{#each items}}
         {{> pizza}}
@@ -23,14 +23,15 @@
     </ul>
 
     {{#unless timer_started}}
-    Place your order
-    <div class="order-box">
-      <form class="new-pizza">
-        <input type="text" name="pizza" placeholder="Order" value="" id="order">
-        <input type="text" name="nick" placeholder="Nick" value="">
-        <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-        <div id="button-wrapper"><button class="add-order-button">Add</button></div>
-      </form>
+    <div class="order-box container-part">
+        <h3>Place your order</h3>
+        <form class="new-pizza">
+            <input type="text" name="pizza" placeholder="Order" value="" id="order">
+            <input type="text" name="nick" placeholder="Nick" value="">
+            <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
+            <button class="add-order-button">Add</button>
+        </form>
+
     </div>
     {{/unless}}
     {{> timer}}
@@ -66,13 +67,15 @@
 </template>
 <template name="timer">
 	{{#if timer_started}}
-    Time Left:
-    <div class="timer-box">
-		  <span class="timer">{{display_time}}</span>
+    <div class="container-part">
+        <h3>Time until food's ready:</h3>
+        <div class="timer-box">
+              <span class="timer">{{display_time}}</span>
+        </div>
     </div>
 	{{else}}
-    <div class="timer-area">
-        <label id="timer-box-label">Enter Ordertime</label>
+    <div class="timer-area container-part" id="count-down-timer">
+        <h3><label id="timer-box-label">Enter time until delivery</label></h3>
         <div class="timer-box">
             <form class="start-timer">
                 <input type="integer" name="minutes" placeholder="Minutes" />
@@ -83,8 +86,8 @@
 	{{/if}}
 </template>
 <template name="swish">
-    <div class="timer-area">
-        <label id="swish-box-label">Swish to:</label>
+    <div class="timer-area container-part" id="swish-container">
+        <h3>Swish to:</h3>
         <div class="swish-box">
             <form class="submit-swish">
                 {{#if has_number}}
@@ -93,10 +96,8 @@
                 {{else}}
                     <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
                     <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >
-                {{/if}}
-                {{#unless has_number}}
                     <button>Submit</button>
-                {{/unless}}
+                {{/if}}
             </form>
         </div>
     </div>
