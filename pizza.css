@@ -178,6 +178,13 @@ input {
 input, button {
 	font-size: 2em;
 }
+
+.timer-area {
+    float: left;
+    margin-right: 40px;
+    margin-bottom: 40px;
+}
+
 .timer-box {
 	background: #fff;
 	width: 260px;
@@ -245,6 +252,54 @@ input, button {
 	to {
 		background: #92E9FF;
 	}
+}
+
+.swish-area {
+    float: right;
+}
+
+.swish-box {
+	background: #fff;
+	width: 380px;
+	padding: 10px 8px 15px 12px;
+	border: 1px solid #ddd;
+	-webkit-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+	-moz-box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+	box-shadow: 0px 2px 2px 0px rgba(0,0,0,0.26);
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+}
+
+.swish-box input{
+	border-width:0 0 1px 0;
+	border-style:solid #000;
+	margin-left: 10px;
+	margin-top: 10px;
+	margin-right: 20px;
+	font-size: 1.5em;
+	width:250px;
+}
+
+.swish-box button {
+	background: #09cdda;
+	width: auto;
+	height: 45px;
+	border: 0px solid #000;
+	border-radius: 5px;
+	color: black;
+	position: absolute;
+	-webkit-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+	-moz-box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+	box-shadow: 0px 3px 4px 0px rgba(0,0,0,0.30);
+}
+
+.swish-box label {
+	display:block;
+	width:100%;
+	padding: 4px 10px 4px 10px;
+	margin: 1px;
+	font-size: 1.5em;
+	position: relative;
 }
 
 button {
