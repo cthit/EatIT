@@ -15,7 +15,9 @@
     {{#if error}}
       No session for this id, <a href="/">create new?</a>
     {{else}}
-    <h2>Share this link with your friends: <a href="{{url}}">{{url}}</a></h2>
+    <div class="container-part" id="share-link-container">
+        <h2 class="text-extra-style">Share this link with your friends: <a class="text-extra-style" href="{{url}}">{{url}}</a></h2>
+    </div>
     <ul class="pizzas">
       {{#each items}}
         {{> pizza}}
