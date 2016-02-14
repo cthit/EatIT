@@ -5,18 +5,41 @@ body,html{
 	margin: 0;
 	padding: 0;
 	overflow: auto;
+	background: #F1F1F1;
+}
+
+.text-extra-style {
+	color: #44aedb;
+	text-shadow: 2px 2px 2px #ddd
+}
+
+* {
+	font-family: Roboto, sans-serif !important;
 }
 
 #header{
-	background-color: #09cdda;
+	background-color: #44aedb;
 	text-align: center;
 	padding:30px;
-	box-shadow: 0px 1px 10px black;
+	box-shadow: 0 1px 10px black;
 }
 
 #header a {
 	color:white;
 	text-underline: none;
+}
+
+#eatit-header-text {
+	margin:0;
+}
+
+h2 a:hover {
+	opacity: 0.7;
+}
+
+#share-link-container {
+	animation: bounceInLeft 1s;
+	-webkit-animation: bounceInLeft 1s;
 }
 
 .pizzas{
@@ -27,11 +50,14 @@ body,html{
 }
 
 .pizza-item {
-	border:1px solid #ddd;
-	box-shadow: 0 2px 2px 0 rgba(0,0,0,0.26);
-	padding:20px;
-	overflow:auto;
-	margin-top:3px;
+	border: 1px solid #ddd;
+	padding: 20px;
+	overflow: auto;
+	margin-top: 3px;
+	animation: rubberBand 1s;
+	-webkit-animation: rubberBand 1s;
+	background-color: white;
+	box-shadow: 7px 8px 5px 1px rgba(0,0,0,0.26);
 }
 
 .timer {
@@ -60,31 +86,33 @@ body,html{
 
 .container-part {
 	border:1px solid #ddd;
-	box-shadow: 0 3px 6px 0 rgba(0,0,0,0.26);
-	margin:40px 0 40px 0;
+	box-shadow: 7px 8px 5px 1px rgba(0,0,0,0.26);
+	margin:20px 0 20px 0;
 	padding:20px;
 	overflow:auto;
-}
-
-#eatit-header-text {
-	margin:0;
+	background-color: white;
 }
 
 button {
-	border: 2px solid #09cdda;
-	padding:5px;
-	font-size: 2rem;
-	background-color: transparent;
-	color: #09cdda;
+	border: 1px solid #44aedb;
+	padding: 10px 20px;
+	font-size: 1.5rem;
+	background-color: #44aedb;
+	color: white;
 	clear:both;
 	float:right;
 	box-shadow: 2px 4px 4px 0 rgba(0,0,0,0.26);
+	border-radius: 2px;
+	outline: 0;
 }
 
 button:hover {
-	background-color: #09cdda;
-	color:white;
 	cursor: pointer;
+	opacity: 0.7;
+}
+
+button:active {
+	box-shadow: none;
 }
 
 form input {
@@ -93,10 +121,89 @@ form input {
 	border: 0;
 	margin:15px 0 15px 0;
 	font-size: 2rem;
-	border-bottom: 1px solid black;
+	border-bottom: 1px solid #44aedb;
 }
 
 .submit-swish label {
 	display: block;
 	font-size: 2rem;
+}
+
+/*
+	The keyframes for the rubber band effect.
+*/
+
+@-webkit-keyframes rubberBand {
+	from {
+		-webkit-transform: scale3d(1, 1, 1);
+		transform: scale3d(1, 1, 1);
+	}
+
+	30% {
+		-webkit-transform: scale3d(1.25, 0.75, 1);
+		transform: scale3d(1.25, 0.75, 1);
+	}
+
+	40% {
+		-webkit-transform: scale3d(0.75, 1.25, 1);
+		transform: scale3d(0.75, 1.25, 1);
+	}
+
+	50% {
+		-webkit-transform: scale3d(1.15, 0.85, 1);
+		transform: scale3d(1.15, 0.85, 1);
+	}
+
+	65% {
+		-webkit-transform: scale3d(.95, 1.05, 1);
+		transform: scale3d(.95, 1.05, 1);
+	}
+
+	75% {
+		-webkit-transform: scale3d(1.05, .95, 1);
+		transform: scale3d(1.05, .95, 1);
+	}
+
+	to {
+		-webkit-transform: scale3d(1, 1, 1);
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+/*
+	Keyframes bounceInLeft
+*/
+
+@keyframes bounceInLeft {
+	from, 60%, 75%, 90%, to {
+		-webkit-animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+		animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+	}
+
+	0% {
+		opacity: 0;
+		-webkit-transform: translate3d(-3000px, 0, 0);
+		transform: translate3d(-3000px, 0, 0);
+	}
+
+	60% {
+		opacity: 1;
+		-webkit-transform: translate3d(25px, 0, 0);
+		transform: translate3d(25px, 0, 0);
+	}
+
+	75% {
+		-webkit-transform: translate3d(-10px, 0, 0);
+		transform: translate3d(-10px, 0, 0);
+	}
+
+	90% {
+		-webkit-transform: translate3d(5px, 0, 0);
+		transform: translate3d(5px, 0, 0);
+	}
+
+	to {
+		-webkit-transform: none;
+		transform: none;
+	}
 }
