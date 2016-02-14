@@ -186,7 +186,7 @@ if (Meteor.isClient) {
           }
           return false;
       }
-  })
+  });
   Template.swish.events({
       "submit .submit-swish": function(event) {
           var name = event.target.swishName.value.trim();
@@ -203,7 +203,7 @@ if (Meteor.isClient) {
           }
           return false;
       }
-  })
+  });
 }
 
 if (Meteor.isServer) {
