@@ -51,9 +51,9 @@ h2 a:hover {
 
 .pizza-item {
 	border: 1px solid #ddd;
-	padding: 20px;
+	padding: 15px;
 	overflow: auto;
-	margin-top: 3px;
+	margin-top: 2px;
 	animation: rubberBand 1s;
 	-webkit-animation: rubberBand 1s;
 	background-color: white;
