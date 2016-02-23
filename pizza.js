@@ -123,7 +123,7 @@ if (Meteor.isClient) {
   }
   Template.pizza.helpers({
     classname: function() {
-      return timer_started() ? '' : 'deletable';
+      return timer_started() ? '' : 'deletable editable';
     }
   });
   Template.timer.created = function() {
@@ -191,7 +191,7 @@ if (Meteor.isClient) {
       "submit .submit-swish": function(event) {
           var name = event.target.swishName.value.trim();
           var number = event.target.swishNbr.value.trim();
-          if (name.length == 0) { 
+          if (name.length == 0) {
               Orders.update(Session.get('order'), { $unset: {swishName: ""}});
           } else {
               Orders.update(Session.get('order'), { $set: {swishName: name}});
@@ -204,6 +204,7 @@ if (Meteor.isClient) {
           return false;
       }
   });
+
 }
 
 if (Meteor.isServer) {
