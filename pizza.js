@@ -123,7 +123,7 @@ if (Meteor.isClient) {
   }
   Template.pizza.helpers({
     classname: function() {
-      return timer_started() ? '' : 'deletable';
+      return timer_started() ? '' : 'deletable editable';
     }
   });
   Template.timer.created = function() {
@@ -202,12 +202,6 @@ if (Meteor.isClient) {
               Orders.update(Session.get('order'), { $set: {swishNbr: number}});
           }
           return false;
-      }
-  });
-
-  Template.pizza.helpers({
-      classname: function (){
-        return timer_started() ? '' : 'editable';
       }
   });
 
