@@ -60,21 +60,12 @@
   </div>
 </body>
 <template name="pizza">
-	{{#if timer_started}}
 	<li class="pizza-item">
-		{{length}} <span class="name" data-name="{{name}}">{{name}}</span>
+		{{length}} <span title="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
 		{{#each this}}
-			<small data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
+			<small title="Remove this order" data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
 		{{/each}}
 	</li>
-	{{else}}
-	<li class="pizza-item">
-		{{length}} <span title="Place same order" class="name before-timerstart" data-name="{{name}}">{{name}}</span>
-		{{#each this}}
-			<small title="Remove this order" data-id="{{_id}}" class="{{classname}} before-timerstart">{{nick}}</small>
-		{{/each}}
-	</li>
-	{{/if}}
 </template>
 <template name="timer">
 	{{#if timer_started}}

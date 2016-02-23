@@ -191,7 +191,7 @@ if (Meteor.isClient) {
       "submit .submit-swish": function(event) {
           var name = event.target.swishName.value.trim();
           var number = event.target.swishNbr.value.trim();
-          if (name.length == 0) { 
+          if (name.length == 0) {
               Orders.update(Session.get('order'), { $unset: {swishName: ""}});
           } else {
               Orders.update(Session.get('order'), { $set: {swishName: name}});
@@ -204,6 +204,13 @@ if (Meteor.isClient) {
           return false;
       }
   });
+
+  Template.pizza.helpers({
+      classname: function (){
+        return timer_started() ? '' : 'editable';
+      }
+  });
+
 }
 
 if (Meteor.isServer) {
