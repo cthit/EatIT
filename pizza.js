@@ -216,7 +216,8 @@ if (Meteor.isServer) {
       return OrderItems.find();
     });
     Meteor.setInterval(function() {
-      var time = new Date() - 10800000; // 3 hours
+      var milliseconds = 172800 * 1000; // 48 hours in ms
+      var time = new Date() - milliseconds;
       Orders.remove({createdAt: { $lt: time }});
       OrderItems.remove({createdAt: { $lt: time }});
     }, 600000); // every 10th minute
