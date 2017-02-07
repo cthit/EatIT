@@ -61,7 +61,8 @@
 </body>
 <template name="pizza">
 	<li class="pizza-item">
-		{{length}} <span title="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
+		<span class="pizza-item-count">{{length}}</span>
+        <span title="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
 		{{#each this}}
 			<small title="Remove this order" data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
 		{{/each}}
