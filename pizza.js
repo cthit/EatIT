@@ -107,7 +107,7 @@ if (Meteor.isClient) {
   }
   function format_time(time) {
     var prefix = '';
-    if (time[1] < 0) {
+    if (time[0] < 0 || time[1] < 0) {
       prefix = '-';
     }
     time[0] = Math.abs(time[0]);
