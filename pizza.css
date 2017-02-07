@@ -231,9 +231,8 @@ form input {
 }
 
 .tooltip {
-	z-index: 1001;
+  z-index: 1001;
   pointer-events: none;
-  
   opacity: 0;
   background-color: rgba(0,0,0,.8);
   color: #fff;
