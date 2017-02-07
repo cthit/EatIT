@@ -24,6 +24,13 @@
       {{/each}}
     </ul>
 
+    {{#if has_items}}
+    <li class="total-item-count centered-body">
+        <span>Total:</span>
+        <span id="total-item-count" class="pizza-item-count">{{items_total_length}}</span>
+    </li>
+    {{/if}}
+
     {{#unless timer_started}}
     <div class="order-box container-part">
         <h3 class="text-extra-style">Place your order</h3>

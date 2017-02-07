@@ -56,6 +56,14 @@ if (Meteor.isClient) {
       });
       return _.sortBy(pizzas, function(pizza){ return -pizza.length; });
     },
+    items_total_length: function() {
+      var items = OrderItems.find({order: Session.get('order')}).fetch();
+      return items.length;
+    },
+    has_items: function() {
+      var items = OrderItems.find({order: Session.get('order')}).fetch();
+      return items.length > 0;
+    },
     error: function() {
       return Session.get('error');
     },
