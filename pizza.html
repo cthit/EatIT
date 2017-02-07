@@ -1,6 +1,6 @@
 <head>
   <link rel="icon" type="image/png" href="/img/favicon.png">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <title>EatIT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -58,13 +58,15 @@
     </script>
     {{/if}}
   </div>
+
+  {{ > tooltips }}
 </body>
 <template name="pizza">
 	<li class="pizza-item">
 		<span class="pizza-item-count">{{length}}</span>
-        <span title="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
+        <span data-tooltip="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
 		{{#each this}}
-			<small title="Remove this order" data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
+			<small data-tooltip="Remove this order" data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
 		{{/each}}
 	</li>
 </template>

@@ -229,3 +229,22 @@ form input {
 		transform: none;
 	}
 }
+
+.tooltip {
+	z-index: 1001;
+  pointer-events: none;
+  
+  opacity: 0;
+  background-color: rgba(0,0,0,.8);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 2px;
+}
+
+.tooltip.hide {
+  opacity: 0;
+}
+
+.tooltip.show {
+  opacity: 1;
+}
