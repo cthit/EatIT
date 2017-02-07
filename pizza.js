@@ -89,8 +89,10 @@ if (Meteor.isClient) {
       $('.new-pizza [name="pizza"]').val(name).next().focus();
     },
     "click .pizza-item small.deletable": function(event) {
-      var id = $(event.target).data('id');
-      OrderItems.remove({_id: id});
+      if (confirm("Are you sure?")) {
+        var id = $(event.target).data('id');
+        OrderItems.remove({_id: id});
+      }
     }
   });
   function time_left() {
