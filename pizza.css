@@ -98,6 +98,26 @@ h2 a:hover {
     width: 0;
 }
 
+.total-item-count {
+	font-size: 1.5rem;
+	text-align: center;
+	list-style-type: none;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.26);
+	margin: 20px 0px 20px 0px;
+	padding: 10px;
+	padding-right: 5px;
+	overflow: auto;
+	background-color: white;
+	width: 6em;
+	margin-right: auto;
+}
+
+.timer {
+	font-size: 3em;
+}
+
 .pizza-item .name.editable:hover span,
 .pizza-item small.editable:hover span {
     transform: scale(1);
@@ -281,4 +301,22 @@ form input {
 		-webkit-transform: none;
 		transform: none;
 	}
+}
+
+.tooltip {
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  background-color: rgba(0,0,0,.8);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 2px;
+}
+
+.tooltip.hide {
+  opacity: 0;
+}
+
+.tooltip.show {
+  opacity: 1;
 }

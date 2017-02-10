@@ -56,6 +56,10 @@ if (Meteor.isClient) {
       });
       return _.sortBy(pizzas, function(pizza){ return -pizza.length; });
     },
+    items_total_count: function() {
+      var items = OrderItems.find({order: Session.get('order')}).fetch();
+      return items.length;
+    },
     error: function() {
       return Session.get('error');
     },
@@ -89,8 +93,10 @@ if (Meteor.isClient) {
       $('.new-pizza [name="pizza"]').val(name).next().focus();
     },
     "click .pizza-item small.deletable": function(event) {
-      var id = $(event.target).data('id');
-      OrderItems.remove({_id: id});
+      if (confirm("Are you sure?")) {
+        var id = $(event.target).data('id');
+        OrderItems.remove({_id: id});
+      }
     }
   });
   function time_left() {

@@ -1,6 +1,6 @@
 <head>
   <link rel="icon" type="image/png" href="/img/favicon.png">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <title>EatIT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -31,6 +31,13 @@
               {{/each}}
             </ul>
         </div>
+    {{/if}}
+
+    {{#if items}}
+    <li class="total-item-count">
+        <span>Total:</span>
+        <span id="total-item-count" class="pizza-item-count">{{items_total_count}}</span>
+    </li>
     {{/if}}
 
     {{#unless timer_started}}
@@ -70,6 +77,8 @@
     </script>
     {{/if}}
   </div>
+
+  {{ > tooltips }}
 </body>
 <template name="pizza">
 	<li class="pizza-item">
