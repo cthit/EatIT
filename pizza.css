@@ -5,7 +5,7 @@ body,html{
 	margin: 0;
 	padding: 0;
 	overflow: auto;
-	background: #F1F1F1;
+	background: #F7F7F7;
 }
 
 .text-extra-style {
@@ -19,13 +19,12 @@ body,html{
 #header{
 	background-color: #44aedb;
 	text-align: center;
-	padding:30px;
-	box-shadow: 0 1px 10px black;
+	padding: 30px;
 }
 
 #header a {
 	color:white;
-	text-underline: none;
+	text-decoration: none;
 }
 
 #eatit-header-text {
@@ -37,8 +36,8 @@ h2 a:hover {
 }
 
 #share-link-container {
-	animation: bounceInLeft 1s;
-	-webkit-animation: bounceInLeft 1s;
+	text-align: center;
+    margin-top: 0;
 }
 
 .pizzas{
@@ -49,14 +48,16 @@ h2 a:hover {
 }
 
 .pizza-item {
-	border: 1px solid #ddd;
-	padding: 15px;
+	padding: 20px;
 	overflow: auto;
-	margin-top: 2px;
 	animation: rubberBand 1s;
 	-webkit-animation: rubberBand 1s;
 	background-color: white;
-	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.26);
+    border-top: 1px dashed #eee;
+}
+
+.pizza-item:first-child {
+    border-top: none;
 }
 
 .pizza-item-count {
@@ -70,22 +71,62 @@ h2 a:hover {
 	text-align: center;
 }
 
+.pizza-item > * {
+    vertical-align: middle;
+}
+
+.pizza-item .editable {
+    transition: 0.3s ease all;
+}
 .pizza-item .editable:hover {
-	text-decoration: underline;
 	cursor: pointer;
+    color: #00ad30;
 }
 
 .pizza-item small.editable:hover {
-	text-decoration: line-through;
-	cursor: pointer;
-	color: #ff6d6d;
+    text-decoration: none;
+    cursor: pointer;
+    color: #fff;
+    background: #db4444;
+}
+
+.pizza-item .name span,
+.pizza-item small span {
+    display: inline-block;
+    transform: scale(0);
+    transition: 0.3s all ease;
+    width: 0;
+}
+
+.total-item-count {
+	font-size: 1.5rem;
+	text-align: center;
+	list-style-type: none;
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.26);
+	margin: 20px 0px 20px 0px;
+	padding: 10px;
+	padding-right: 5px;
+	overflow: auto;
+	background-color: white;
+	width: 6em;
+	margin-right: auto;
 }
 
 .timer {
 	font-size: 3em;
 }
 
+.pizza-item .name.editable:hover span,
+.pizza-item small.editable:hover span {
+    transform: scale(1);
+    width: auto;
+}
 
+.timer {
+	font-size: 3em;
+}
 
 .content {
 	padding:2%;
@@ -101,36 +142,59 @@ h2 a:hover {
 	text-align: center;
 }
 
+.clear {
+    clear: both;
+}
+
 .container-part h3 {
+    color: #1b1b1b;
+    font-weight: normal;
+    font-size: 24px;
 	margin:0;
 }
 
 .container-part {
-	border:1px solid #ddd;
-	border-radius: 3px;
-	box-shadow: 0px 2px 6px 0px rgba(0,0,0,0.26);
+    box-shadow: 0 1px 4px rgba(0,0,0,.2);
+    border-radius: 3px;
+    background-color: #fff;
 	margin:20px 0 20px 0;
-	padding:20px;
-	overflow:auto;
+	overflow:hidden;
 	background-color: white;
+}
+
+.container-content {
+    padding: 20px;
+}
+
+.container-header {
+    padding: 12px 20px;
+    background: #44aedb;
+    color: #fff;
+    font-size: 20px;
 }
 
 button {
 	border: 1px solid #44aedb;
-	padding: 10px 20px;
 	font-size: 1.5rem;
 	background-color: #44aedb;
 	color: white;
 	clear:both;
 	float:right;
-	box-shadow: 2px 3px 4px 0 rgba(0,0,0,0.30);
-	border-radius: 2px;
+    padding: 8px 18px;
+    font-size: 18px;
+    border-radius: 4px;
 	outline: 0;
+    transition: all .15s ease;
+    box-shadow: 0 4px 6px rgba(50, 71, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+    font-weight: bold;
 }
 
 button:hover {
-	cursor: pointer;
-	opacity: 0.7;
+    cursor: pointer;
+    transform: translateY(-2px);
+    box-shadow: 0 7px 14px rgba(59, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    background-color: #3d90b4;
+    border-color: #3d90b4;
 }
 
 button:active {
@@ -149,6 +213,15 @@ form input {
 .submit-swish label {
 	display: block;
 	font-size: 2rem;
+}
+
+.pizza-item-user {
+    background: #eee;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 16px;
+    margin-left: 5px;
+    transition: 0.3s all ease;
 }
 
 /*
@@ -228,4 +301,22 @@ form input {
 		-webkit-transform: none;
 		transform: none;
 	}
+}
+
+.tooltip {
+  z-index: 1001;
+  pointer-events: none;
+  opacity: 0;
+  background-color: rgba(0,0,0,.8);
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 2px;
+}
+
+.tooltip.hide {
+  opacity: 0;
+}
+
+.tooltip.show {
+  opacity: 1;
 }

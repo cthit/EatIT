@@ -1,6 +1,6 @@
 <head>
   <link rel="icon" type="image/png" href="/img/favicon.png">
-    <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'>
   <title>EatIT</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -8,31 +8,50 @@
 <body>
   <div id="header">
     <header class="centered-body">
-      <h1 id="eatit-header-text"><a href="/">EatIT!</a></h1>
+      <h1 id="eatit-header-text"><a href="/">🍕 EatIT</a></h1>
     </header>
   </div>
+
+  {{#unless error}}
+  <div class="container-part" id="share-link-container">
+      <h2 class="text-extra-style">Share this link with your friends: <a class="text-extra-style" id="share-link" href="{{url}}">{{url}}</a></h2>
+  </div>
+   {{/unless}}
+
   <div class="content centered-body">
     {{#if error}}
       No session for this id, <a href="/">create new?</a>
     {{else}}
-    <div class="container-part" id="share-link-container">
-        <h2 class="text-extra-style">Share this link with your friends: <a class="text-extra-style" id="share-link" href="{{url}}">{{url}}</a></h2>
-    </div>
-    <ul class="pizzas">
-      {{#each items}}
-        {{> pizza}}
-      {{/each}}
-    </ul>
+    {{#if items}}
+        <div class="container-part">
+            <div class="container-header">Order</div>
+            <ul class="pizzas">
+              {{#each items}}
+                {{> pizza}}
+              {{/each}}
+            </ul>
+        </div>
+    {{/if}}
+
+    {{#if items}}
+    <li class="total-item-count">
+        <span>Total:</span>
+        <span id="total-item-count" class="pizza-item-count">{{items_total_count}}</span>
+    </li>
+    {{/if}}
 
     {{#unless timer_started}}
     <div class="order-box container-part">
-        <h3 class="text-extra-style">Place your order</h3>
-        <form class="new-pizza">
-            <input type="text" name="pizza" placeholder="Order" value="" id="order">
-            <input type="text" name="nick" placeholder="Nick" value="">
-            <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-            <button class="add-order-button">Add</button>
-        </form>
+        <div class="container-content">
+            <h3>🍽 Place your order</h3>
+            <form class="new-pizza">
+                <input type="text" name="pizza" placeholder="Order" value="" id="order">
+                <input type="text" name="nick" placeholder="Nick" value="">
+                <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
+                <button class="add-order-button">Add</button>
+                <div class="clear"></div>
+            </form>
+        </div>
 
     </div>
     {{/unless}}
@@ -58,50 +77,60 @@
     </script>
     {{/if}}
   </div>
+
+  {{ > tooltips }}
 </body>
 <template name="pizza">
 	<li class="pizza-item">
 		<span class="pizza-item-count">{{length}}</span>
-        <span title="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}}</span>
+        <span data-tooltip="Place same order" class="name {{classname}}" data-name="{{name}}">{{name}} <span>+</span></span>
 		{{#each this}}
-			<small title="Remove this order" data-id="{{_id}}" class="{{classname}}">{{nick}}</small>
+		    <small data-tooltip="Remove this order" data-id="{{_id}}" class="pizza-item-user {{classname}}">{{nick}} <span>&times;</span></small>
 		{{/each}}
 	</li>
 </template>
 <template name="timer">
 	{{#if timer_started}}
     <div class="container-part">
-        <h3 class="text-extra-style">Time until food's ready:</h3>
-        <div class="timer-box">
-              <span class="timer">{{display_time}}</span>
+        <div class="container-content">
+            <h3 class="text-extra-style">🕑 Time until food's ready:</h3>
+            <div class="timer-box">
+                  <span class="timer">{{display_time}}</span>
+            </div>
         </div>
     </div>
 	{{else}}
     <div class="timer-area container-part" id="count-down-timer">
-        <h3><label class="text-extra-style" id="timer-box-label">Enter time until delivery</label></h3>
-        <div class="timer-box">
-            <form class="start-timer">
-                <input type="integer" name="minutes" placeholder="Minutes" />
-                <button>Start</button>
-            </form>
+        <div class="container-content">
+            <h3><label id="timer-box-label">🕑 Enter time until delivery</label></h3>
+            <div class="timer-box">
+                <form class="start-timer">
+                    <input type="integer" name="minutes" placeholder="Minutes" />
+                    <button>Start</button>
+                    <div class="clear"></div>
+                </form>
+            </div>
         </div>
     </div>
 	{{/if}}
 </template>
 <template name="swish">
     <div class="timer-area container-part" id="swish-container">
-        <h3 class="text-extra-style">Swish to:</h3>
-        <div class="swish-box">
-            <form class="submit-swish">
-                {{#if has_number}}
-                    <label>{{name}}</label>
-                    <label>{{number}}</label>
-                {{else}}
-                    <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
-                    <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >
-                    <button>Submit</button>
-                {{/if}}
-            </form>
+        <div class="container-content">
+            <h3>💸 Swish to:</h3>
+            <div class="swish-box">
+                <form class="submit-swish">
+                    {{#if has_number}}
+                        <label>{{name}}</label>
+                        <label>{{number}}</label>
+                    {{else}}
+                        <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
+                        <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >
+                        <button>Submit</button>
+                        <div class="clear"></div>
+                    {{/if}}
+                </form>
+            </div>
         </div>
     </div>
 </template>
