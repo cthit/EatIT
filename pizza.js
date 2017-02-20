@@ -155,10 +155,12 @@ if (Meteor.isClient) {
   });
   Template.timer.events({
     "submit .start-timer": function(event) {
-      var mins = parseInt(event.target.minutes.value.trim());
-      var end_date = (new Date()).valueOf() + mins * 60000;
-      Orders.update(Session.get('order'), { $set: {timer_end: end_date}})
-      return false;
+      if (confirm("Are you sure?")) {
+        var mins = parseInt(event.target.minutes.value.trim());
+        var end_date = (new Date()).valueOf() + mins * 60000;
+        Orders.update(Session.get('order'), { $set: {timer_end: end_date}})
+        return false;
+      }
     }
   });
   Template.swish.helpers({
