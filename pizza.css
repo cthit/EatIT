@@ -37,7 +37,7 @@ h2 a:hover {
 
 #share-link-container {
 	text-align: center;
-    margin-top: 0;
+	margin-top: 0;
 	border-radius: 0;
 }
 
@@ -54,11 +54,11 @@ h2 a:hover {
 	animation: rubberBand 1s;
 	-webkit-animation: rubberBand 1s;
 	background-color: white;
-    border-top: 1px dashed #eee;
+	border-top: 1px dashed #eee;
 }
 
 .pizza-item:first-child {
-    border-top: none;
+	border-top: none;
 }
 
 .pizza-item-count {
@@ -73,34 +73,34 @@ h2 a:hover {
 }
 
 .pizza-item > * {
-    vertical-align: middle;
+	vertical-align: middle;
 }
 
 .pizza-item .editable {
-    transition: 0.3s ease all;
+	transition: 0.3s ease all;
 }
 .pizza-item .editable:hover {
 	cursor: pointer;
-    color: #00ad30;
+	color: #00ad30;
 }
 
 .pizza-item small.editable:hover {
-    text-decoration: none;
-    cursor: pointer;
-    color: #fff;
-    background: #db4444;
+	text-decoration: none;
+	cursor: pointer;
+	color: #fff;
+	background: #db4444;
 }
 
 .pizza-item .name span,
 .pizza-item small span {
-    display: inline-block;
-    transform: scale(0);
-    transition: 0.3s all ease;
-    width: 0;
+	display: inline-block;
+	transform: scale(0);
+	transition: 0.3s all ease;
+	width: 0;
 }
 
 #total-item-count {
-    border-top: 2px solid #eee;
+	border-top: 2px solid #eee;
 	font-size: 18px;
 }
 
@@ -110,8 +110,8 @@ h2 a:hover {
 
 .pizza-item .name.editable:hover span,
 .pizza-item small.editable:hover span {
-    transform: scale(1);
-    width: auto;
+	transform: scale(1);
+	width: auto;
 }
 
 .timer {
@@ -133,34 +133,34 @@ h2 a:hover {
 }
 
 .clear {
-    clear: both;
+	clear: both;
 }
 
 .container-part h3 {
-    color: #1b1b1b;
-    font-weight: normal;
-    font-size: 24px;
+	color: #1b1b1b;
+	font-weight: normal;
+	font-size: 24px;
 	margin:0;
 }
 
 .container-part {
-    box-shadow: 0 1px 4px rgba(0,0,0,.2);
-    border-radius: 3px;
-    background-color: #fff;
+	box-shadow: 0 1px 4px rgba(0,0,0,.2);
+	border-radius: 3px;
+	background-color: #fff;
 	margin:20px 0 20px 0;
 	overflow:hidden;
 	background-color: white;
 }
 
 .container-content {
-    padding: 20px;
+	padding: 20px;
 }
 
 .container-header {
-    padding: 12px 20px;
-    background: #44aedb;
-    color: #fff;
-    font-size: 20px;
+	padding: 12px 20px;
+	background: #44aedb;
+	color: #fff;
+	font-size: 20px;
 }
 
 button {
@@ -170,21 +170,21 @@ button {
 	color: white;
 	clear:both;
 	float:right;
-    padding: 8px 18px;
-    font-size: 18px;
-    border-radius: 4px;
+	padding: 8px 18px;
+	font-size: 18px;
+	border-radius: 4px;
 	outline: 0;
-    transition: all .15s ease;
-    box-shadow: 0 4px 6px rgba(50, 71, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
-    font-weight: bold;
+	transition: all .15s ease;
+	box-shadow: 0 4px 6px rgba(50, 71, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
+	font-weight: bold;
 }
 
 button:hover {
-    cursor: pointer;
-    transform: translateY(-2px);
-    box-shadow: 0 7px 14px rgba(59, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-    background-color: #3d90b4;
-    border-color: #3d90b4;
+	cursor: pointer;
+	transform: translateY(-2px);
+	box-shadow: 0 7px 14px rgba(59, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+	background-color: #3d90b4;
+	border-color: #3d90b4;
 }
 
 button:active {
@@ -206,16 +206,16 @@ form input {
 }
 
 .pizza-item-user {
-    background: #eee;
-    padding: 3px 10px;
-    border-radius: 50px;
-    font-size: 16px;
-    margin-left: 5px;
-    transition: 0.3s all ease;
+	background: #eee;
+	padding: 3px 10px;
+	border-radius: 50px;
+	font-size: 16px;
+	margin-left: 5px;
+	transition: 0.3s all ease;
 }
 
 /*
-	The keyframes for the rubber band effect.
+The keyframes for the rubber band effect.
 */
 
 @-webkit-keyframes rubberBand {
@@ -256,7 +256,7 @@ form input {
 }
 
 /*
-	Keyframes bounceInLeft
+Keyframes bounceInLeft
 */
 
 @keyframes bounceInLeft {
@@ -294,21 +294,21 @@ form input {
 }
 
 .tooltip {
-  z-index: 1001;
-  pointer-events: none;
-  opacity: 0;
-  background-color: rgba(0,0,0,.8);
-  color: #fff;
-  padding: 8px 10px;
-  border-radius: 2px;
+	z-index: 1001;
+	pointer-events: none;
+	opacity: 0;
+	background-color: rgba(0,0,0,.8);
+	color: #fff;
+	padding: 8px 10px;
+	border-radius: 2px;
 }
 
 .tooltip.hide {
-  opacity: 0;
+	opacity: 0;
 }
 
 .tooltip.show {
-  opacity: 1;
+	opacity: 1;
 }
 
 
