@@ -105,7 +105,7 @@ if (Meteor.isClient) {
         OrderItems.remove({_id: id});
       }
     },
-    "click #generate-share-link-qr": function(event) {
+    "click #toggle-share-link-qr": function(event) {
       $('#share-link-qr').toggle();
     }
   });

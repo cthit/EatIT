@@ -327,10 +327,10 @@ form input {
 	display: none;
 }
 
-#generate-share-link-qr:hover{
+#toggle-share-link-qr:hover{
 	cursor: pointer;
 	transform: translateY(-2px);
 }
-#generate-share-link-qr{
+#toggle-share-link-qr{
 	transition: all .15s ease;
 }
