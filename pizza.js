@@ -39,6 +39,13 @@ if (Meteor.isClient) {
       Session.set('order', order._id);
       Session.set('url', window.location.href);
     }
+
+    $('#share-link-qr').qrcode({
+      size: 150,
+      text: Session.get('url')
+    });
+
+
   });
   Session.set('url', window.location.href);
 
@@ -97,6 +104,9 @@ if (Meteor.isClient) {
         var id = $(event.target).data('id');
         OrderItems.remove({_id: id});
       }
+    },
+    "click #generate-share-link-qr": function(event) {
+      $('#share-link-qr').toggle();
     }
   });
   function time_left() {

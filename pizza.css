@@ -13,7 +13,7 @@ body,html{
 }
 
 * {
-	font-family: Roboto, sans-serif !important;
+	font-family: Roboto, sans-serif;
 }
 
 #header{
@@ -319,4 +319,18 @@ form input {
 
 .tooltip.show {
   opacity: 1;
+}
+
+#share-link-qr{
+	padding-bottom: 15px;
+	border: 0px;
+	display: none;
+}
+
+#generate-share-link-qr:hover{
+	cursor: pointer;
+	transform: translateY(-2px);
+}
+#generate-share-link-qr{
+	transition: all .15s ease;
 }
