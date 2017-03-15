@@ -126,7 +126,7 @@
                 <form class="submit-swish">
                     {{#if has_number}}
                         <label>{{name}}</label>
-                        <label>{{number}}</label>
+                        <label><a href="{{number_link}}">{{number}}</a></label>
                     {{else}}
                         <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
                         <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >

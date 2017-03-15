@@ -202,6 +202,18 @@ if (Meteor.isClient) {
               return order.swishNbr;
           }
       },
+      number_link: function() {
+          var order = Orders.findOne(Session.get('order'));
+          if (order) {
+              var jsonString = JSON.stringify({
+                version: 1,
+                payee: { value: order.swishNbr },
+                message: { editable: true, value: "EatIT#" + order.hash }
+              });
+
+              return encodeURI("swish://payment?data=" + jsonString)
+          }
+      },
 
       has_name: function() {
           var order = Orders.findOne(Session.get('order'));
