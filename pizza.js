@@ -208,7 +208,7 @@ if (Meteor.isClient) {
               var jsonString = JSON.stringify({
                 version: 1,
                 payee: { value: order.swishNbr },
-                message: { editable: true, value: "EatIT#" + order.hash }
+                message: { editable: true, value: "EatIT " + order.hash }
               });
 
               return encodeURI("swish://payment?data=" + jsonString)
