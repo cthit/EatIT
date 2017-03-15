@@ -163,7 +163,7 @@ h2 a:hover {
 	font-size: 20px;
 }
 
-button {
+.button {
 	border: 1px solid #44aedb;
 	font-size: 1.5rem;
 	background-color: #44aedb;
@@ -177,9 +177,10 @@ button {
 	transition: all .15s ease;
 	box-shadow: 0 4px 6px rgba(50, 71, 93, 0.11), 0 1px 3px rgba(0, 0, 0, 0.08);
 	font-weight: bold;
+	text-decoration: none;;
 }
 
-button:hover {
+.button:hover {
 	cursor: pointer;
 	transform: translateY(-2px);
 	box-shadow: 0 7px 14px rgba(59, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
@@ -187,7 +188,7 @@ button:hover {
 	border-color: #3d90b4;
 }
 
-button:active {
+.button:active {
 	box-shadow: none;
 }
 
@@ -323,6 +324,32 @@ Keyframes bounceInLeft
 }
 #toggle-share-link-qr{
 	transition: all .15s ease;
+}
+
+/* Swish button */
+#swish-button {
+	background-color: #fff;
+	color: #000;
+	border-color: #ccc;
+	display: block;
+	float: none;
+	margin-top: 12px;
+	text-align: center;
+}
+
+#swish-button img {
+	vertical-align: middle;
+	margin-right: 10px;
+}
+
+#swish-button:hover {
+	background-color: #44aedb;
+	border-color: #44aedb;
+	color: #fff;
+}
+
+#swish-button:hover img {
+	filter: brightness(100);
 }
 
 @media screen and (max-width: 768px) {
