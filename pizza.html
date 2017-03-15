@@ -52,7 +52,7 @@
                 <input type="text" name="pizza" placeholder="Order" value="" id="order">
                 <input type="text" name="nick" placeholder="Nick" value="">
                 <!-- <input type="text" name="comment" placeholder="Kommentar"> -->
-                <button class="add-order-button">Add</button>
+                <button class="button add-order-button">Add</button>
                 <div class="clear"></div>
             </form>
         </div>
@@ -110,7 +110,7 @@
             <div class="timer-box">
                 <form class="start-timer">
                     <input type="integer" name="minutes" placeholder="Minutes" />
-                    <button>Start</button>
+                    <button class="button">Start</button>
                     <div class="clear"></div>
                 </form>
             </div>
@@ -126,11 +126,13 @@
                 <form class="submit-swish">
                     {{#if has_number}}
                         <label>{{name}}</label>
-                        <label><a href="{{number_link}}">{{number}}</a></label>
+                        <label>{{number}}</label>
+                        <a href="{{number_link}}" class="button" id="swish-button"><img src="img/swish.png" alt="Swish" width="32"> Tap to pay with Swish</a>
+                        <p id="swish-notice">Only works on mobile devices with the Swish app installed</p>
                     {{else}}
                         <input type="text" name="swishName" placeholder="{{name_placeholder}}" >
                         <input type="text" name="swishNbr" placeholder="{{number_placeholder}}" >
-                        <button>Submit</button>
+                        <button class="button">Submit</button>
                         <div class="clear"></div>
                     {{/if}}
                 </form>
