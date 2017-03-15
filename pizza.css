@@ -352,6 +352,11 @@ Keyframes bounceInLeft
 	filter: brightness(100);
 }
 
+#swish-notice {
+	text-align: center;
+	opacity: 0.4;
+}
+
 @media screen and (max-width: 768px) {
 	#share-link-container {
 		font-size: 12px;
