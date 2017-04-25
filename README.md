@@ -13,3 +13,7 @@ A system for organizing food orders
 
 ### Software requirements
 * meteor
+
+### Setup
+Run the following commands:
+1. `meteor run`
