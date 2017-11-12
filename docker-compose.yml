@@ -1,9 +1,9 @@
 version: '2.2'
 services:
   eatit:
-    build:
-      context: .
-      dockerfile: dockerfiles/development/Dockerfile
+#    build:
+#      context: .
+#      dockerfile: dockerfiles/development/Dockerfile
     image: eatit:dev
     ports:
       - "3000:3000"
