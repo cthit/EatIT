@@ -3,11 +3,9 @@ services:
   eatit:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: dockerfiles/development/Dockerfile
     image: eatit:dev
     ports:
       - "3000:3000"
     volumes:
       - .:/app
-
-
