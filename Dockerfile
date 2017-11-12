@@ -53,5 +53,4 @@ ENV MAIL_URL smtp://user:password@mailhost:port
 
 # Provide default command and entrypoint
 WORKDIR /app/bundle
-ENTRYPOINT node
-CMD main.js
+CMD node main.js
