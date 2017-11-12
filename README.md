@@ -12,8 +12,9 @@ A system for organizing food orders
 ## Development
 
 ### Software requirements
-* meteor
+* docker
+* docker-compose
 
 ### Setup
-Run the following commands:
-1. `meteor run`
+Run the following command:
+1. `docker-compose up`
