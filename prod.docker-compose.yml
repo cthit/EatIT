@@ -4,7 +4,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: eatit:prod
+    image: eatit
     ports:
       - "80:8080"
     environment:
