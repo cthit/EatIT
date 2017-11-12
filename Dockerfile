@@ -33,8 +33,8 @@ RUN tar -zxf app.tar.gz && rm app.tar.gz
 
 ##########################
 #    PRODUCTION STAGE    #
-########################## alpine?
-FROM node:latest AS production
+##########################
+FROM node:9.1.0 AS production
 MAINTAINER digIT <digit@chalmers.it>
 
 # Copy files from the build stage
