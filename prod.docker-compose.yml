@@ -1,9 +1,9 @@
 version: '2.2'
 services:
   eatit:
-#    build:
-#      context: .
-#      dockerfile: dockerfiles/production/Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: eatit:prod
     ports:
       - "80:8080"
