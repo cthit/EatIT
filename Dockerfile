@@ -25,6 +25,7 @@ USER meteor:meteor
 #RUN meteor update --all-packages
 
 # Build and extract app
+RUN meteor npm install
 RUN meteor build /output
 WORKDIR /output
 RUN tar -zxf app.tar.gz && rm app.tar.gz
