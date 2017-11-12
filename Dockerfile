@@ -50,6 +50,8 @@ USER node:node
 # Install the application
 WORKDIR /app/bundle/programs/server
 RUN npm install
+
+# Setup environment
 ENV MONGO_URL mongodb://user:password@host:port/databasename
 ENV ROOT_URL https://example.com
 ENV MAIL_URL smtp://user:password@mailhost:port
