@@ -1,3 +1,4 @@
+# Dockerfile for EatIT in production
 FROM debian:jessie AS buildStage
 MAINTAINER digIT <digit@chalmers.it>
 
