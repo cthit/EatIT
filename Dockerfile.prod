@@ -23,7 +23,6 @@ RUN curl https://install.meteor.com/ | sh
 USER root:root
 RUN cp /home/meteor/.meteor/packages/meteor-tool/1.6.0/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
 USER meteor:meteor
-#RUN meteor update --all-packages
 
 # Build and extract app
 RUN meteor npm install
