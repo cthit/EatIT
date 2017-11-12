@@ -37,6 +37,9 @@ RUN tar -zxf app.tar.gz && rm app.tar.gz
 FROM node:9.1.0 AS production
 MAINTAINER digIT <digit@chalmers.it>
 
+# Build arguments
+ARG port=8080
+
 # Copy files from the build stage
 COPY --from=buildStage /output /app
 
@@ -50,6 +53,8 @@ RUN npm install
 ENV MONGO_URL mongodb://user:password@host:port/databasename
 ENV ROOT_URL https://example.com
 ENV MAIL_URL smtp://user:password@mailhost:port
+ENV PORT $port
+EXPOSE $port
 
 # Provide default command and entrypoint
 WORKDIR /app/bundle
