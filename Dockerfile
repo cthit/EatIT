@@ -14,7 +14,7 @@ curl
 # Copy Source files
 COPY . .
 
-# Change ownership and su unprevelegied user
+# Change ownership and su unprivileged user
 RUN chown -R meteor:meteor /app && chown -R meteor /output
 USER meteor:meteor
 
@@ -43,7 +43,7 @@ ARG port=8080
 # Copy files from the build stage
 COPY --from=buildStage /output /app
 
-# Setup and su as unprevelegied user
+# Setup and su as unprivileged user
 RUN chown -R node:node /app
 USER node:node
 
