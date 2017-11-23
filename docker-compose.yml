@@ -1,0 +1,11 @@
+version: '2.2'
+services:
+  eatit:
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    image: eatit:dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
