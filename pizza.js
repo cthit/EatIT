@@ -196,38 +196,6 @@ if (Meteor.isClient) {
     }
   });
 
-  Template.timer_test.created = function() {
-    this.handle = Meteor.setInterval(function() {
-      var time = time_left();
-      if (time[0] === 0 && time[1] === 0 || (time[1] < 0 && !window.playing)) {
-        if (player && player.getPlayerState() === YT.PlayerState.CUED) {
-          console.log('stop!');
-          document.body.className += ' animated';
-          window.playing = true;
-          player.seekTo(51);
-        }
-        // Meteor.clearInterval(this.handle);
-      }
-      Session.set('time_left', format_time(time));
-    }.bind(this), 500);
-  };
-  Template.timer_test.helpers({
-    display_time: function() {
-      return Session.get('time_left');
-    },
-    timer_started: timer_started
-  });
-  Template.timer_test.events({
-    "submit .start-timer": function(event) {
-      if (confirm("Are you sure?")) {
-        var mins = parseInt(event.target.minutes.value.trim());
-        var end_date = (new Date()).valueOf() + mins * 60000;
-        Orders.update(Session.get('order'), { $set: {timer_end: end_date}})
-        return false;
-      }
-    }
-  });
-
   Template.swish.helpers({
       name_placeholder: "Name (optional)",
       name: function() {

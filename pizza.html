@@ -119,31 +119,6 @@
     </div>
 	{{/if}}
 </template>
-<template name="timer_test">
-	{{#if timer_started}}
-    <div class="container-part">
-        <div class="container-content">
-            <h3 class="text-extra-style">🕑 Time until food's ordered:</h3>
-            <div class="timer-box">
-                  <span class="timer">{{display_time}}</span>
-            </div>
-        </div>
-    </div>
-	{{else}}
-    <div class="timer-area container-part" id="count-down-timer">
-        <div class="container-content">
-            <h3><label id="timer-box-label">🕑 Enter time until ordering</label></h3>
-            <div class="timer-box">
-                <form class="start-timer">
-                    <input type="integer" name="minutes" placeholder="Minutes" />
-                    <button class="button">Start</button>
-                    <div class="clear"></div>
-                </form>
-            </div>
-        </div>
-    </div>
-	{{/if}}
-</template>
 <template name="swish">
     <div class="timer-area container-part" id="swish-container">
         <div class="container-content">
