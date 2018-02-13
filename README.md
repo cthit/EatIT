@@ -9,11 +9,34 @@ A system for organizing food orders
 ### Physical requirements
 * Phone
 
+## Production
+Use the automated [docker image](https://hub.docker.com/r/cthit/eatit/)
+
+### Example compose file
+```yml
+version: '2.2'
+services:
+  eatit:
+    image: eatit
+    ports:
+      - "80:8080"
+    environment:
+      ROOT_URL: https://example.org
+      MONGO_URL: mongodb://db:27017
+  db:
+    image: mongo
+```
+
 ## Development
 
 ### Software requirements
-* meteor
+* docker
+* docker-compose
 
 ### Setup
-Run the following commands:
-1. `meteor run`
+Run the following command:
+1. `docker-compose up`
+
+### Local production environment
+You can compile and build the production image with your local codebase using:
+`docker-compose -f prod.docker-compose up --build`

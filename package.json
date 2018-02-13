@@ -1,5 +1,5 @@
 {
-  "name": "EatIT-react",
+  "name": "eatit",
   "private": true,
   "scripts": {
     "start": "meteor run"
