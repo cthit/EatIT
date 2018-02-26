@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { OrderItems } from "./api/order_items";
 
+const MAX_LENGTH_PIZZA = 100;
+const MAX_LENGTH_NICK = 50;
+
 export default class OrderBox extends Component {
   onSubmit = event => {
     event.preventDefault();
@@ -25,11 +28,11 @@ export default class OrderBox extends Component {
   };
 
   setPizzaValue = event => {
-    this.props.setPizza(event.target.value);
+    this.props.setPizza(event.target.value.substr(0, MAX_LENGTH_PIZZA));
   };
 
   setNickValue = event => {
-    this.props.setNick(event.target.value);
+    this.props.setNick(event.target.value.substr(0, MAX_LENGTH_NICK));
   };
 
   render() {
