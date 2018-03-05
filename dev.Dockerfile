@@ -2,6 +2,8 @@
 FROM debian:jessie
 MAINTAINER digIT <digit@chalmers.it>
 
+ENV METEOR_VERSION 1.6.1
+
 # Setup unprivileged user
 RUN groupadd -r meteor && useradd -m -g meteor meteor
 
@@ -15,9 +17,9 @@ RUN mkdir /app && chown -R meteor:meteor /app
 USER meteor:meteor
 
 # Install meteor
-RUN curl https://install.meteor.com/ | sh
+RUN curl https://install.meteor.com/?release=$METEOR_VERSION | sh
 USER root:root
-RUN cp /home/meteor/.meteor/packages/meteor-tool/1.6.0/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
+RUN cp /home/meteor/.meteor/packages/meteor-tool/$METEOR_VERSION/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
 
 # Setup locales
 RUN cat /usr/share/i18n/SUPPORTED | grep en_US >> /etc/locale.gen
