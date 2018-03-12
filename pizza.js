@@ -1,5 +1,6 @@
 OrderItems = new Mongo.Collection("order_items");
 Orders = new Mongo.Collection("orders");
+var timeToOrder = false;
 
 function randomHash() {
   var hex = parseInt(Math.random() * 0xfff).toString(16);
@@ -100,10 +101,12 @@ if (Meteor.isClient) {
       $('.new-pizza [name="pizza"]').val(name).next().focus();
     },
     "click .pizza-item small.deletable": function(event) {
-      if (confirm("Are you sure?")) {
-        var id = $(event.target).data('id');
-        OrderItems.remove({_id: id});
-      }
+      if (timeToOrder === false) {
+         if (confirm("Are you sure?")) {
+           var id = $(event.target).data('id');
+           OrderItems.remove({_id: id});
+         }
+       }
     },
     "click #toggle-share-link-qr": function(event) {
       $('#share-link-qr').toggle();
@@ -139,6 +142,7 @@ if (Meteor.isClient) {
     var prefix = '';
     if (time[0] < 0 || time[1] < 0) {
       prefix = '-';
+      timeToOrder = true;
     }
     time[0] = Math.abs(time[0]);
     time[1] = Math.abs(time[1]);
@@ -153,7 +157,11 @@ if (Meteor.isClient) {
   }
   Template.pizza.helpers({
     classname: function() {
-      return timer_started() ? '' : 'deletable editable';
+	if(timeToOrder === false) {
+      		return 'deletable editable';
+	}else {
+		return null;
+	}
     }
   });
   Template.timer.created = function() {
@@ -187,6 +195,7 @@ if (Meteor.isClient) {
       }
     }
   });
+
   Template.swish.helpers({
       name_placeholder: "Name (optional)",
       name: function() {
