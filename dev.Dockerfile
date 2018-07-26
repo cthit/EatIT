@@ -9,7 +9,7 @@ RUN groupadd -r meteor && useradd -m -g meteor meteor
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
-curl locales grep
+    curl locales grep git
 
 
 # Change ownership and su unprivileged user

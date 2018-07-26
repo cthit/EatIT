@@ -2,14 +2,16 @@
 FROM debian:jessie AS buildStage
 MAINTAINER digIT <digit@chalmers.it>
 
+ENV METEOR_VERSION 1.6.1
+
 # Setup directories and user
 RUN mkdir /app && mkdir /output && \
-groupadd -r meteor && useradd -m -g meteor meteor
+    groupadd -r meteor && useradd -m -g meteor meteor
 WORKDIR /app
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
-curl
+    curl
 
 # Copy Source files
 COPY . .
@@ -19,9 +21,9 @@ RUN chown -R meteor:meteor /app && chown -R meteor /output
 USER meteor:meteor
 
 # Install meteor
-RUN curl https://install.meteor.com/ | sh
+RUN curl https://install.meteor.com/?release=$METEOR_VERSION | sh
 USER root:root
-RUN cp /home/meteor/.meteor/packages/meteor-tool/1.6.0/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
+RUN cp /home/meteor/.meteor/packages/meteor-tool/$METEOR_VERSION/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
 USER meteor:meteor
 
 # Build and extract app
