@@ -11,7 +11,7 @@ WORKDIR /app
 
 # Install prerequisites
 RUN apt-get update && apt-get install -y \
-    curl
+    curl git
 
 # Copy Source files
 COPY . .
