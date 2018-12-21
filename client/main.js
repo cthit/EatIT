@@ -2,7 +2,7 @@ import React from "react";
 import { Meteor } from "meteor/meteor";
 import { render } from "react-dom";
 
-import App from "../imports/App.js";
+import App from "../imports/app/App.jsx";
 import { Orders } from "../imports/api/orders";
 
 function randomHash() {
