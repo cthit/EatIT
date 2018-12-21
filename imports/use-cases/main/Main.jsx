@@ -8,6 +8,12 @@ import YouTube from "react-youtube";
 import { Orders } from "../../api/orders";
 import { withTracker } from "meteor/react-meteor-data";
 
+import {
+    DigitButton,
+    DigitHeader,
+    DigitLayout
+} from "@cthit/react-digit-components";
+
 class Main extends Component {
     state = {
         pizza: "",
@@ -56,65 +62,63 @@ class Main extends Component {
         const error = !order;
 
         return (
-            <React.Fragment>
-                <div id="header">
-                    <header className="centered-body">
-                        <h1 id="eatit-header-text">
-                            <a href="/">🍕 EatIT</a>
-                        </h1>
-                    </header>
-                </div>
-                {!error && <Share url={window.location.href} />}
-                <div className="content centered-body">
-                    {error ? (
-                        <div className="container-part">
-                            <div className="container-content">
-                                No session for this id,{" "}
-                                <a href="/">create new?</a>
-                            </div>
-                        </div>
-                    ) : (
-                        <React.Fragment>
-                            <div className="container-part">
-                                <Pizzas
-                                    timerStarted={timerStarted}
-                                    onClickPizza={this.onClickPizza}
-                                    orderId={order._id}
-                                />
-                            </div>
-                            <div className="order-box container-part">
-                                {!timerStarted && (
-                                    <OrderBox
-                                        setNick={this.setNick}
-                                        setPizza={this.setPizza}
-                                        pizza={pizza}
-                                        nick={nick}
-                                        inputRef={nick =>
-                                            (this.nickInput = nick)
-                                        }
-                                        orderId={order._id}
+            <DigitHeader
+                title="EatIT"
+                renderMain={() => (
+                    <DigitLayout.Column>
+                        {!error && <Share url={window.location.href} />}
+                        <div className="content centered-body">
+                            {error ? (
+                                <div className="container-part">
+                                    <div className="container-content">
+                                        No session for this id,{" "}
+                                        <a href="/">create new?</a>
+                                    </div>
+                                </div>
+                            ) : (
+                                <React.Fragment>
+                                    <div className="container-part">
+                                        <Pizzas
+                                            timerStarted={timerStarted}
+                                            onClickPizza={this.onClickPizza}
+                                            orderId={order._id}
+                                        />
+                                    </div>
+                                    <div className="order-box container-part">
+                                        {!timerStarted && (
+                                            <OrderBox
+                                                setNick={this.setNick}
+                                                setPizza={this.setPizza}
+                                                pizza={pizza}
+                                                nick={nick}
+                                                inputRef={nick =>
+                                                    (this.nickInput = nick)
+                                                }
+                                                orderId={order._id}
+                                            />
+                                        )}
+                                    </div>
+                                    <Timer
+                                        onExpiry={this.onTimerExpired}
+                                        setTimer={this.setTimer}
+                                        timeEnd={order.timer_end}
+                                        timerStarted={timerStarted}
                                     />
-                                )}
-                            </div>
-                            <Timer
-                                onExpiry={this.onTimerExpired}
-                                setTimer={this.setTimer}
-                                timeEnd={order.timer_end}
-                                timerStarted={timerStarted}
-                            />
-                            <Swish
-                                order={order}
-                                submitSwishInfo={this.setSwishInfo}
-                            />
-                        </React.Fragment>
-                    )}
-                </div>
-                <YouTube
-                    className="youtubevideo"
-                    videoId="ZcJjMnHoIBI"
-                    onReady={this.onPlayerReady}
-                />
-            </React.Fragment>
+                                    <Swish
+                                        order={order}
+                                        submitSwishInfo={this.setSwishInfo}
+                                    />
+                                </React.Fragment>
+                            )}
+                        </div>
+                        <YouTube
+                            className="youtubevideo"
+                            videoId="ZcJjMnHoIBI"
+                            onReady={this.onPlayerReady}
+                        />
+                    </DigitLayout.Column>
+                )}
+            />
         );
     }
 }
