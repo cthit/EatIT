@@ -65,7 +65,7 @@ class Main extends Component {
             <DigitHeader
                 title="EatIT"
                 renderMain={() => (
-                    <DigitLayout.Column>
+                    <DigitLayout.Column centerHorizontal>
                         {!error && <Share url={window.location.href} />}
                         <div className="content centered-body">
                             {error ? (

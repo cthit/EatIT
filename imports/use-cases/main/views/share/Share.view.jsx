@@ -1,12 +1,25 @@
 import React, { Component } from "react";
+import styled from "styled-components";
 import QRCode from "qrcode.react";
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import faQrcode from "@fortawesome/fontawesome-free-solid/faQrcode";
+
+import {
+    DigitLayout,
+    DigitText,
+    DigitDesign,
+    DigitTooltip,
+    DigitButton
+} from "@cthit/react-digit-components";
+
+const NoStyleLink = styled.a`
+    text-decoration: None;
+`;
 
 export default class Share extends Component {
     state = { showQr: false };
 
     onClickCopyLink = event => {
+        const { openToast } = this.props;
+
         event.preventDefault();
         // Create an auxiliary hidden input
         const aux = document.createElement("input");
@@ -20,6 +33,11 @@ export default class Share extends Component {
         document.execCommand("copy");
         // Remove the input from the body
         document.body.removeChild(aux);
+
+        openToast({
+            text: "Link copied!",
+            duration: 3000
+        });
     };
 
     render() {
@@ -27,46 +45,61 @@ export default class Share extends Component {
         const { showQr } = this.state;
 
         return (
-            <div className="container-part" id="share-link-container">
-                <h2 className="text-extra-style">
-                    Share this link with your friends:{" "}
-                    <a
-                        className="text-extra-style"
-                        id="share-link"
-                        onClick={this.onClickCopyLink}
-                        data-tooltip="Copy link to clipboard"
-                        href={url}
-                    >
-                        {url}
-                    </a>{" "}
-                    <span
-                        className="toggle-share-link-qr"
-                        onClick={() =>
-                            this.setState(({ showQr }) => ({ showQr: !showQr }))
-                        }
-                    >
-                        <FontAwesomeIcon icon={faQrcode} />
-                    </span>
-                </h2>
-                <h2 className="text-extra-style">
-                    Don't know what you want yet?{" "}
-                    <a
-                        className="text-extra-style"
-                        id="mat-link"
-                        data-tooltip="Mat vid campus Johanneberg"
-                        href="https://mat.chalmers.it"
-                        target="_blank"
-                    >
-                        mat.chalmers.it
-                    </a>
-                </h2>
-                <div
-                    className="center-qr"
-                    style={{ display: showQr ? "block" : "none" }}
-                >
-                    <QRCode value={url} />
-                </div>
-            </div>
+            <>
+                <DigitLayout.Spacing />
+                <DigitDesign.Card maxWidth="800px">
+                    <DigitDesign.CardBody>
+                        <DigitLayout.Column
+                            center
+                            margin={"2px"}
+                            padding={"2px"}
+                        >
+                            <DigitLayout.Row>
+                                <DigitText.Title text="Don't know what you want yet? " />
+                                <DigitLayout.Spacing />
+                                <DigitTooltip text="Mat vid campus Johanneberg">
+                                    <NoStyleLink
+                                        href="https://mat.chalmers.it"
+                                        target="_blank"
+                                    >
+                                        <DigitText.Title text="mat.chalmers.it" />
+                                    </NoStyleLink>
+                                </DigitTooltip>
+                            </DigitLayout.Row>
+                            <DigitLayout.Spacing />
+                            <DigitLayout.Row>
+                                <DigitText.Title
+                                    text={"Share this link with your friends: "}
+                                />
+                                <DigitLayout.Spacing />
+                                <DigitTooltip text="Click to copy link to clipboard ">
+                                    <NoStyleLink
+                                        onClick={this.onClickCopyLink}
+                                        href={url}
+                                    >
+                                        <DigitText.Title text={url} />
+                                    </NoStyleLink>
+                                </DigitTooltip>
+                            </DigitLayout.Row>
+                            <DigitLayout.Spacing />
+                            <DigitButton
+                                outlined
+                                text={showQr ? "Hide QR code" : "Show QR code"}
+                                onClick={() =>
+                                    this.setState(({ showQr }) => ({
+                                        showQr: !showQr
+                                    }))
+                                }
+                            />
+                            <DigitLayout.Row>
+                                <DigitLayout.Hide hidden={!showQr}>
+                                    <QRCode value={url} />
+                                </DigitLayout.Hide>
+                            </DigitLayout.Row>
+                        </DigitLayout.Column>
+                    </DigitDesign.CardBody>
+                </DigitDesign.Card>
+            </>
         );
     }
 }
