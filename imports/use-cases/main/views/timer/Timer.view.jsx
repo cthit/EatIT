@@ -1,71 +1,75 @@
-import React, { Component } from "react";
-
+import React from "react";
 import CountDownView from "../count-down";
+import * as yup from "yup";
+import {
+    DigitEditData,
+    DigitTextField,
+    DigitDesign
+} from "@cthit/react-digit-components";
 
-export default class Timer extends Component {
-    state = { value: "" };
+const Timer = ({
+    timerStarted,
+    timeEnd,
+    onExpiry,
+    openToast,
+    openDialog,
+    setTimer
+}) => {
+    if (timerStarted) {
+        return (
+            <DigitDesign.Card>
+                <DigitDesign.CardTitle text={"Time until food's ready"} />
+                <DigitDesign.CardBody>
+                    <CountDownView timeEnd={timeEnd} />
+                </DigitDesign.CardBody>
+            </DigitDesign.Card>
+        );
+    } else {
+        return (
+            <DigitEditData
+                onSubmit={(values, actions) => {
+                    const minutesFromNow = parseInt(values.minutes, 10);
 
-    onSubmit = event => {
-        event.preventDefault();
-
-        const minutesFromNow = parseInt(this.state.value.trim(), 10);
-
-        if (!minutesFromNow) {
-            return;
-        } else if (confirm("Are you sure?")) {
-            const timeEnd = new Date().valueOf() + minutesFromNow * 60000;
-            this.props.setTimer(timeEnd);
-        }
-    };
-
-    render() {
-        const { timerStarted, timeEnd, onExpiry } = this.props;
-        const { value } = this.state;
-
-        if (timerStarted) {
-            return (
-                <div className="container-part">
-                    <div className="container-content">
-                        <h3 className="text-extra-style">
-                            🕑 Time until food's ready:
-                        </h3>
-                        <CountDownView timeEnd={timeEnd} onExpiry={onExpiry} />
-                    </div>
-                </div>
-            );
-        } else {
-            return (
-                <div
-                    className="timer-area container-part"
-                    id="count-down-timer"
-                >
-                    <div className="container-content">
-                        <h3>
-                            <label id="timer-box-label">
-                                🕑 Enter time until delivery
-                            </label>
-                        </h3>
-                        <div className="timer-box">
-                            <form
-                                className="start-timer"
-                                onSubmit={this.onSubmit}
-                            >
-                                <input
-                                    type="integer"
-                                    name="minutes"
-                                    placeholder="Minutes"
-                                    onInput={e =>
-                                        this.setState({ value: e.target.value })
-                                    }
-                                    value={value}
-                                />
-                                <button className="button">Start</button>
-                                <div className="clear" />
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            );
-        }
+                    openDialog({
+                        title: "Are you sure? ",
+                        description: "You cannot reverse this step.",
+                        cancelButtonText: "No",
+                        confirmButtonText: "Yes",
+                        onConfirm: () => {
+                            const timeEnd =
+                                new Date().valueOf() + minutesFromNow * 60000;
+                            setTimer(timeEnd);
+                            openToast({
+                                text: "Timer has been started",
+                                duration: 3000
+                            });
+                        }
+                    });
+                    actions.setSubmitting(false);
+                }}
+                initialValues={{}}
+                validationSchema={yup.object().shape({
+                    minutes: yup
+                        .number()
+                        .moreThan(0, "Must be a positive number")
+                        .required("This field is required to start a timer")
+                })}
+                titleText="Enter time until delivery"
+                submitText="Set timer"
+                keysOrder={["minutes"]}
+                keysComponentData={{
+                    minutes: {
+                        component: DigitTextField,
+                        componentProps: {
+                            outlined: true,
+                            upperLabel: "Minutes",
+                            numbersOnly: true
+                        }
+                    }
+                }}
+            />
+        );
     }
-}
+};
+
+export default Timer;

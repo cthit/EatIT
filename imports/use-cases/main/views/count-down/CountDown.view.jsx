@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 
+import { DigitText } from "@cthit/react-digit-components";
+
 export default class CountDownView extends Component {
     state = {
         timeLeft: null
@@ -44,10 +46,6 @@ export default class CountDownView extends Component {
 
     render() {
         const { timeLeft } = this.state;
-        return (
-            <div className="timer-box">
-                <span className="timer">{timeLeft}</span>
-            </div>
-        );
+        return <DigitText.Heading3 text={timeLeft} />;
     }
 }
