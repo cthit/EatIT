@@ -15,14 +15,6 @@ import {
 } from "@cthit/react-digit-components";
 
 class Main extends Component {
-    state = {
-        pizza: "",
-        nick: ""
-    };
-
-    setPizza = pizza => this.setState({ pizza });
-    setNick = nick => this.setState({ nick });
-
     onClickPizza = pizza => {
         this.setPizza(pizza);
         this.nickInput.focus();
@@ -55,7 +47,6 @@ class Main extends Component {
 
     render() {
         const { orders, order } = this.props;
-        const { pizza, nick } = this.state;
 
         const timerStarted = Boolean(order && order.timer_end);
 
@@ -71,12 +62,12 @@ class Main extends Component {
                             {error ? (
                                 <div className="container-part">
                                     <div className="container-content">
-                                        No session for this id,{" "}
+                                        No session for this id,
                                         <a href="/">create new?</a>
                                     </div>
                                 </div>
                             ) : (
-                                <React.Fragment>
+                                <>
                                     <div className="container-part">
                                         <Pizzas
                                             timerStarted={timerStarted}
@@ -87,10 +78,6 @@ class Main extends Component {
                                     <div className="order-box container-part">
                                         {!timerStarted && (
                                             <OrderBox
-                                                setNick={this.setNick}
-                                                setPizza={this.setPizza}
-                                                pizza={pizza}
-                                                nick={nick}
                                                 inputRef={nick =>
                                                     (this.nickInput = nick)
                                                 }
@@ -108,7 +95,7 @@ class Main extends Component {
                                         order={order}
                                         submitSwishInfo={this.setSwishInfo}
                                     />
-                                </React.Fragment>
+                                </>
                             )}
                         </div>
                         <YouTube

@@ -51,8 +51,10 @@ class Pizzas extends Component {
         const { showUndoRemove } = this.state;
 
         const ordersByPizza = groupBy(orderItems, "pizza");
+
+        console.log(this.props.orderItems);
         return (
-            <React.Fragment>
+            <>
                 {(orderItems.length > 0 || showUndoRemove) && (
                     <div className="container-header">Order</div>
                 )}
@@ -82,7 +84,7 @@ class Pizzas extends Component {
                         </li>
                     </ul>
                 )}
-            </React.Fragment>
+            </>
         );
     }
 }
