@@ -8,11 +8,7 @@ import YouTube from "react-youtube";
 import { Orders } from "../../api/orders";
 import { withTracker } from "meteor/react-meteor-data";
 
-import {
-    DigitButton,
-    DigitHeader,
-    DigitLayout
-} from "@cthit/react-digit-components";
+import { DigitButton, DigitLayout } from "@cthit/react-digit-components";
 
 class Main extends Component {
     onClickPizza = pizza => {
@@ -53,59 +49,54 @@ class Main extends Component {
         const error = !order;
 
         return (
-            <DigitHeader
-                title="EatIT"
-                renderMain={() => (
-                    <DigitLayout.Column centerHorizontal>
-                        {!error && <Share url={window.location.href} />}
-                        <div className="content centered-body">
-                            {error ? (
-                                <div className="container-part">
-                                    <div className="container-content">
-                                        No session for this id,
-                                        <a href="/">create new?</a>
-                                    </div>
-                                </div>
-                            ) : (
-                                <>
-                                    <div className="container-part">
-                                        <Pizzas
-                                            timerStarted={timerStarted}
-                                            onClickPizza={this.onClickPizza}
-                                            orderId={order._id}
-                                        />
-                                    </div>
-                                    <div className="order-box container-part">
-                                        {!timerStarted && (
-                                            <OrderBox
-                                                inputRef={nick =>
-                                                    (this.nickInput = nick)
-                                                }
-                                                orderId={order._id}
-                                            />
-                                        )}
-                                    </div>
-                                    <Timer
-                                        onExpiry={this.onTimerExpired}
-                                        setTimer={this.setTimer}
-                                        timeEnd={order.timer_end}
-                                        timerStarted={timerStarted}
-                                    />
-                                    <Swish
-                                        order={order}
-                                        submitSwishInfo={this.setSwishInfo}
-                                    />
-                                </>
-                            )}
+            <DigitLayout.Column centerHorizontal>
+                {!error && <Share url={window.location.href} />}
+                <div className="content centered-body">
+                    {error ? (
+                        <div className="container-part">
+                            <div className="container-content">
+                                No session for this id,
+                                <a href="/">create new?</a>
+                            </div>
                         </div>
-                        <YouTube
-                            className="youtubevideo"
-                            videoId="ZcJjMnHoIBI"
-                            onReady={this.onPlayerReady}
-                        />
-                    </DigitLayout.Column>
-                )}
-            />
+                    ) : (
+                        <>
+                            <div className="container-part">
+                                <Pizzas
+                                    timerStarted={timerStarted}
+                                    onClickPizza={this.onClickPizza}
+                                    orderId={order._id}
+                                />
+                            </div>
+                            <div className="order-box container-part">
+                                {!timerStarted && (
+                                    <OrderBox
+                                        inputRef={nick =>
+                                            (this.nickInput = nick)
+                                        }
+                                        orderId={order._id}
+                                    />
+                                )}
+                            </div>
+                            <Timer
+                                onExpiry={this.onTimerExpired}
+                                setTimer={this.setTimer}
+                                timeEnd={order.timer_end}
+                                timerStarted={timerStarted}
+                            />
+                            <Swish
+                                order={order}
+                                submitSwishInfo={this.setSwishInfo}
+                            />
+                        </>
+                    )}
+                </div>
+                <YouTube
+                    className="youtubevideo"
+                    videoId="ZcJjMnHoIBI"
+                    onReady={this.onPlayerReady}
+                />
+            </DigitLayout.Column>
         );
     }
 }

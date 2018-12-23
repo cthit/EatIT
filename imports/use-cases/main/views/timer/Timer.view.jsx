@@ -33,7 +33,7 @@ const Timer = ({
                     openDialog({
                         title: "Are you sure? ",
                         description: "You cannot reverse this step.",
-                        cancelButtonText: "No",
+                        cancelButtonText: "Cancel",
                         confirmButtonText: "Yes",
                         onConfirm: () => {
                             const timeEnd =

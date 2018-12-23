@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import Main from "../use-cases/main";
 
-import { DigitToast, DigitDialog } from "@cthit/react-digit-components";
+import {
+    DigitToast,
+    DigitDialog,
+    DigitText,
+    DigitHeader,
+    DigitLayout
+} from "@cthit/react-digit-components";
 
 class App extends Component {
     render() {
@@ -9,7 +15,20 @@ class App extends Component {
             <>
                 <DigitDialog />
                 <DigitToast />
-                <Main hash={this.props.hash} />
+                <DigitHeader
+                    title="EatIT"
+                    renderMain={() => <Main hash={this.props.hash} />}
+                    renderHeader={() => (
+                        <DigitLayout.Column centerVertical margin={"16px"}>
+                            <DigitText.Text
+                                white
+                                text={
+                                    "All data is deleted after 24 hours automatically"
+                                }
+                            />
+                        </DigitLayout.Column>
+                    )}
+                />
             </>
         );
     }

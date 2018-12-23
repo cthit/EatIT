@@ -1,24 +1,25 @@
 import React, { Component } from "react";
 
+import {
+    DigitEditData,
+    DigitTextField,
+    DigitLayout,
+    DigitText,
+    DigitDesign,
+    DigitButton
+} from "@cthit/react-digit-components";
+
+import * as yup from "yup";
+
 import QRCode from "qrcode.react";
 
 export default class Swish extends Component {
-    state = {
-        swishNbr: "",
-        swishName: "",
-        showSwish: false
-    };
-
     openSwish = () => {
         const { swishNbr, hash } = this.props.order;
         const jsonString = JSON.stringify({
             version: 1,
             payee: { value: swishNbr },
             message: { editable: true, value: "EatIT " + hash }
-        });
-
-        this.setState({
-            showSwish: true
         });
 
         window.location = encodeURI("swish://payment?data=" + jsonString);
@@ -50,31 +51,63 @@ export default class Swish extends Component {
     };
 
     renderSwishForm = () => {
-        const { swishName, swishNbr } = this.state;
+        const { openToast, openDialog } = this.props;
 
         return (
-            <form className="submit-swish" onSubmit={this.onSubmit}>
-                <input
-                    type="text"
-                    name="swishName"
-                    onInput={e => this.setState({ swishName: e.target.value })}
-                    value={swishName}
-                    placeholder="Name (optional)"
-                />
-                <input
-                    type="text"
-                    name="swishNbr"
-                    onInput={e =>
-                        this.setState({
-                            swishNbr: e.target.value.replace(/[^\d]/g, "")
-                        })
+            <DigitEditData
+                onSubmit={(values, actions) => {
+                    openDialog({
+                        title: "Are you sure?",
+                        description: "Settings swish options cannot be undone.",
+                        confirmButtonText: "Yes",
+                        cancelButtonText: "Cancel",
+                        onConfirm: () => {
+                            this.setState({
+                                showSwish: true
+                            });
+                            this.props.submitSwishInfo(values);
+                            openToast({
+                                text: "Swish options has been set",
+                                duration: 3000
+                            });
+                        }
+                    });
+
+                    actions.setSubmitting(false);
+                }}
+                initialValues={{ swishName: null, swishNbr: null }}
+                validationSchema={yup.object().shape({
+                    swishName: yup
+                        .string()
+                        .max(50, "Please enter a valid name")
+                        .required(
+                            "You have to enter a name so that people can confirm that they typed the phone number correctly."
+                        ),
+                    swishNbr: yup
+                        .string()
+                        .max(15, "Please enter a phone number")
+                        .required()
+                })}
+                titleText="Swish"
+                submitText="Submit"
+                keysOrder={["swishName", "swishNbr"]}
+                keysComponentData={{
+                    swishName: {
+                        component: DigitTextField,
+                        componentProps: {
+                            upperLabel: "Swish",
+                            outlined: true
+                        }
+                    },
+                    swishNbr: {
+                        component: DigitTextField,
+                        componentProps: {
+                            upperLabel: "Phone number",
+                            outlined: true
+                        }
                     }
-                    value={swishNbr}
-                    placeholder="Swish number"
-                />
-                <button className="button">Submit</button>
-                <div className="clear" />
-            </form>
+                }}
+            />
         );
     };
 
@@ -82,30 +115,28 @@ export default class Swish extends Component {
         const {
             order: { swishNbr, swishName }
         } = this.props;
-        const { showSwish } = this.state;
         return (
-            <React.Fragment>
-                <label>{swishName}</label>
-                <label>{swishNbr}</label>
-                <div
-                    className="button"
-                    id="swish-button"
-                    onClick={this.openSwish}
-                >
-                    <img src="img/swish.png" alt="Swish" width="32" /> Tap to
-                    pay with Swish
-                </div>
-                {showSwish && (
-                    <React.Fragment>
-                        <p id="swish-notice">
-                            Link only works on mobile devices with the Swish app
-                            installed, alternatively you can scan this code with
-                            the Swish app:
-                        </p>
-                        {this.renderSwishQrCode()}
-                    </React.Fragment>
-                )}
-            </React.Fragment>
+            <DigitDesign.Card maxWidth={"600px"} width={"600px"}>
+                <DigitDesign.CardBody>
+                    <DigitLayout.Column>
+                        <DigitText.Title text={swishNbr + " - " + swishName} />
+                        <DigitButton
+                            text={"Tap to pay with Swish"}
+                            onClick={this.openSwish}
+                        />
+                        {swishNbr && (
+                            <>
+                                <p id="swish-notice">
+                                    Link only works on mobile devices with the
+                                    Swish app installed, alternatively you can
+                                    scan this code with the Swish app:
+                                </p>
+                                {this.renderSwishQrCode()}
+                            </>
+                        )}
+                    </DigitLayout.Column>
+                </DigitDesign.CardBody>
+            </DigitDesign.Card>
         );
     };
 
@@ -114,17 +145,6 @@ export default class Swish extends Component {
             order: { swishNbr }
         } = this.props;
 
-        return (
-            <div className="timer-area container-part" id="swish-container">
-                <div className="container-content">
-                    <h3>💸 Swish to:</h3>
-                    <div className="swish-box">
-                        {swishNbr
-                            ? this.renderSwishInfo()
-                            : this.renderSwishForm()}
-                    </div>
-                </div>
-            </div>
-        );
+        return swishNbr ? this.renderSwishInfo() : this.renderSwishForm();
     }
 }

@@ -1,2 +1,2 @@
-import Swish from "./Swish.view";
+import Swish from "./Swish.view.container";
 export default Swish;
