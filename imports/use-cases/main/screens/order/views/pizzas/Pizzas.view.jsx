@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { groupBy, values } from "lodash";
+import _ from "lodash";
 
 import { OrderItems } from "../../../../../../api/order_items";
 
@@ -15,8 +15,6 @@ import {
 class Pizzas extends Component {
     removeOrderItem = orderItem => {
         OrderItems.remove({ _id: orderItem._id });
-
-        console.log(orderItem);
 
         this.props.openToast({
             text:
@@ -54,7 +52,30 @@ class Pizzas extends Component {
     render() {
         const { error, orderItems, onClickPizza, timerStarted } = this.props;
 
-        const ordersByPizza = groupBy(orderItems, "pizza");
+        var pizzas = _.groupBy(orderItems, "pizza");
+
+        pizzas = _.map(pizzas, (value, key) => {
+            value = {
+                name: key,
+                items: value
+            };
+            return value;
+        });
+
+        pizzas = _.sortBy(pizzas, function(pizza) {
+            return -pizza.items.length;
+        });
+
+        const pizzaElements = _.map(pizzas, value => (
+            <PizzaItem
+                key={value.name}
+                timerStarted={timerStarted}
+                onClickPizza={onClickPizza}
+                onClickRemove={this.removeOrderItem}
+                pizzaName={value.name}
+                items={value.items}
+            />
+        ));
 
         return (
             <DigitDesign.Card
@@ -69,16 +90,7 @@ class Pizzas extends Component {
                         test={orderItems.length > 0}
                         ifRender={() => (
                             <DigitLayout.Column>
-                                {Object.keys(ordersByPizza).map(pizzaName => (
-                                    <PizzaItem
-                                        key={pizzaName}
-                                        timerStarted={timerStarted}
-                                        onClickPizza={onClickPizza}
-                                        onClickRemove={this.removeOrderItem}
-                                        pizzaName={pizzaName}
-                                        items={ordersByPizza[pizzaName]}
-                                    />
-                                ))}
+                                {pizzaElements}
 
                                 <hr />
                                 <DigitLayout.Row>

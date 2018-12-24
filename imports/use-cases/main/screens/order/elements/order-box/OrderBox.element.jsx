@@ -32,10 +32,8 @@ const OrderBox = ({ openToast, orderId }) => (
                 },
                 (error, doc) => {
                     if (!error) {
-                        actions.setFieldValue("pizza", "");
+                        actions.resetForm();
                         actions.setSubmitting(false);
-                        actions.setFieldError("pizza", false);
-                        actions.setFieldError("nick", false);
                         openToast({
                             text: "You have added " + pizza + " as " + nick,
                             duration: 6000,
