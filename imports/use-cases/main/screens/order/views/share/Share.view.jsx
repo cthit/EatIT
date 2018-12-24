@@ -40,8 +40,50 @@ export default class Share extends Component {
         });
     };
 
+    renderLinkToMenu = restaurant => {
+        if (restaurant == null) {
+            return (
+                <>
+                    <DigitText.Text text="Don't know what you want yet?" />
+                    <DigitTooltip text="Mat vid campus Johanneberg">
+                        <NoStyleLink
+                            href="https://mat.chalmers.it"
+                            target="_blank"
+                        >
+                            <DigitText.Text bold text="mat.chalmers.it" />
+                        </NoStyleLink>
+                    </DigitTooltip>
+                </>
+            );
+        } else {
+            if (!restaurant.linkToMenu.startsWith("http")) {
+                restaurant.linkToMenu =
+                    "https://mat.chalmers.it" + restaurant.linkToMenu;
+            }
+            return (
+                <>
+                    <DigitLayout.Row>
+                        <DigitText.Text
+                            text={"This EatIT are ordering from: "}
+                        />
+                        <DigitText.Text text={restaurant.restaurantName} bold />
+                    </DigitLayout.Row>
+                    <DigitLayout.Row>
+                        <DigitText.Text text={"Link to menu: "} />
+                        <NoStyleLink
+                            href={restaurant.linkToMenu}
+                            target="_blank"
+                        >
+                            <DigitText.Text bold text={restaurant.linkToMenu} />
+                        </NoStyleLink>
+                    </DigitLayout.Row>
+                </>
+            );
+        }
+    };
+
     render() {
-        const { url } = this.props;
+        const { url, restaurant } = this.props;
         const { showQr } = this.state;
 
         return (
@@ -50,18 +92,7 @@ export default class Share extends Component {
                 <DigitDesign.CardBody>
                     <DigitLayout.Column centerVertical flexWrap={"wrap"}>
                         <DigitLayout.Row flexWrap={"wrap"}>
-                            <DigitText.Text text="Don't know what you want yet? " />
-                            <DigitTooltip text="Mat vid campus Johanneberg">
-                                <NoStyleLink
-                                    href="https://mat.chalmers.it"
-                                    target="_blank"
-                                >
-                                    <DigitText.Text
-                                        bold
-                                        text="mat.chalmers.it"
-                                    />
-                                </NoStyleLink>
-                            </DigitTooltip>
+                            {this.renderLinkToMenu(restaurant)}
                         </DigitLayout.Row>
                         <DigitLayout.Row flexWrap={"wrap"}>
                             <DigitText.Text

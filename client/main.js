@@ -7,6 +7,8 @@ import { Orders } from "../imports/api/orders";
 
 import { DigitProviders } from "@cthit/react-digit-components";
 
+import menu from "../imports/use-cases/main/screens/order/views/menu/Menu.view.reducer";
+
 function randomHash() {
     var hex = parseInt(Math.random() * 0xfff).toString(16);
     return ("000" + hex).slice(-3); // pad with 3 zeros
@@ -32,7 +34,7 @@ Meteor.startup(() => {
     }
 
     render(
-        <DigitProviders>
+        <DigitProviders rootReducer={{ menu }}>
             <App hash={hash} />
         </DigitProviders>,
         document.getElementById("root")

@@ -124,7 +124,11 @@ export default class Swish extends Component {
             order: { swishNbr, swishName }
         } = this.props;
         return (
-            <DigitDesign.Card maxWidth={"600px"} width={"600px"}>
+            <DigitDesign.Card
+                maxWidth={"600px"}
+                width={"100%"}
+                minWidth={"300px"}
+            >
                 <DigitDesign.CardBody>
                     <DigitLayout.Column>
                         <DigitText.Title text={swishNbr + " - " + swishName} />
