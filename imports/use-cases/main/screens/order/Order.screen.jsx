@@ -34,7 +34,11 @@ class Order extends React.Component {
     };
 
     tryPlayVideo = () => {
-        if (this.player && this.state.expired) {
+        if (
+            this.player &&
+            this.state.expired &&
+            this.props.order.playEatITSong
+        ) {
             this.player.seekTo(51);
         }
     };
@@ -44,6 +48,12 @@ class Order extends React.Component {
             expired: true
         });
         this.tryPlayVideo();
+    };
+
+    setPlayEatITSong = playEatITSong => {
+        Orders.update(this.props.order._id, {
+            $set: { playEatITSong: playEatITSong }
+        });
     };
 
     setTimer = timerEnd => {
@@ -79,12 +89,13 @@ class Order extends React.Component {
                     hasOrders={orderItems.length > 0}
                     onExpiry={this.onTimerExpired}
                     setTimer={this.setTimer}
+                    setPlayEatITSong={this.setPlayEatITSong}
                     timeEnd={order.timer_end}
                     timerStarted={timerStarted}
                 />
                 <Swish order={order} submitSwishInfo={this.setSwishInfo} />
 
-                {expired && (
+                {expired && order.playEatITSong && (
                     <DigitDesign.Card
                         minWidth="300px"
                         maxWidth="600px"

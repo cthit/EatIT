@@ -6,7 +6,8 @@ import {
     DigitTextField,
     DigitDesign,
     DigitLayout,
-    DigitText
+    DigitText,
+    DigitSwitch
 } from "@cthit/react-digit-components";
 
 const Timer = ({
@@ -16,7 +17,8 @@ const Timer = ({
     openToast,
     openDialog,
     setTimer,
-    hasOrders
+    hasOrders,
+    setPlayEatITSong
 }) => {
     if (timerStarted) {
         return (
@@ -71,6 +73,7 @@ const Timer = ({
                             const timeEnd =
                                 new Date().valueOf() + minutesFromNow * 60000;
                             setTimer(timeEnd);
+                            setPlayEatITSong(values.playEatITSong);
                             openToast({
                                 text: "Timer has been started",
                                 duration: 3000
@@ -79,16 +82,17 @@ const Timer = ({
                     });
                     actions.setSubmitting(false);
                 }}
-                initialValues={{}}
+                initialValues={{ playEatITSong: true }}
                 validationSchema={yup.object().shape({
                     minutes: yup
                         .number()
                         .moreThan(0, "Must be a positive number")
-                        .required("This field is required to start a timer")
+                        .required("This field is required to start a timer"),
+                    playEatITSong: yup.bool().required()
                 })}
                 titleText="Enter time until delivery"
                 submitText="Set timer"
-                keysOrder={["minutes"]}
+                keysOrder={["minutes", "playEatITSong"]}
                 keysComponentData={{
                     minutes: {
                         component: DigitTextField,
@@ -98,6 +102,13 @@ const Timer = ({
                             lowerLabel:
                                 "The number of minutes until the food is here",
                             numbersOnly: true
+                        }
+                    },
+                    playEatITSong: {
+                        component: DigitSwitch,
+                        componentProps: {
+                            primary: true,
+                            label: "Play EatIT video after the timer is done"
                         }
                     }
                 }}

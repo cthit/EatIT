@@ -19,7 +19,6 @@ const OrderBox = ({ openToast, orderId }) => (
         minWidth={"280px"}
         maxWidth={"600px"}
         width={"100%"}
-        marginVertical="4px"
         initialValues={{ pizza: "", nick: "" }}
         onSubmit={(values, actions) => {
             let { pizza, nick } = values;

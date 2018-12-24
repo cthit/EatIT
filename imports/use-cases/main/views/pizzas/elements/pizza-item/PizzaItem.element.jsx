@@ -10,13 +10,13 @@ import {
 
 const NumberOfItems = styled.span`
     display: inline-block;
-    border: 1px solid #2196f3;
+    border: 2px solid #2196f3;
     padding: 5px;
     border-radius: 50%;
     margin-right: 5px;
     color: #2196f3;
     text-align: center;
-    font-font: "Roboto";
+    font-family: "Roboto";
     font-size: 20px;
     width: 36px;
     line-height: 36px;
@@ -25,13 +25,7 @@ const NumberOfItems = styled.span`
 
 export default class PizzaItem extends Component {
     render() {
-        const {
-            items,
-            pizzaName,
-            onClickPizza,
-            onClickRemove,
-            timerStarted
-        } = this.props;
+        const { items, pizzaName, onClickRemove, timerStarted } = this.props;
 
         return (
             <DigitLayout.Row centerVertical justifyContent={"space-between"}>
