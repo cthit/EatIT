@@ -5,6 +5,7 @@ import Pizzas from "./views/pizzas";
 import OrderBox from "./elements/order-box";
 import Timer from "./views/timer";
 import Swish from "./views/swish";
+import Menu from "./views/menu";
 
 import YouTube from "react-youtube";
 import styled from "styled-components";
@@ -64,15 +65,31 @@ class Order extends React.Component {
         Orders.update(this.props.order._id, { $set: { swishName, swishNbr } });
     };
 
+    setMenu = (restaurantName, linkToMenu) => {
+        Orders.update(this.props.order._id, {
+            $set: { restaurant: { restaurantName, linkToMenu } }
+        });
+    };
+
     render() {
         const { order, orderItems } = this.props;
         const { expired } = this.state;
 
         const timerStarted = Boolean(order && order.timer_end);
 
+        console.log(order);
+
+        const hasMenu =
+            order != null &&
+            order.restaurant != null &&
+            order.restaurant.restaurantName != null;
+
         return (
             <DigitLayout.Column centerHorizontal marginVertical={"4px"}>
-                <Share url={window.location.href} />
+                <Share
+                    restaurant={order.restaurant}
+                    url={window.location.href}
+                />
                 <Pizzas
                     timerStarted={timerStarted}
                     onClickPizza={this.onClickPizza}
@@ -85,6 +102,11 @@ class Order extends React.Component {
                         orderId={order._id}
                     />
                 )}
+                <Menu
+                    hasOrders={orderItems.length > 0}
+                    hasMenu={hasMenu}
+                    setMenu={this.setMenu}
+                />
                 <Timer
                     hasOrders={orderItems.length > 0}
                     onExpiry={this.onTimerExpired}
