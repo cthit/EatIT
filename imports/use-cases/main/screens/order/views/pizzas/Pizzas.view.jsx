@@ -1,8 +1,7 @@
 import React, { Component } from "react";
-import { withTracker } from "meteor/react-meteor-data";
 import { groupBy, values } from "lodash";
 
-import { OrderItems } from "../../../../api/order_items";
+import { OrderItems } from "../../../../../../api/order_items";
 
 import PizzaItem from "./elements/pizza-item/PizzaItem.element";
 
@@ -14,45 +13,46 @@ import {
 } from "@cthit/react-digit-components";
 
 class Pizzas extends Component {
-    state = { showUndoRemove: false };
-
-    lastRemovedOrder = null;
-
     removeOrderItem = orderItem => {
         OrderItems.remove({ _id: orderItem._id });
-        this.lastRemovedOrder = orderItem;
 
-        this.setState({
-            showUndoRemove: true
+        console.log(orderItem);
+
+        this.props.openToast({
+            text:
+                orderItem.pizza +
+                " by " +
+                orderItem.nick +
+                " has been removed.",
+            duration: 5000,
+            actionText: "Undo",
+            actionHandler: () => {
+                this.undoRemoveOrderItem(orderItem);
+                this.props.openToast({
+                    text:
+                        orderItem.pizza +
+                        " by " +
+                        orderItem.nick +
+                        " has been added again.",
+                    duration: 5000
+                });
+            }
         });
-        setTimeout(() => {
-            this.setState({
-                showUndoRemove: false
-            });
-            this.lastRemovedOrder = null;
-        }, 10000);
     };
 
-    undoRemoveOrderItem = () => {
-        if (this.lastRemovedOrder) {
-            const { nick, pizza, order } = this.lastRemovedOrder;
+    undoRemoveOrderItem = orderItem => {
+        const { nick, pizza, order } = orderItem;
 
-            OrderItems.insert({
-                order,
-                nick,
-                pizza,
-                createdAt: new Date()
-            });
-            this.removedOrder = null;
-            this.setState({
-                showUndoRemove: false
-            });
-        }
+        OrderItems.insert({
+            order,
+            nick,
+            pizza,
+            createdAt: new Date()
+        });
     };
 
     render() {
         const { error, orderItems, onClickPizza, timerStarted } = this.props;
-        const { showUndoRemove } = this.state;
 
         const ordersByPizza = groupBy(orderItems, "pizza");
 

@@ -1,10 +1,10 @@
 import React from "react";
 import { Orders } from "../../../../api/orders";
-import Share from "../../views/share";
-import Pizzas from "../../views/pizzas";
-import OrderBox from "../../views/order-box";
-import Timer from "../../views/timer";
-import Swish from "../../views/swish";
+import Share from "./views/share";
+import Pizzas from "./views/pizzas";
+import OrderBox from "./elements/order-box";
+import Timer from "./views/timer";
+import Swish from "./views/swish";
 
 import YouTube from "react-youtube";
 import styled from "styled-components";
