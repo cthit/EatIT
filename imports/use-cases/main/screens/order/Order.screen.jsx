@@ -90,6 +90,7 @@ class Order extends React.Component {
                     restaurant={order.restaurant}
                     url={window.location.href}
                 />
+                <Swish order={order} submitSwishInfo={this.setSwishInfo} />
                 <Pizzas
                     timerStarted={timerStarted}
                     onClickPizza={this.onClickPizza}
@@ -115,7 +116,6 @@ class Order extends React.Component {
                     timeEnd={order.timer_end}
                     timerStarted={timerStarted}
                 />
-                <Swish order={order} submitSwishInfo={this.setSwishInfo} />
 
                 {expired && order.playEatITSong && (
                     <DigitDesign.Card

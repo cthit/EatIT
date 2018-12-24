@@ -133,15 +133,19 @@ export default class Swish extends Component {
                     <DigitLayout.Column>
                         <DigitText.Title text={swishNbr + " - " + swishName} />
                         <DigitButton
+                            primary
+                            raised
                             text={"Tap to pay with Swish"}
                             onClick={this.openSwish}
                         />
-                        <p id="swish-notice">
-                            Link only works on mobile devices with the Swish app
-                            installed, alternatively you can scan this code with
-                            the Swish app:
-                        </p>
-                        {this.renderSwishQrCode()}
+                        <DigitText.Text
+                            text={
+                                "Link only works on mobile devices with the Swish app installed, alternatively you can scan this code with the Swish app:"
+                            }
+                        />
+                        <DigitLayout.Center>
+                            {this.renderSwishQrCode()}
+                        </DigitLayout.Center>
                     </DigitLayout.Column>
                 </DigitDesign.CardBody>
             </DigitDesign.Card>
