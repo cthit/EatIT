@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import { groupBy, values } from "lodash";
 
-import FontAwesomeIcon from "@fortawesome/react-fontawesome";
-import faUndo from "@fortawesome/fontawesome-free-solid/faUndo";
-
 import { OrderItems } from "../../../../api/order_items";
 
-import PizzaItem from "../../elements/pizza-item/PizzaItem.element";
+import PizzaItem from "./elements/pizza-item/PizzaItem.element";
+
+import {
+    DigitText,
+    DigitLayout,
+    DigitIfElseRendering,
+    DigitDesign
+} from "@cthit/react-digit-components";
 
 class Pizzas extends Component {
     state = { showUndoRemove: false };
@@ -52,45 +56,52 @@ class Pizzas extends Component {
 
         const ordersByPizza = groupBy(orderItems, "pizza");
 
-        console.log(this.props.orderItems);
         return (
-            <>
-                {(orderItems.length > 0 || showUndoRemove) && (
-                    <div className="container-header">Order</div>
-                )}
-                {showUndoRemove && (
-                    <div
-                        className="button deletable"
-                        onClick={this.undoRemoveOrderItem}
-                    >
-                        <FontAwesomeIcon icon={faUndo} /> Undo remove item!
-                    </div>
-                )}
-                {orderItems.length > 0 && (
-                    <ul className="pizzas">
-                        {Object.keys(ordersByPizza).map(pizzaName => (
-                            <PizzaItem
-                                key={pizzaName}
-                                timerStarted={timerStarted}
-                                onClickPizza={onClickPizza}
-                                onClickRemove={this.removeOrderItem}
-                                pizzaName={pizzaName}
-                                items={ordersByPizza[pizzaName]}
-                            />
-                        ))}
-                        <li className="pizza-item" id="total-item-count">
-                            <span>Total items: </span>
-                            <span>{orderItems.length}</span>
-                        </li>
-                    </ul>
-                )}
-            </>
+            <DigitDesign.Card
+                minHeight={"150px"}
+                minWidth={"300px"}
+                maxWidth={"600px"}
+                width={"100%"}
+            >
+                <DigitDesign.CardTitle text={"Orders"} />
+                <DigitDesign.CardBody>
+                    <DigitIfElseRendering
+                        test={orderItems.length > 0}
+                        ifRender={() => (
+                            <DigitLayout.Column>
+                                {Object.keys(ordersByPizza).map(pizzaName => (
+                                    <PizzaItem
+                                        key={pizzaName}
+                                        timerStarted={timerStarted}
+                                        onClickPizza={onClickPizza}
+                                        onClickRemove={this.removeOrderItem}
+                                        pizzaName={pizzaName}
+                                        items={ordersByPizza[pizzaName]}
+                                    />
+                                ))}
+
+                                <hr />
+                                <DigitLayout.Row>
+                                    <DigitText.Text
+                                        text={
+                                            "Total items: " + orderItems.length
+                                        }
+                                    />
+                                </DigitLayout.Row>
+                            </DigitLayout.Column>
+                        )}
+                        elseRender={() => (
+                            <DigitLayout.Center>
+                                <DigitText.Title
+                                    text={"No items has been added"}
+                                />
+                            </DigitLayout.Center>
+                        )}
+                    />
+                </DigitDesign.CardBody>
+            </DigitDesign.Card>
         );
     }
 }
 
-export default withTracker(({ orderId }) => {
-    return {
-        orderItems: OrderItems.find({ order: orderId }).fetch()
-    };
-})(Pizzas);
+export default Pizzas;

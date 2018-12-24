@@ -4,7 +4,9 @@ import * as yup from "yup";
 import {
     DigitEditData,
     DigitTextField,
-    DigitDesign
+    DigitDesign,
+    DigitLayout,
+    DigitText
 } from "@cthit/react-digit-components";
 
 const Timer = ({
@@ -13,20 +15,50 @@ const Timer = ({
     onExpiry,
     openToast,
     openDialog,
-    setTimer
+    setTimer,
+    hasOrders
 }) => {
     if (timerStarted) {
         return (
-            <DigitDesign.Card>
+            <DigitDesign.Card
+                width={"100%"}
+                maxWidth={"600px"}
+                minWidth={"300px"}
+            >
                 <DigitDesign.CardTitle text={"Time until food's ready"} />
                 <DigitDesign.CardBody>
-                    <CountDownView timeEnd={timeEnd} />
+                    <DigitLayout.Center>
+                        <CountDownView timeEnd={timeEnd} onExpiry={onExpiry} />
+                    </DigitLayout.Center>
+                </DigitDesign.CardBody>
+            </DigitDesign.Card>
+        );
+    } else if (!hasOrders) {
+        return (
+            <DigitDesign.Card
+                minHeight={"150px"}
+                minWidth={"300px"}
+                maxWidth={"600px"}
+                width={"100%"}
+            >
+                <DigitDesign.CardTitle text={"Enter time until delivery"} />
+                <DigitDesign.CardBody>
+                    <DigitLayout.Center>
+                        <DigitText.Title
+                            text={
+                                "There must exist orders to be able to set a timer"
+                            }
+                        />
+                    </DigitLayout.Center>
                 </DigitDesign.CardBody>
             </DigitDesign.Card>
         );
     } else {
         return (
             <DigitEditData
+                width={"100%"}
+                maxWidth={"600px"}
+                minWidth={"300px"}
                 onSubmit={(values, actions) => {
                     const minutesFromNow = parseInt(values.minutes, 10);
 
@@ -63,6 +95,8 @@ const Timer = ({
                         componentProps: {
                             outlined: true,
                             upperLabel: "Minutes",
+                            lowerLabel:
+                                "The number of minutes until the food is here",
                             numbersOnly: true
                         }
                     }

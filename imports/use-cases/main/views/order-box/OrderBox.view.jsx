@@ -16,6 +16,9 @@ const MAX_LENGTH_NICK = 50;
 
 const OrderBox = ({ openToast, orderId }) => (
     <DigitEditData
+        minWidth={"280px"}
+        maxWidth={"600px"}
+        width={"100%"}
         marginVertical="4px"
         initialValues={{ pizza: "", nick: "" }}
         onSubmit={(values, actions) => {
@@ -87,14 +90,16 @@ const OrderBox = ({ openToast, orderId }) => (
                 component: DigitTextField,
                 componentProps: {
                     outlined: true,
-                    upperLabel: "Pizza"
+                    upperLabel: "Food item",
+                    lowerLabel: "Enter what you want to eat"
                 }
             },
             nick: {
                 component: DigitTextField,
                 componentProps: {
                     outlined: true,
-                    upperLabel: "Nick"
+                    upperLabel: "Nick",
+                    lowerLabel: "Enter an identifiable name or nick"
                 }
             }
         }}

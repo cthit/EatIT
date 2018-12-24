@@ -45,61 +45,54 @@ export default class Share extends Component {
         const { showQr } = this.state;
 
         return (
-            <>
-                <DigitLayout.Spacing />
-                <DigitDesign.Card maxWidth="800px">
-                    <DigitDesign.CardBody>
-                        <DigitLayout.Column
-                            center
-                            margin={"2px"}
-                            padding={"2px"}
-                        >
-                            <DigitLayout.Row>
-                                <DigitText.Title text="Don't know what you want yet? " />
-                                <DigitLayout.Spacing />
-                                <DigitTooltip text="Mat vid campus Johanneberg">
-                                    <NoStyleLink
-                                        href="https://mat.chalmers.it"
-                                        target="_blank"
-                                    >
-                                        <DigitText.Title text="mat.chalmers.it" />
-                                    </NoStyleLink>
-                                </DigitTooltip>
-                            </DigitLayout.Row>
-                            <DigitLayout.Spacing />
-                            <DigitLayout.Row>
-                                <DigitText.Title
-                                    text={"Share this link with your friends: "}
-                                />
-                                <DigitLayout.Spacing />
-                                <DigitTooltip text="Click to copy link to clipboard ">
-                                    <NoStyleLink
-                                        onClick={this.onClickCopyLink}
-                                        href={url}
-                                    >
-                                        <DigitText.Title text={url} />
-                                    </NoStyleLink>
-                                </DigitTooltip>
-                            </DigitLayout.Row>
-                            <DigitLayout.Spacing />
-                            <DigitButton
-                                outlined
-                                text={showQr ? "Hide QR code" : "Show QR code"}
-                                onClick={() =>
-                                    this.setState(({ showQr }) => ({
-                                        showQr: !showQr
-                                    }))
-                                }
+            <DigitDesign.Card minWidth="300px" maxWidth="600px" width={"100%"}>
+                <DigitDesign.CardTitle text={"Share"} />
+                <DigitDesign.CardBody>
+                    <DigitLayout.Column centerVertical flexWrap={"wrap"}>
+                        <DigitLayout.Row flexWrap={"wrap"}>
+                            <DigitText.Text text="Don't know what you want yet? " />
+                            <DigitTooltip text="Mat vid campus Johanneberg">
+                                <NoStyleLink
+                                    href="https://mat.chalmers.it"
+                                    target="_blank"
+                                >
+                                    <DigitText.Text
+                                        bold
+                                        text="mat.chalmers.it"
+                                    />
+                                </NoStyleLink>
+                            </DigitTooltip>
+                        </DigitLayout.Row>
+                        <DigitLayout.Row flexWrap={"wrap"}>
+                            <DigitText.Text
+                                text={"Share this link with your friends: "}
                             />
-                            <DigitLayout.Row>
-                                <DigitLayout.Hide hidden={!showQr}>
-                                    <QRCode value={url} />
-                                </DigitLayout.Hide>
-                            </DigitLayout.Row>
-                        </DigitLayout.Column>
-                    </DigitDesign.CardBody>
-                </DigitDesign.Card>
-            </>
+                            <DigitTooltip text="Click to copy link to clipboard ">
+                                <NoStyleLink
+                                    onClick={this.onClickCopyLink}
+                                    href={url}
+                                >
+                                    <DigitText.Text bold text={url} />
+                                </NoStyleLink>
+                            </DigitTooltip>
+                        </DigitLayout.Row>
+                        <DigitButton
+                            outlined
+                            text={showQr ? "Hide QR code" : "Show QR code"}
+                            onClick={() =>
+                                this.setState(({ showQr }) => ({
+                                    showQr: !showQr
+                                }))
+                            }
+                        />
+                        <DigitLayout.Row center>
+                            <DigitLayout.Hide hidden={!showQr}>
+                                <QRCode value={url} />
+                            </DigitLayout.Hide>
+                        </DigitLayout.Row>
+                    </DigitLayout.Column>
+                </DigitDesign.CardBody>
+            </DigitDesign.Card>
         );
     }
 }

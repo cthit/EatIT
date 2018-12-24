@@ -22,9 +22,7 @@ class App extends Component {
                         <DigitLayout.Column centerVertical margin={"16px"}>
                             <DigitText.Text
                                 white
-                                text={
-                                    "All data is deleted after 24 hours automatically"
-                                }
+                                text={"Data only lives for 24 hours"}
                             />
                         </DigitLayout.Column>
                     )}

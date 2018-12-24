@@ -55,6 +55,9 @@ export default class Swish extends Component {
 
         return (
             <DigitEditData
+                width={"100%"}
+                minWidth={"300px"}
+                maxWidth={"600px"}
                 onSubmit={(values, actions) => {
                     openDialog({
                         title: "Are you sure?",
@@ -72,10 +75,9 @@ export default class Swish extends Component {
                             });
                         }
                     });
-
                     actions.setSubmitting(false);
                 }}
-                initialValues={{ swishName: null, swishNbr: null }}
+                initialValues={{ swishName: "", swishNbr: "" }}
                 validationSchema={yup.object().shape({
                     swishName: yup
                         .string()
@@ -86,7 +88,9 @@ export default class Swish extends Component {
                     swishNbr: yup
                         .string()
                         .max(15, "Please enter a phone number")
-                        .required()
+                        .required(
+                            "You have to enter a phone number connected to swish"
+                        )
                 })}
                 titleText="Swish"
                 submitText="Submit"
@@ -95,7 +99,9 @@ export default class Swish extends Component {
                     swishName: {
                         component: DigitTextField,
                         componentProps: {
-                            upperLabel: "Swish",
+                            upperLabel: "Name",
+                            lowerLabel:
+                                "Enter a name to let people know who they are paying",
                             outlined: true
                         }
                     },
@@ -103,6 +109,8 @@ export default class Swish extends Component {
                         component: DigitTextField,
                         componentProps: {
                             upperLabel: "Phone number",
+                            lowerLabel:
+                                "Enter a valid phone number that is connected to swish",
                             outlined: true
                         }
                     }
@@ -124,16 +132,12 @@ export default class Swish extends Component {
                             text={"Tap to pay with Swish"}
                             onClick={this.openSwish}
                         />
-                        {swishNbr && (
-                            <>
-                                <p id="swish-notice">
-                                    Link only works on mobile devices with the
-                                    Swish app installed, alternatively you can
-                                    scan this code with the Swish app:
-                                </p>
-                                {this.renderSwishQrCode()}
-                            </>
-                        )}
+                        <p id="swish-notice">
+                            Link only works on mobile devices with the Swish app
+                            installed, alternatively you can scan this code with
+                            the Swish app:
+                        </p>
+                        {this.renderSwishQrCode()}
                     </DigitLayout.Column>
                 </DigitDesign.CardBody>
             </DigitDesign.Card>

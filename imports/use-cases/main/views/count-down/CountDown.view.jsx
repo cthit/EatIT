@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { DigitText } from "@cthit/react-digit-components";
 
-export default class CountDownView extends Component {
+export default class CountDown extends Component {
     state = {
         timeLeft: null
     };

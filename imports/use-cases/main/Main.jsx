@@ -1,102 +1,40 @@
 import React, { Component } from "react";
-import Share from "./views/share";
-import Pizzas from "./views/pizzas";
-import OrderBox from "./views/order-box";
-import Timer from "./views/timer";
-import Swish from "./views/swish";
-import YouTube from "react-youtube";
 import { Orders } from "../../api/orders";
 import { withTracker } from "meteor/react-meteor-data";
 
-import { DigitButton, DigitLayout } from "@cthit/react-digit-components";
+import Error from "./screens/error";
+import Order from "./screens/order";
+import Loading from "./screens/loading";
+
+import { DigitLayout } from "@cthit/react-digit-components";
 
 class Main extends Component {
-    onClickPizza = pizza => {
-        this.setPizza(pizza);
-        this.nickInput.focus();
-    };
+    constructor(props) {
+        super(props);
 
-    onPlayerReady = event => {
-        this.player = event.target;
+        this.state = {
+            oneSecondPassed: false
+        };
 
-        this.tryPlayVideo();
-    };
+        const self = this;
 
-    tryPlayVideo = () => {
-        if (this.player && this.expired) {
-            this.player.seekTo(51);
-        }
-    };
-
-    onTimerExpired = () => {
-        this.expired = true;
-        this.tryPlayVideo();
-    };
-
-    setTimer = timerEnd => {
-        Orders.update(this.props.order._id, { $set: { timer_end: timerEnd } });
-    };
-
-    setSwishInfo = ({ swishName, swishNbr }) => {
-        Orders.update(this.props.order._id, { $set: { swishName, swishNbr } });
-    };
+        setTimeout(() => {
+            self.setState({
+                oneSecondPassed: true
+            });
+        }, 1000);
+    }
 
     render() {
-        const { orders, order } = this.props;
-
-        const timerStarted = Boolean(order && order.timer_end);
-
-        const error = !order;
+        const { order, hash } = this.props;
+        const { oneSecondPassed } = this.state;
 
         return (
-            <DigitLayout.Column centerHorizontal>
-                {!error && <Share url={window.location.href} />}
-                <div className="content centered-body">
-                    {error ? (
-                        <div className="container-part">
-                            <div className="container-content">
-                                No session for this id,
-                                <a href="/">create new?</a>
-                            </div>
-                        </div>
-                    ) : (
-                        <>
-                            <div className="container-part">
-                                <Pizzas
-                                    timerStarted={timerStarted}
-                                    onClickPizza={this.onClickPizza}
-                                    orderId={order._id}
-                                />
-                            </div>
-                            <div className="order-box container-part">
-                                {!timerStarted && (
-                                    <OrderBox
-                                        inputRef={nick =>
-                                            (this.nickInput = nick)
-                                        }
-                                        orderId={order._id}
-                                    />
-                                )}
-                            </div>
-                            <Timer
-                                onExpiry={this.onTimerExpired}
-                                setTimer={this.setTimer}
-                                timeEnd={order.timer_end}
-                                timerStarted={timerStarted}
-                            />
-                            <Swish
-                                order={order}
-                                submitSwishInfo={this.setSwishInfo}
-                            />
-                        </>
-                    )}
-                </div>
-                <YouTube
-                    className="youtubevideo"
-                    videoId="ZcJjMnHoIBI"
-                    onReady={this.onPlayerReady}
-                />
-            </DigitLayout.Column>
+            <DigitLayout.Padding>
+                {!order && !oneSecondPassed && <Loading />}
+                {!order && oneSecondPassed && <Error hash={hash} />}
+                {order && <Order order={order} />}
+            </DigitLayout.Padding>
         );
     }
 }
