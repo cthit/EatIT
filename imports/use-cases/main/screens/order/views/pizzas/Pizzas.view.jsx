@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import _ from "lodash";
+import styled from "styled-components";
 
 import { OrderItems } from "../../../../../../api/order_items";
 
@@ -11,6 +12,17 @@ import {
     DigitIfElseRendering,
     DigitDesign
 } from "@cthit/react-digit-components";
+
+const ItemsContainer = styled.div`
+    max-width: calc(100vw - 32px);
+    width: 100%;
+    overflow-x: auto;
+
+    > * {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+`;
 
 class Pizzas extends Component {
     removeOrderItem = orderItem => {
@@ -50,7 +62,7 @@ class Pizzas extends Component {
     };
 
     render() {
-        const { error, orderItems, onClickPizza, timerStarted } = this.props;
+        const { orderItems, onClickPizza, timerStarted } = this.props;
 
         var pizzas = _.groupBy(orderItems, "pizza");
 
@@ -89,9 +101,8 @@ class Pizzas extends Component {
                     <DigitIfElseRendering
                         test={orderItems.length > 0}
                         ifRender={() => (
-                            <DigitLayout.Column>
-                                {pizzaElements}
-
+                            <DigitLayout.Column marginVertical={"16px"}>
+                                <ItemsContainer>{pizzaElements}</ItemsContainer>
                                 <hr />
                                 <DigitLayout.Row>
                                     <DigitText.Text

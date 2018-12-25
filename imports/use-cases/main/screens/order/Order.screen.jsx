@@ -23,9 +23,14 @@ class Order extends React.Component {
         expired: false
     };
 
+    constructor(props) {
+        super(props);
+
+        this.orderBoxRef = React.createRef();
+    }
+
     onClickPizza = pizza => {
-        this.setPizza(pizza);
-        this.nickInput.focus();
+        this.orderBoxRef.setPizzaField(pizza);
     };
 
     onPlayerReady = event => {
@@ -77,8 +82,6 @@ class Order extends React.Component {
 
         const timerStarted = Boolean(order && order.timer_end);
 
-        console.log(order);
-
         const hasMenu =
             order != null &&
             order.restaurant != null &&
@@ -99,8 +102,13 @@ class Order extends React.Component {
                 />
                 {!timerStarted && (
                     <OrderBox
-                        inputRef={nick => (this.nickInput = nick)}
                         orderId={order._id}
+                        ref={connectedComponent => {
+                            if (connectedComponent == null) {
+                                return;
+                            }
+                            this.orderBoxRef = connectedComponent.getWrappedInstance();
+                        }}
                     />
                 )}
                 <Menu
