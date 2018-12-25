@@ -37,19 +37,6 @@ export default class Swish extends Component {
         );
     };
 
-    onSubmit = event => {
-        event.preventDefault();
-
-        let { swishName, swishNbr } = this.state;
-
-        swishName = swishName.trim();
-        swishNbr = swishNbr.trim();
-
-        if (swishNbr) {
-            this.props.submitSwishInfo({ swishNbr, swishName });
-        }
-    };
-
     renderSwishForm = () => {
         const { openToast, openDialog } = this.props;
 

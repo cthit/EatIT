@@ -15,12 +15,12 @@ class Menu extends React.Component {
     componentDidMount() {
         this.props
             .loadRestaurants()
-            .then(response => {
+            .then(() => {
                 this.setState({
                     hasTriedLoading: true
                 });
             })
-            .catch(error => {
+            .catch(() => {
                 this.setState({
                     hasTriedLoading: true
                 });
@@ -35,6 +35,7 @@ class Menu extends React.Component {
             restaurants,
             setMenu
         } = this.props;
+
         const { hasTriedLoading } = this.state;
 
         if (
@@ -77,8 +78,6 @@ class Menu extends React.Component {
                     }}
                 />
             );
-        } else if (hasTriedLoading && !hasOrders && !hasMenu) {
-            return <div>hej</div>;
         } else {
             return null;
         }

@@ -18,10 +18,6 @@ const MAX_LENGTH_PIZZA = 20;
 const MAX_LENGTH_NICK = 20;
 
 class OrderBox extends Component {
-    state = {
-        setFieldValue: null
-    };
-
     constructor(props) {
         super(props);
         this.formikFormRef = React.createRef();
@@ -87,7 +83,7 @@ class OrderBox extends Component {
                                         actionHandler: () => {
                                             OrderItems.remove(
                                                 { _id: doc },
-                                                (error, doc) => {
+                                                () => {
                                                     openToast({
                                                         text:
                                                             "You have undoed " +

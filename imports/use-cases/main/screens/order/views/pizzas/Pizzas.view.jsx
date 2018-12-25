@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 import { OrderItems } from "../../../../../../api/order_items";
 
-import PizzaItem from "./elements/pizza-item/PizzaItem.element";
+import PizzaItem from "./elements/pizza-item";
 
 import {
     DigitText,
