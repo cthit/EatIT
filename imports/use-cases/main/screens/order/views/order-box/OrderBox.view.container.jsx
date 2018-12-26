@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import OrderBox from "./OrderBox.element";
+import OrderBox from "./OrderBox.view";
 import { DigitToastActions } from "@cthit/react-digit-components";
 
 const mapStateToProps = () => ({});

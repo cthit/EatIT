@@ -1,8 +1,10 @@
 import React from "react";
 import { Orders } from "../../../../api/orders";
+import { OrderItems } from "../../../../api/order_items";
+
 import Share from "./views/share";
 import Pizzas from "./views/pizzas";
-import OrderBox from "./elements/order-box";
+import OrderBox from "./views/order-box";
 import Timer from "./views/timer";
 import Swish from "./views/swish";
 import Menu from "./views/menu";
@@ -12,7 +14,6 @@ import styled from "styled-components";
 
 import { DigitLayout, DigitDesign } from "@cthit/react-digit-components";
 import { withTracker } from "meteor/react-meteor-data";
-import { OrderItems } from "../../../../api/order_items";
 
 const StyledYoutube = styled(({ ...rest }) => <YouTube {...rest} />)`
     width: calc(100%);

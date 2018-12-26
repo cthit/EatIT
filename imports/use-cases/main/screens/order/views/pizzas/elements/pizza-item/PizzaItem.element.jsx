@@ -44,12 +44,16 @@ export default class PizzaItem extends Component {
             >
                 <DigitLayout.Row centerVertical marginHorizontal={"2px"}>
                     <NumberOfItems>{items.length}</NumberOfItems>
-                    <DigitIconButton
-                        icon={AddIcon}
-                        onClick={
-                            timerStarted ? null : () => onClickPizza(pizzaName)
-                        }
-                    />
+                    <DigitLayout.Hide hidden={timerStarted}>
+                        <DigitIconButton
+                            icon={AddIcon}
+                            onClick={
+                                timerStarted
+                                    ? null
+                                    : () => onClickPizza(pizzaName)
+                            }
+                        />
+                    </DigitLayout.Hide>
                     <DigitText.Title text={pizzaName} />
                     <DigitLayout.Row marginHorizontal={"4px"}>
                         {items.map(item => (

@@ -108,7 +108,7 @@ class OrderBox extends Component {
                     }}
                     render={props => (
                         <DigitDesign.Card>
-                            <DigitDesign.CardTitle text={"Hej"} />
+                            <DigitDesign.CardTitle text={"Place your order"} />
                             <DigitDesign.CardBody>
                                 <DigitLayout.Column>
                                     <FormikPropsHolder
