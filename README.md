@@ -1,5 +1,5 @@
 # EatIT 
-A system for organizing food orders
+A system for organizing food orders. Written in ReactJS and Meteor. 
 
 ### Features
 * Allow people to online organize a food order (for pizza for example). 
