@@ -14,8 +14,8 @@ import {
 
 import * as yup from "yup";
 
-const MAX_LENGTH_PIZZA = 20;
-const MAX_LENGTH_NICK = 20;
+const MAX_LENGTH_PIZZA = 150;
+const MAX_LENGTH_NICK = 30;
 
 class OrderBox extends Component {
     constructor(props) {
@@ -44,7 +44,7 @@ class OrderBox extends Component {
                             .trim()
                             .max(
                                 MAX_LENGTH_PIZZA,
-                                "Food item can at most be 20 characters long"
+                                "Food item can at most be 150 characters long"
                             )
                             .required("You have to enter what you want to eat"),
                         nick: yup
@@ -52,7 +52,7 @@ class OrderBox extends Component {
                             .trim()
                             .max(
                                 MAX_LENGTH_NICK,
-                                "Nick can at most be 20 characters long"
+                                "Nick can at most be 30 characters long"
                             )
                             .required(
                                 "You have to enter an identifiable name or nick"
