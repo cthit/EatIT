@@ -90,17 +90,6 @@ class Order extends React.Component {
 
         return (
             <DigitLayout.Column centerHorizontal marginVertical={"4px"}>
-                <Share
-                    restaurant={order.restaurant}
-                    url={window.location.href}
-                />
-                <Swish order={order} submitSwishInfo={this.setSwishInfo} />
-                <Pizzas
-                    timerStarted={timerStarted}
-                    onClickPizza={this.onClickPizza}
-                    orderId={order._id}
-                    orderItems={orderItems}
-                />
                 {!timerStarted && (
                     <OrderBox
                         orderId={order._id}
@@ -112,11 +101,18 @@ class Order extends React.Component {
                         }}
                     />
                 )}
+                <Pizzas
+                    timerStarted={timerStarted}
+                    onClickPizza={this.onClickPizza}
+                    orderId={order._id}
+                    orderItems={orderItems}
+                />
                 <Menu
                     hasOrders={orderItems.length > 0}
                     hasMenu={hasMenu}
                     setMenu={this.setMenu}
                 />
+                <Swish order={order} submitSwishInfo={this.setSwishInfo} />
                 <Timer
                     hasOrders={orderItems.length > 0}
                     onExpiry={this.onTimerExpired}
@@ -124,6 +120,10 @@ class Order extends React.Component {
                     setPlayEatITSong={this.setPlayEatITSong}
                     timeEnd={order.timer_end}
                     timerStarted={timerStarted}
+                />
+                <Share
+                    restaurant={order.restaurant}
+                    url={window.location.href}
                 />
 
                 {expired && order.playEatITSong && (
