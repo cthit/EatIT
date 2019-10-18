@@ -82,7 +82,7 @@ const Timer = ({
                     });
                     actions.setSubmitting(false);
                 }}
-                initialValues={{ playEatITSong: true }}
+                initialValues={{ playEatITSong: false }}
                 validationSchema={yup.object().shape({
                     minutes: yup
                         .number()
