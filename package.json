@@ -20,7 +20,7 @@
         "prop-types": "^15.6.2",
         "qrcode.react": "^0.7.2",
         "react": "^16.4.0",
-        "react-dom": "^16.4.0",
+        "react-dom": "^16.4.2",
         "react-jss": "^8.6.1",
         "react-redux": "^5.0.7",
         "react-router": "^4.3.1",
