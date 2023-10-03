@@ -67,11 +67,17 @@ func addOrderItem(w http.ResponseWriter, r *http.Request) {
 		// Else, create item and add buyer
 		db.Query("INSERT INTO item (order_id, item_id, buyer) VALUES ("+r.FormValue("order_id")+","+r.FormValue("item_id")+","+r.FormValue("buyer")+")")
 	}
+	defer pottedRows.Close()
 	var item Item
 	pottedRows.Scan(&item.item_id)
 	// If item exist, add buyer
-	db.Query("UPDATE item ADD" + /*Hope this works?*/" buyer = "+r.FormValue("buyer")+" WHERE order_id = "+r.FormValue("order_id")+" AND item_id = "+strconv.Itoa(item.item_id))
-
+	t, err := db.Query("UPDATE item ADD" + /*Hope this works?*/" buyer = "+r.FormValue("buyer")+" WHERE order_id = "+r.FormValue("order_id")+" AND item_id = "+strconv.Itoa(item.item_id))
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("Oopsie woopsie UwU - Something bad happened, hehe!"))
+		return
+	}
+	defer t.Close()
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("Order item added!"))
 	return
