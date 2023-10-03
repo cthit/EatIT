@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS "order" (
 	 created_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	 updated_at TIMESTAMP NOT NULL DEFAULT NOW(),
 	 restaurants TEXT[]
+	 order_name TEXT NOT NULL,
 );
 
 CREATE TABLE IF NOT EXISTS "item" (
