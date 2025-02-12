@@ -1,5 +1,5 @@
 # Dockerfile for EatIT in development
-FROM debian
+FROM debian:bookworm
 MAINTAINER digIT <digit@chalmers.it>
 
 ENV METEOR_VERSION 1.6.1
