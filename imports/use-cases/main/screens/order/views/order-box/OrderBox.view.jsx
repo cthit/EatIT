@@ -15,7 +15,7 @@ import {
 import * as yup from "yup";
 
 const MAX_LENGTH_PIZZA = 150;
-const MAX_LENGTH_NICK = 30;
+const MAX_LENGTH_NICK = 100;
 
 class OrderBox extends Component {
     constructor(props) {
