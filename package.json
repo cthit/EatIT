@@ -14,7 +14,7 @@
         "@material-ui/icons": "^3.0.1",
         "axios": "^0.21.1",
         "formik": "^1.4.0",
-        "lodash": "^4.17.19",
+        "lodash": "^4.17.21",
         "meteor-node-stubs": "^0.3.2",
         "prettier": "^1.15.3",
         "prop-types": "^15.6.2",
