@@ -10,21 +10,24 @@ A system for organizing food orders. Written in ReactJS and Meteor.
 * Phone
 
 ## Production
-Use the automated [docker image](https://hub.docker.com/r/cthit/eatit/)
+Use the automated [docker image](ghcr.io/cthit/eatit:latest)
 
 ### Example compose file
 ```yml
-version: '2.2'
 services:
-  eatit:
-    image: eatit
-    ports:
-      - "80:8080"
-    environment:
-      ROOT_URL: https://example.org
-      MONGO_URL: mongodb://db:27017
   db:
-    image: mongo
+    image: mongo:4.4.6
+    networks:
+    - default
+    restart: unless-stopped
+
+  eatit:
+    image: ghcr.io/cthit/eatit:latest
+    environment: 
+      ROOT_URL: https://eatit.chalmers.it
+      MONGO_URL: mongodb://db:27017
+    restart: unless-stopped
+
 ```
 
 ## Development
