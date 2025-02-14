@@ -11,7 +11,8 @@ import {
     DigitLayout,
     DigitIfElseRendering,
     DigitDesign,
-    DigitButton
+    DigitButton,
+    DigitTooltip
 } from "@cthit/react-digit-components";
 
 const ItemsContainer = styled.div`
@@ -118,12 +119,21 @@ class Pizzas extends Component {
                             <DigitLayout.Column marginVertical={"16px"}>
                                 <ItemsContainer>{pizzaElements}</ItemsContainer>
                                 <hr />
-                                <DigitLayout.Row>
+                                <DigitLayout.Row justifyContent="space-between">
                                     <DigitText.Text
                                         text={
                                             "Total items: " + orderItems.length
                                         }
                                     />
+                                    <DigitDesign.CardButtons reverseDirection>
+                                        <DigitButton
+                                            disabled={this.props.orderItems.length == 0}
+                                            primary
+                                            outlined
+                                            text="Copy names to clipboard"
+                                            onClick={this.copyNamesToClipboard}
+                                        />
+                                    </DigitDesign.CardButtons>
                                 </DigitLayout.Row>
                             </DigitLayout.Column>
                         )}
@@ -136,15 +146,6 @@ class Pizzas extends Component {
                         )}
                     />
                 </DigitDesign.CardBody>
-                <DigitDesign.CardButtons reverseDirection>
-                    <DigitButton
-                        disabled={this.props.orderItems.length == 0}
-                        primary
-                        outlined
-                        text="Copy names to clipboard"
-                        onClick={this.copyNamesToClipboard}
-                    />
-                </DigitDesign.CardButtons>
             </DigitDesign.Card>
         );
     }
