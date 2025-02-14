@@ -11,8 +11,7 @@ import {
     DigitLayout,
     DigitIfElseRendering,
     DigitDesign,
-    DigitButton,
-    DigitTooltip
+    DigitButton
 } from "@cthit/react-digit-components";
 
 const ItemsContainer = styled.div`
