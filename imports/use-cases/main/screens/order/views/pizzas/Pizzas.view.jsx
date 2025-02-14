@@ -10,7 +10,8 @@ import {
     DigitText,
     DigitLayout,
     DigitIfElseRendering,
-    DigitDesign
+    DigitDesign,
+    DigitButton
 } from "@cthit/react-digit-components";
 
 const ItemsContainer = styled.div`
@@ -49,6 +50,19 @@ class Pizzas extends Component {
             }
         });
     };
+
+    copyNamesToClipboard = () => {
+        const orderItems = this.props.orderItems;
+        const nicks = orderItems.map(item => item.nick).join("\n");
+        try {
+            navigator.clipboard.writeText(nicks);
+            this.props.openToast({
+                text: "Copied to clipboard"
+            });
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+        }
+    }
 
     undoRemoveOrderItem = orderItem => {
         const { nick, pizza, order } = orderItem;
@@ -122,6 +136,15 @@ class Pizzas extends Component {
                         )}
                     />
                 </DigitDesign.CardBody>
+                <DigitDesign.CardButtons reverseDirection>
+                    <DigitButton
+                        disabled={this.props.orderItems.length == 0}
+                        primary
+                        outlined
+                        text="Copy names to clipboard"
+                        onClick={this.copyNamesToClipboard}
+                    />
+                </DigitDesign.CardButtons>
             </DigitDesign.Card>
         );
     }
