@@ -53,7 +53,8 @@ class Pizzas extends Component {
 
     copyNamesToClipboard = () => {
         const orderItems = this.props.orderItems;
-        const nicks = orderItems.map(item => item.nick).join("\n");
+        //const nicks = orderItems.map(item => item.nick).join("\n");
+        const nicks = orderItems.flatMap(item => item.nick.split(/\s*\+\s*|\s*&\s*/)).join("\n"); 
         try {
             navigator.clipboard.writeText(nicks);
             this.props.openToast({
