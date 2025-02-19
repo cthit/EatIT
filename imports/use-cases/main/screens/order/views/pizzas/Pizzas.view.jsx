@@ -10,7 +10,8 @@ import {
     DigitText,
     DigitLayout,
     DigitIfElseRendering,
-    DigitDesign
+    DigitDesign,
+    DigitButton
 } from "@cthit/react-digit-components";
 
 const ItemsContainer = styled.div`
@@ -49,6 +50,20 @@ class Pizzas extends Component {
             }
         });
     };
+
+    copyNamesToClipboard = () => {
+        const orderItems = this.props.orderItems;
+        //const nicks = orderItems.map(item => item.nick).join("\n");
+        const nicks = orderItems.flatMap(item => item.nick.split(/\s*\+\s*|\s*&\s*/)).join("\n"); 
+        try {
+            navigator.clipboard.writeText(nicks);
+            this.props.openToast({
+                text: "Copied to clipboard"
+            });
+        } catch (err) {
+            console.error("Failed to copy: ", err);
+        }
+    }
 
     undoRemoveOrderItem = orderItem => {
         const { nick, pizza, order } = orderItem;
@@ -104,12 +119,21 @@ class Pizzas extends Component {
                             <DigitLayout.Column marginVertical={"16px"}>
                                 <ItemsContainer>{pizzaElements}</ItemsContainer>
                                 <hr />
-                                <DigitLayout.Row>
+                                <DigitLayout.Row justifyContent="space-between">
                                     <DigitText.Text
                                         text={
                                             "Total items: " + orderItems.length
                                         }
                                     />
+                                    <DigitDesign.CardButtons reverseDirection>
+                                        <DigitButton
+                                            disabled={this.props.orderItems.length == 0}
+                                            primary
+                                            outlined
+                                            text="Copy names to clipboard"
+                                            onClick={this.copyNamesToClipboard}
+                                        />
+                                    </DigitDesign.CardButtons>
                                 </DigitLayout.Row>
                             </DigitLayout.Column>
                         )}

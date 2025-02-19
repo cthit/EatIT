@@ -132,7 +132,7 @@ class OrderBox extends Component {
                                             outlined: true,
                                             upperLabel: "Nick",
                                             lowerLabel:
-                                                "Enter an identifiable name or nick"
+                                                "Enter an identifiable name or nick (multiple names should be separated by either \"+\" or \"&\")"
                                         }}
                                     />
                                 </DigitLayout.Column>
