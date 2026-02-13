@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getOrderWithItems } from '@/lib/storage';
+import { getOrderWithItems, getOrderLastModified } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,40 +15,91 @@ export async function GET(request: NextRequest) {
 
   const customReadable = new ReadableStream({
     async start(controller) {
-      let intervalId: NodeJS.Timeout;
-
+      let heartbeatInterval: NodeJS.Timeout;
+      let pollInterval: NodeJS.Timeout;
+      let lastDataSent: string | null = null;
+      let lastModified: number | null = null;
+      
       // Send updates
       const sendUpdate = async () => {
         try {
           const { order, items } = await getOrderWithItems(orderHash);
 
           if (!order) {
-            clearInterval(intervalId);
-            controller.close();
+            cleanup();
             return;
           }
 
           const data = { order, items };
-
-          controller.enqueue(
-            encoder.encode(`data: ${JSON.stringify(data)}\n\n`)
-          );
+          const dataStr = JSON.stringify(data);
+          
+          // Only send if data actually changed
+          if (dataStr !== lastDataSent) {
+            lastDataSent = dataStr;
+            controller.enqueue(
+              encoder.encode(`data: ${dataStr}\n\n`)
+            );
+          }
         } catch (error) {
           console.error('Error sending update:', error);
         }
       };
 
-      // Send initial update
-      await sendUpdate();
+      // Check for modifications
+      const checkForUpdates = async () => {
+        try {
+          const currentLastModified = await getOrderLastModified(orderHash);
+          
+          if (currentLastModified === null) {
+            cleanup();
+            return;
+          }
 
-      // Poll for changes every 2 seconds
-      intervalId = setInterval(sendUpdate, 2000);
+          // If last_modified has changed, send an update
+          if (lastModified === null || currentLastModified > lastModified) {
+            console.log(`Order ${orderHash} modified at ${currentLastModified}, was ${lastModified}`);
+            lastModified = currentLastModified;
+            await sendUpdate();
+          }
+        } catch (error) {
+          console.error('Error checking for updates:', error);
+        }
+      };
 
       // Clean up on close
-      request.signal.addEventListener('abort', () => {
-        clearInterval(intervalId);
-        controller.close();
-      });
+      const cleanup = () => {
+        console.log(`Cleaning up stream for order ${orderHash}`);
+        if (heartbeatInterval) {
+          clearInterval(heartbeatInterval);
+        }
+        if (pollInterval) {
+          clearInterval(pollInterval);
+        }
+        try {
+          controller.close();
+        } catch (e) {
+          // Stream may already be closed
+        }
+      };
+
+      // Send initial update and get initial last_modified
+      lastModified = await getOrderLastModified(orderHash);
+      await sendUpdate();
+      console.log(`Stream started for order ${orderHash}, last_modified: ${lastModified}`);
+
+      // Poll for changes every 1 second
+      pollInterval = setInterval(checkForUpdates, 1000);
+
+      // Send heartbeat every 15 seconds to keep connection alive
+      heartbeatInterval = setInterval(() => {
+        try {
+          controller.enqueue(encoder.encode(`: heartbeat\n\n`));
+        } catch (e) {
+          cleanup();
+        }
+      }, 15000);
+
+      request.signal.addEventListener('abort', cleanup);
     },
   });
 

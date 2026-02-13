@@ -25,6 +25,7 @@ async function getDb(): Promise<DatabaseSync> {
       hash TEXT PRIMARY KEY,
       created_at INTEGER NOT NULL,
       expires_at INTEGER NOT NULL,
+      last_modified INTEGER NOT NULL,
       timer_end INTEGER,
       play_eat_it_song INTEGER DEFAULT 0,
       swish_nbr TEXT,
@@ -74,11 +75,11 @@ export async function createOrder(hash: string): Promise<Order> {
   const expiresAt = now + SESSION_LIFETIME_MS;
 
   const stmt = database.prepare(`
-    INSERT INTO orders (hash, created_at, expires_at)
-    VALUES (?, ?, ?)
+    INSERT INTO orders (hash, created_at, expires_at, last_modified)
+    VALUES (?, ?, ?, ?)
   `);
   
-  stmt.run(hash, now, expiresAt);
+  stmt.run(hash, now, expiresAt, now);
 
   return {
     _id: hash,
@@ -149,9 +150,14 @@ export async function updateOrder(hash: string, updates: Partial<Order>): Promis
   }
 
   if (fields.length > 0) {
+    fields.push('last_modified = ?');
+    values.push(Date.now());
     values.push(hash);
     const stmt = database.prepare(`UPDATE orders SET ${fields.join(', ')} WHERE hash = ?`);
     stmt.run(...values);
+    
+    // Emit event for order update
+    console.log(`Emitting order:updated event for ${hash}`);
   }
 
   return getOrderByHash(hash);
@@ -201,6 +207,12 @@ export async function addOrderItem(
   
   stmt.run(itemId, orderHash, nick.trim(), pizza.trim(), now);
 
+  // Update order's last_modified timestamp
+  database.prepare('UPDATE orders SET last_modified = ? WHERE hash = ?').run(now, orderHash);
+
+  // Emit event for item addition
+  console.log(`Emitting order:item:added event for ${orderHash}`);
+
   return {
     _id: itemId,
     order: orderHash,
@@ -220,7 +232,30 @@ export async function deleteOrderItem(orderHash: string, itemId: string): Promis
   `);
   
   const result = stmt.run(itemId, orderHash);
+  
+  if (result.changes > 0) {
+    // Update order's last_modified timestamp
+    database.prepare('UPDATE orders SET last_modified = ? WHERE hash = ?').run(Date.now(), orderHash);
+    
+    // Emit event for item deletion
+    console.log(`Emitting order:item:deleted event for ${orderHash}`);
+  }
+  
   return result.changes > 0;
+}
+
+// Get order's last modified timestamp
+export async function getOrderLastModified(hash: string): Promise<number | null> {
+  const database = await getDb();
+  const now = Date.now();
+
+  const stmt = database.prepare(`
+    SELECT last_modified FROM orders WHERE hash = ? AND expires_at > ?
+  `);
+  
+  const row = stmt.get(hash, now) as any;
+  
+  return row ? row.last_modified : null;
 }
 
 // Get order with all items

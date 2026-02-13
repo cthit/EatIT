@@ -22,21 +22,40 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
   const orderFormRef = useRef<OrderFormRef>(null);
 
   useEffect(() => {
-    // Connect to SSE stream for real-time updates
-    const eventSource = new EventSource(`/api/orders/stream?orderHash=${hash}`);
+    let eventSource: EventSource | null = null;
+    let retryCount = 0;
+    const maxRetries = 5;
+    const baseDelay = 1000; // 1 second
 
-    eventSource.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      setOrder(data.order);
-      setOrderItems(data.items);
+    const connect = () => {
+      eventSource = new EventSource(`/api/orders/stream?orderHash=${hash}`);
+
+      eventSource.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        setOrder(data.order);
+        setOrderItems(data.items);
+        retryCount = 0; // Reset on successful message
+      };
+
+      eventSource.onerror = () => {
+        console.error('SSE connection error');
+        eventSource?.close();
+
+        if (retryCount < maxRetries) {
+          const delay = baseDelay * Math.pow(2, retryCount);
+          console.log(`Retrying in ${delay}ms (attempt ${retryCount + 1}/${maxRetries})`);
+          retryCount++;
+          setTimeout(connect, delay);
+        } else {
+          console.error('Max retries reached');
+        }
+      };
     };
 
-    eventSource.onerror = () => {
-      console.error('SSE connection error');
-    };
+    connect();
 
     return () => {
-      eventSource.close();
+      eventSource?.close();
     };
   }, [hash]);
 
