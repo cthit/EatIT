@@ -1,4 +1,4 @@
-FROM node:18-alpine AS builder
+FROM node:25-alpine AS builder
 
 WORKDIR /app
 
@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml ./
 
 # Install dependencies
 RUN npm install -g pnpm
-RUN pnpm i
+RUN pnpm i --frozen-lockfile
 
 # Copy application files
 COPY . .
@@ -17,7 +17,7 @@ COPY . .
 RUN pnpm run build
 
 # Production stage
-FROM node:18-alpine
+FROM node:25-alpine
 
 WORKDIR /app
 
