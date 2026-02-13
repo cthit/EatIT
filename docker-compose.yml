@@ -1,29 +1,20 @@
 version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:4.4.6
-    restart: unless-stopped
-    volumes:
-      - mongodb_data:/data/db
-    networks:
-      - eatit-network
-
   eatit:
     build: .
     restart: unless-stopped
     ports:
       - "3000:3000"
     environment:
-      - MONGODB_URI=mongodb://mongodb:27017/eatit
       - NODE_ENV=production
-    depends_on:
-      - mongodb
+    volumes:
+      - eatit_data:/app/data
     networks:
       - eatit-network
 
 volumes:
-  mongodb_data:
+  eatit_data:
 
 networks:
   eatit-network:

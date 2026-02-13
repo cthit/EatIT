@@ -1,6 +1,6 @@
 # EatIT
 
-A modern web application for organizing food orders with friends. Built with Next.js 14, TypeScript, and MongoDB.
+A modern web application for organizing food orders with friends. Built with Next.js 14, TypeScript, and SQLite.
 
 ## Features
 
@@ -12,20 +12,21 @@ A modern web application for organizing food orders with friends. Built with Nex
 * **Menu Selection**: Integration with Chalmers food venues
 * **Share Links**: Easily shareable URLs and QR codes for joining orders
 * **Auto-Cleanup**: Orders automatically expire after 24 hours
+* **Simple Storage**: Embedded SQLite database - no server needed
 
 ## Technology Stack
 
 - **Frontend**: Next.js 14 with React 18, TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes with Server-Side Rendering (SSR), Server-Sent Events for real-time updates
-- **Database**: MongoDB with TTL indexes for automatic cleanup
+- **Storage**: SQLite (Node.js built-in) with WAL mode for better concurrency
 - **Payments**: Swish deep linking and QR codes
 
 ## Getting Started
 
 ### Prerequisites
 
-- Node.js 18+ or pnpm
-- MongoDB 4.4+
+- Node.js 22.5.0+ (for built-in SQLite support)
+- pnpm (or npm)
 
 ### Installation
 
@@ -42,33 +43,16 @@ pnpm install
 npm install
 ```
 
-3. Set up environment variables:
-```bash
-cp .env.example .env.local
-```
-
-Edit `.env.local` and set your MongoDB connection string:
-```
-MONGODB_URI=mongodb://localhost:27017/eatit
-```
-
-4. Start MongoDB (if running locally):
-```bash
-# Using Docker
-docker run -d -p 27017:27017 --name mongodb mongo:4.4.6
-
-# Or using a local MongoDB installation
-mongod
-```
-
-5. Run the development server:
+3. Run the development server:
 ```bash
 pnpm dev
 # or
 npm run dev
 ```
 
-6. Open [http://localhost:3000](http://localhost:3000) to see the application.
+4. Open [http://localhost:3000](http://localhost:3000) to see the application.
+
+That's it! No database setup required.
 
 ## Production Deployment
 
@@ -98,14 +82,20 @@ EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
+**Important**: When deploying with Docker, mount a volume to `/app/data` for data persistence:
+
+```bash
+docker run -p 3000:3000 -v eatit_data:/app/data eatit
+```
+
 ### Environment Variables
 
-- `MONGODB_URI`: MongoDB connection string (required)
 - `NODE_ENV`: Set to `production` for production builds
+- No database connection string needed!
 
-## Database Schema
+## Storage Schema
 
-### Orders Collection
+Data is stored in a SQLite database at `data/eatit.db`:
 
 ```typescript
 {
@@ -127,11 +117,29 @@ CMD ["npm", "start"]
 
 ```typescript
 {
-  _id: ObjectId,
-  order: string,          // Reference to order _id
-  nick: string,           // Name(s) of person ordering
-  pizza: string,          // Food item description
-  createdAt: Date         // TTL index for auto-deletion
+  "order": {
+    "_id": "abc",
+    "hash": "abc",
+    "createdAt": "2026-02-10T12:00:00.000Z",
+    "timer_end": 1707566400000,
+    "playEatITSong": true,
+    "swishNbr": "1234567890",
+    "swishName": "John Doe",
+    "restaurant": {
+      "restaurantName": "Pizza Place",
+      "linkToMenu": "https://example.com/menu"
+    }
+  },
+  "items": [
+    {
+      "_id": "abc-1707566400000-xyz123",
+      "order": "abc",
+      "nick": "John",
+      "pizza": "Margherita",
+      "createdAt": "2026-02-10T12:05:00.000Z"
+    }
+  ],
+  "expiresAt": 1707652800000
 }
 ```
 
@@ -139,6 +147,13 @@ CMD ["npm", "start"]
 
 ### Real-time Updates
 The application uses Server-Sent Events (SSE) to push updates to all connected clients. When anyone adds/removes an order or updates settings, all participants see the changes immediately.
+
+### Storage System
+- **SQLite Database**: Single-file database at `/data/eatit.db`
+- **WAL Mode**: Write-Ahead Logging for better concurrency
+- **Automatic Cleanup**: Background service removes expired sessions every hour
+- **24-Hour Lifetime**: Sessions automatically expire 24 hours after creation
+- **Simple Backup**: Just copy the database file
 
 ### Timer System
 - Set a countdown timer when food is ordered
@@ -155,7 +170,9 @@ The application uses Server-Sent Events (SSE) to push updates to all connected c
 - Links to restaurant menus
 - Can be set before orders are placed
 
-## Migration from Old Version
+## Migration Notes
+
+### From Previous Version
 
 This is a complete rewrite of the original Meteor + React application. Key differences:
 
@@ -164,6 +181,10 @@ This is a complete rewrite of the original Meteor + React application. Key diffe
 - **Real-time updates**: SSE instead of Meteor's DDP
 - **Improved performance**: Server-side rendering and optimized bundle size
 - **Better deployment**: Standard Docker deployment without Meteor-specific requirements
+
+### From MongoDB Version
+
+If migrating from a MongoDB-based version, see [STORAGE_MIGRATION.md](STORAGE_MIGRATION.md) for details on the new SQLite storage system.
 
 ## License
 

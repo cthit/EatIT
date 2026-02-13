@@ -1,6 +1,0 @@
-services:
-  mongodb:
-    image: mongo:4.4.6
-    restart: unless-stopped
-    ports:
-      - "27017:27017"

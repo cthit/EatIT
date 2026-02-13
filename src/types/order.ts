@@ -1,9 +1,7 @@
-import { ObjectId } from 'mongodb';
-
 export interface Order {
-  _id?: ObjectId | string;
+  _id?: string;
   hash: string;
-  createdAt: Date | string; // Date objects get serialized to strings
+  createdAt: string;
   timer_end?: number;
   playEatITSong?: boolean;
   swishNbr?: string;
@@ -15,11 +13,11 @@ export interface Order {
 }
 
 export interface OrderItem {
-  _id?: ObjectId | string;
-  order: ObjectId | string;
+  _id?: string;
+  order: string;
   nick: string;
   pizza: string;
-  createdAt: Date | string; // Date objects get serialized to strings
+  createdAt: string;
 }
 
 export interface Restaurant {

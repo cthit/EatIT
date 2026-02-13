@@ -1,5 +1,5 @@
 import { NextRequest } from 'next/server';
-import { getDb } from '@/lib/mongodb';
+import { getOrderWithItems } from '@/lib/storage';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,33 +15,20 @@ export async function GET(request: NextRequest) {
 
   const customReadable = new ReadableStream({
     async start(controller) {
-      const db = await getDb();
-      const orders = db.collection('orders');
-      const orderItems = db.collection('order_items');
-
-      // Find the order
-      const order = await orders.findOne({ hash: orderHash });
-      
-      if (!order) {
-        controller.close();
-        return;
-      }
-
       let intervalId: NodeJS.Timeout;
 
-      // Send initial data
+      // Send updates
       const sendUpdate = async () => {
         try {
-          const currentOrder = await orders.findOne({ hash: orderHash });
-          const items = await orderItems
-            .find({ order: order._id.toString() })
-            .toArray();
+          const { order, items } = await getOrderWithItems(orderHash);
 
-          // Serialize MongoDB objects to plain JavaScript objects
-          const data = {
-            order: JSON.parse(JSON.stringify(currentOrder)),
-            items: JSON.parse(JSON.stringify(items)),
-          };
+          if (!order) {
+            clearInterval(intervalId);
+            controller.close();
+            return;
+          }
+
+          const data = { order, items };
 
           controller.enqueue(
             encoder.encode(`data: ${JSON.stringify(data)}\n\n`)

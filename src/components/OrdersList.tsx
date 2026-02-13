@@ -29,7 +29,7 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
       const response = await fetch('/api/order-items', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item._id }),
+        body: JSON.stringify({ itemId: item._id, orderHash }),
       });
 
       if (!response.ok) {

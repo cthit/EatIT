@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { updateOrder } from '@/lib/storage';
 
 export async function PATCH(request: NextRequest) {
   try {
@@ -13,23 +12,16 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
-    const db = await getDb();
-    const orders = db.collection('orders');
-    
-    const result = await orders.updateOne(
-      { hash },
-      { $set: updates }
-    );
+    const updatedOrder = await updateOrder(hash, updates);
 
-    if (result.matchedCount === 0) {
+    if (!updatedOrder) {
       return NextResponse.json(
         { error: 'Order not found' },
         { status: 404 }
       );
     }
 
-    const updatedOrder = await orders.findOne({ hash });
-    return NextResponse.json(JSON.parse(JSON.stringify(updatedOrder)));
+    return NextResponse.json(updatedOrder);
   } catch (error) {
     console.error('Error updating order:', error);
     return NextResponse.json(

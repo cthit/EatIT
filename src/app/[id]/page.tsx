@@ -17,11 +17,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
     notFound();
   }
 
-  // Serialize MongoDB objects to plain JavaScript objects
-  const serializedOrder = JSON.parse(JSON.stringify(order));
-  const serializedItems = JSON.parse(JSON.stringify(items));
-
-  return <OrderPageClient hash={hash} initialOrder={serializedOrder} initialOrderItems={serializedItems} />;
+  return <OrderPageClient hash={hash} initialOrder={order} initialOrderItems={items} />;
 }
 
 export async function generateMetadata({ params }: OrderPageProps) {

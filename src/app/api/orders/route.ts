@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getDb } from '@/lib/mongodb';
-import { ObjectId } from 'mongodb';
+import { createOrder, getOrderByHash } from '@/lib/storage';
+import '@/lib/init'; // Initialize cleanup service
 
 function randomHash(): string {
   const hex = Math.floor(Math.random() * 0xfff).toString(16);
@@ -9,20 +9,10 @@ function randomHash(): string {
 
 export async function POST() {
   try {
-    const db = await getDb();
-    const orders = db.collection('orders');
-    
     const hash = randomHash();
-    const result = await orders.insertOne({
-      hash,
-      createdAt: new Date(),
-    });
+    const order = await createOrder(hash);
 
-    return NextResponse.json({
-      _id: result.insertedId.toString(),
-      hash,
-      createdAt: new Date(),
-    });
+    return NextResponse.json(order);
   } catch (error) {
     console.error('Error creating order:', error);
     return NextResponse.json(
@@ -44,10 +34,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const db = await getDb();
-    const orders = db.collection('orders');
-    
-    const order = await orders.findOne({ hash });
+    const order = await getOrderByHash(hash);
 
     if (!order) {
       return NextResponse.json(
@@ -56,7 +43,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(JSON.parse(JSON.stringify(order)));
+    return NextResponse.json(order);
   } catch (error) {
     console.error('Error fetching order:', error);
     return NextResponse.json(
