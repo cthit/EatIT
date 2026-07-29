@@ -22,32 +22,27 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
   const orderFormRef = useRef<OrderFormRef>(null);
 
   useEffect(() => {
-    let eventSource: EventSource | null = null;
+    let ws: WebSocket | null = null;
     let retryCount = 0;
     const maxRetries = 5;
-    const baseDelay = 1000; // 1 second
+    const baseDelay = 1000;
 
     const connect = () => {
-      eventSource = new EventSource(`/api/orders/stream?orderHash=${hash}`);
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      ws = new WebSocket(`${protocol}//${window.location.host}/api/ws?orderHash=${hash}`);
 
-      eventSource.onmessage = (event) => {
+      ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
         setOrder(data.order);
         setOrderItems(data.items);
-        retryCount = 0; // Reset on successful message
+        retryCount = 0;
       };
 
-      eventSource.onerror = () => {
-        console.error('SSE connection error');
-        eventSource?.close();
-
+      ws.onclose = () => {
         if (retryCount < maxRetries) {
           const delay = baseDelay * Math.pow(2, retryCount);
-          console.log(`Retrying in ${delay}ms (attempt ${retryCount + 1}/${maxRetries})`);
           retryCount++;
           setTimeout(connect, delay);
-        } else {
-          console.error('Max retries reached');
         }
       };
     };
@@ -55,7 +50,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
     connect();
 
     return () => {
-      eventSource?.close();
+      ws?.close();
     };
   }, [hash]);
 

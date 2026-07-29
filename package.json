@@ -3,29 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "prepare": "next-ws patch",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "next": "16.1.6",
+    "next-ws": "^2.2.9",
+    "qrcode.react": "^3.1.0",
     "react": "^18",
     "react-dom": "^18",
-    "next": "16.1.6",
-    "qrcode.react": "^3.1.0",
-    "axios": "^1.6.5",
-    "lodash": "^4.17.21"
+    "ws": "^8.21.1"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^22",
     "@types/react": "^18",
     "@types/react-dom": "^19",
-    "@types/lodash": "^4.14.202",
+    "@types/ws": "^8.18.1",
     "autoprefixer": "^10.0.1",
     "postcss": "^8",
     "tailwindcss": "^3.3.0",
-    "tsx": "^4.7.0"
+    "tsx": "^4.7.0",
+    "typescript": "^5"
   },
   "engines": {
     "node": ">=22.5.0"

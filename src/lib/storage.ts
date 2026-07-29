@@ -2,6 +2,7 @@ import { DatabaseSync } from 'node:sqlite';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { Order, OrderItem } from '@/types/order';
+import { emitOrderEvent } from '@/lib/events';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_PATH = path.join(DATA_DIR, 'eatit.db');
@@ -149,16 +150,15 @@ export async function updateOrder(hash: string, updates: Partial<Order>): Promis
     values.push(updates.restaurant.restaurantName, updates.restaurant.linkToMenu);
   }
 
-  if (fields.length > 0) {
-    fields.push('last_modified = ?');
-    values.push(Date.now());
-    values.push(hash);
-    const stmt = database.prepare(`UPDATE orders SET ${fields.join(', ')} WHERE hash = ?`);
-    stmt.run(...values);
-    
-    // Emit event for order update
-    console.log(`Emitting order:updated event for ${hash}`);
-  }
+    if (fields.length > 0) {
+      fields.push('last_modified = ?');
+      values.push(Date.now());
+      values.push(hash);
+      const stmt = database.prepare(`UPDATE orders SET ${fields.join(', ')} WHERE hash = ?`);
+      stmt.run(...values);
+
+      emitOrderEvent(hash);
+    }
 
   return getOrderByHash(hash);
 }
@@ -207,11 +207,9 @@ export async function addOrderItem(
   
   stmt.run(itemId, orderHash, nick.trim(), pizza.trim(), now);
 
-  // Update order's last_modified timestamp
   database.prepare('UPDATE orders SET last_modified = ? WHERE hash = ?').run(now, orderHash);
 
-  // Emit event for item addition
-  console.log(`Emitting order:item:added event for ${orderHash}`);
+  emitOrderEvent(orderHash);
 
   return {
     _id: itemId,
@@ -234,11 +232,9 @@ export async function deleteOrderItem(orderHash: string, itemId: string): Promis
   const result = stmt.run(itemId, orderHash);
   
   if (result.changes > 0) {
-    // Update order's last_modified timestamp
     database.prepare('UPDATE orders SET last_modified = ? WHERE hash = ?').run(Date.now(), orderHash);
-    
-    // Emit event for item deletion
-    console.log(`Emitting order:item:deleted event for ${orderHash}`);
+
+    emitOrderEvent(orderHash);
   }
   
   return result.changes > 0;

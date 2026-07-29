@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { OrderItem } from '@/types/order';
-import _ from 'lodash';
 
 interface OrdersListProps {
   orderItems: OrderItem[];
@@ -65,11 +64,17 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
   };
 
   // Group items by pizza name
-  const groupedPizzas: GroupedItem[] = _.chain(orderItems)
-    .groupBy('pizza')
-    .map((items, name) => ({ name, items }))
-    .sortBy(group => -group.items.length)
-    .value();
+  const groupedPizzas: GroupedItem[] = orderItems
+    .reduce((acc: GroupedItem[], item) => {
+      const group = acc.find((g) => g.name === item.pizza);
+      if (group) {
+        group.items.push(item);
+      } else {
+        acc.push({ name: item.pizza, items: [item] });
+      }
+      return acc;
+    }, [])
+    .sort((a, b) => b.items.length - a.items.length);
 
   return (
     <>
