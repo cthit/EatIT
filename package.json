@@ -10,16 +10,16 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "16.1.6",
+    "next": "16.2.11",
     "next-ws": "^2.2.9",
-    "qrcode.react": "^3.1.0",
-    "react": "^18",
-    "react-dom": "^18",
+    "qrcode.react": "^4.2.0",
+    "react": "^19",
+    "react-dom": "^19",
     "ws": "^8.21.1"
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^18",
+    "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",
     "autoprefixer": "^10.0.1",
