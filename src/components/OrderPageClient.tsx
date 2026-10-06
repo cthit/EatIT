@@ -23,9 +23,8 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
 
   useEffect(() => {
     let ws: WebSocket | null = null;
-    let retryCount = 0;
-    const maxRetries = 5;
-    const baseDelay = 1000;
+    let stopped = false;
+    let retryDelay = 1000;
 
     const connect = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -35,14 +34,13 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
         const data = JSON.parse(event.data);
         setOrder(data.order);
         setOrderItems(data.items);
-        retryCount = 0;
+        retryDelay = 1000;
       };
 
       ws.onclose = () => {
-        if (retryCount < maxRetries) {
-          const delay = baseDelay * Math.pow(2, retryCount);
-          retryCount++;
-          setTimeout(connect, delay);
+        if (!stopped && retryDelay < 30000) {
+          setTimeout(connect, retryDelay);
+          retryDelay = Math.min(retryDelay * 2, 30000);
         }
       };
     };
@@ -50,6 +48,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
     connect();
 
     return () => {
+      stopped = true;
       ws?.close();
     };
   }, [hash]);
@@ -70,19 +69,8 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
     }
   };
 
-  const handleTimerExpired = () => {
-    setTimerExpired(true);
-  };
-
-  const handlePizzaClick = (pizzaName: string) => {
-    if (orderFormRef.current) {
-      orderFormRef.current.setPizzaField(pizzaName);
-    }
-  };
-
   const timerStarted = Boolean(order.timer_end);
   const hasOrders = orderItems.length > 0;
-  const hasMenu = Boolean(order.restaurant?.restaurantName);
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -97,40 +85,31 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
           orderItems={orderItems}
           orderHash={hash}
           timerStarted={timerStarted}
-          onPizzaClick={handlePizzaClick}
+          onPizzaClick={(pizzaName) => orderFormRef.current?.setPizzaField(pizzaName)}
         />
 
         <MenuSelector
           hasOrders={hasOrders}
-          hasMenu={hasMenu}
-          onSetMenu={(restaurantName, linkToMenu) => {
-            updateOrder({
-              restaurant: { restaurantName, linkToMenu }
-            });
-          }}
+          hasMenu={Boolean(order.restaurant?.restaurantName)}
+          onSetMenu={(restaurantName, linkToMenu) =>
+            updateOrder({ restaurant: { restaurantName, linkToMenu } })
+          }
         />
 
         <SwishInfo
           order={order}
-          onSubmit={(swishName, swishNbr) => {
-            updateOrder({ swishName, swishNbr });
-          }}
+          onSubmit={(swishName, swishNbr) => updateOrder({ swishName, swishNbr })}
         />
 
         <Timer
           hasOrders={hasOrders}
           timerStarted={timerStarted}
           timeEnd={order.timer_end}
-          onSetTimer={(timerEnd, playEatITSong) => {
-            updateOrder({ timer_end: timerEnd, playEatITSong });
-          }}
-          onExpiry={handleTimerExpired}
+          onSetTimer={(timerEnd, playEatITSong) => updateOrder({ timer_end: timerEnd, playEatITSong })}
+          onExpiry={() => setTimerExpired(true)}
         />
 
-        <ShareSection
-          url={typeof window !== 'undefined' ? window.location.href : ''}
-          restaurant={order.restaurant}
-        />
+        <ShareSection restaurant={order.restaurant} />
 
         {timerExpired && order.playEatITSong && (
           <div className="bg-white rounded-lg shadow-lg p-6">

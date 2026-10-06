@@ -2,23 +2,13 @@
 
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { Card, useToast } from '@/components/ui';
+import { Restaurant } from '@/types/order';
 
-interface ShareSectionProps {
-  url: string;
-  restaurant?: {
-    restaurantName: string;
-    linkToMenu: string;
-  };
-}
-
-export function ShareSection({ url, restaurant }: ShareSectionProps) {
+export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {
   const [showQr, setShowQr] = useState(false);
-  const [toast, setToast] = useState<{ message: string; show: boolean }>({ message: '', show: false });
-
-  const showToast = (message: string) => {
-    setToast({ message, show: true });
-    setTimeout(() => setToast({ message: '', show: false }), 3000);
-  };
+  const { toast, showToast } = useToast();
+  const url = typeof window !== 'undefined' ? window.location.href : '';
 
   const copyToClipboard = async () => {
     try {
@@ -48,10 +38,9 @@ export function ShareSection({ url, restaurant }: ShareSectionProps) {
       );
     }
 
-    let menuLink = restaurant.linkToMenu;
-    if (!menuLink.startsWith('http')) {
-      menuLink = 'https://mat.chalmers.it' + menuLink;
-    }
+    const menuLink = restaurant.linkToMenu.startsWith('http')
+      ? restaurant.linkToMenu
+      : 'https://mat.chalmers.it' + restaurant.linkToMenu;
 
     return (
       <div className="space-y-2">
@@ -75,8 +64,7 @@ export function ShareSection({ url, restaurant }: ShareSectionProps) {
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Share</h2>
+      <Card title="Share">
         <div className="space-y-4">
           {renderLinkToMenu()}
 
@@ -111,13 +99,9 @@ export function ShareSection({ url, restaurant }: ShareSectionProps) {
             </div>
           )}
         </div>
-      </div>
+      </Card>
 
-      {toast.show && (
-        <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg">
-          {toast.message}
-        </div>
-      )}
+      {toast}
     </>
   );
 }

@@ -1,5 +1,5 @@
 import OrderPageClient from '@/components/OrderPageClient';
-import { getOrderWithItems } from '@/lib/order-data';
+import { getOrderWithItems } from '@/lib/storage';
 import { notFound } from 'next/navigation';
 
 interface OrderPageProps {

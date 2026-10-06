@@ -1,4 +1,4 @@
-import { DatabaseSync } from 'node:sqlite';
+import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
 import path from 'path';
 import { promises as fs } from 'fs';
 import { Order, OrderItem } from '@/types/order';
@@ -48,24 +48,20 @@ async function getDb(): Promise<DatabaseSync> {
     CREATE INDEX IF NOT EXISTS idx_orders_expires_at ON orders(expires_at);
   `);
 
+  // Delete expired sessions now and then
+  cleanupExpiredSessions().catch(console.error);
+  setInterval(() => cleanupExpiredSessions().catch(console.error), 60 * 60 * 1000);
+
   return db;
 }
 
-// Clean up expired sessions
+// Delete expired orders (cascades to order_items)
 export async function cleanupExpiredSessions(): Promise<void> {
-  try {
-    const database = await getDb();
-    const now = Date.now();
-    
-    // Delete expired orders (cascades to order_items)
-    const stmt = database.prepare('DELETE FROM orders WHERE expires_at < ?');
-    const result = stmt.run(now);
-    
-    if (result.changes > 0) {
-      console.log(`Cleaned up ${result.changes} expired sessions`);
-    }
-  } catch (error) {
-    console.error('Error cleaning up sessions:', error);
+  const database = await getDb();
+  const result = database.prepare('DELETE FROM orders WHERE expires_at < ?').run(Date.now());
+
+  if (result.changes > 0) {
+    console.log(`Cleaned up ${result.changes} expired sessions`);
   }
 }
 
@@ -82,11 +78,7 @@ export async function createOrder(hash: string): Promise<Order> {
   
   stmt.run(hash, now, expiresAt, now);
 
-  return {
-    _id: hash,
-    hash,
-    createdAt: new Date(now).toISOString(),
-  };
+  return { hash };
 }
 
 // Get order by hash
@@ -103,9 +95,7 @@ export async function getOrderByHash(hash: string): Promise<Order | null> {
   if (!row) return null;
 
   return {
-    _id: row.hash,
     hash: row.hash,
-    createdAt: new Date(row.created_at).toISOString(),
     timer_end: row.timer_end || undefined,
     playEatITSong: row.play_eat_it_song === 1,
     swishNbr: row.swish_nbr || undefined,
@@ -122,43 +112,25 @@ export async function updateOrder(hash: string, updates: Partial<Order>): Promis
   const database = await getDb();
   const now = Date.now();
 
-  // Check if order exists and not expired
-  const exists = database.prepare('SELECT 1 FROM orders WHERE hash = ? AND expires_at > ?').get(hash, now);
-  if (!exists) return null;
-
-  const fields: string[] = [];
-  const values: any[] = [];
-
-  if (updates.timer_end !== undefined) {
-    fields.push('timer_end = ?');
-    values.push(updates.timer_end);
-  }
-  if (updates.playEatITSong !== undefined) {
-    fields.push('play_eat_it_song = ?');
-    values.push(updates.playEatITSong ? 1 : 0);
-  }
-  if (updates.swishNbr !== undefined) {
-    fields.push('swish_nbr = ?');
-    values.push(updates.swishNbr);
-  }
-  if (updates.swishName !== undefined) {
-    fields.push('swish_name = ?');
-    values.push(updates.swishName);
-  }
+  const columns: [string, SQLInputValue][] = [];
+  if (updates.timer_end !== undefined) columns.push(['timer_end', updates.timer_end]);
+  if (updates.playEatITSong !== undefined) columns.push(['play_eat_it_song', updates.playEatITSong ? 1 : 0]);
+  if (updates.swishNbr !== undefined) columns.push(['swish_nbr', updates.swishNbr]);
+  if (updates.swishName !== undefined) columns.push(['swish_name', updates.swishName]);
   if (updates.restaurant) {
-    fields.push('restaurant_name = ?', 'restaurant_link = ?');
-    values.push(updates.restaurant.restaurantName, updates.restaurant.linkToMenu);
+    columns.push(['restaurant_name', updates.restaurant.restaurantName]);
+    columns.push(['restaurant_link', updates.restaurant.linkToMenu]);
   }
 
-    if (fields.length > 0) {
-      fields.push('last_modified = ?');
-      values.push(Date.now());
-      values.push(hash);
-      const stmt = database.prepare(`UPDATE orders SET ${fields.join(', ')} WHERE hash = ?`);
-      stmt.run(...values);
+  if (columns.length === 0) return getOrderByHash(hash);
 
-      emitOrderEvent(hash);
-    }
+  columns.push(['last_modified', now]);
+  const setClause = columns.map(([column]) => `${column} = ?`).join(', ');
+  database
+    .prepare(`UPDATE orders SET ${setClause} WHERE hash = ? AND expires_at > ?`)
+    .run(...columns.map(([, value]) => value), hash, now);
+
+  emitOrderEvent(hash);
 
   return getOrderByHash(hash);
 }
@@ -178,10 +150,8 @@ export async function getOrderItems(orderHash: string): Promise<OrderItem[]> {
 
   return rows.map(row => ({
     _id: row.id,
-    order: row.order_hash,
     nick: row.nick,
     pizza: row.pizza,
-    createdAt: new Date(row.created_at).toISOString(),
   }));
 }
 
@@ -213,10 +183,8 @@ export async function addOrderItem(
 
   return {
     _id: itemId,
-    order: orderHash,
     nick: nick.trim(),
     pizza: pizza.trim(),
-    createdAt: new Date(now).toISOString(),
   };
 }
 
@@ -238,20 +206,6 @@ export async function deleteOrderItem(orderHash: string, itemId: string): Promis
   }
   
   return result.changes > 0;
-}
-
-// Get order's last modified timestamp
-export async function getOrderLastModified(hash: string): Promise<number | null> {
-  const database = await getDb();
-  const now = Date.now();
-
-  const stmt = database.prepare(`
-    SELECT last_modified FROM orders WHERE hash = ? AND expires_at > ?
-  `);
-  
-  const row = stmt.get(hash, now) as any;
-  
-  return row ? row.last_modified : null;
 }
 
 // Get order with all items

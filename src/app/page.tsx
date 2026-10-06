@@ -6,6 +6,8 @@ import { useState } from 'react';
 export default function Home() {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
+  const btnClass =
+    'bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg transition-colors';
 
   const createNewOrder = async () => {
     setCreating(true);
@@ -37,7 +39,7 @@ export default function Home() {
         <button
           onClick={createNewOrder}
           disabled={creating}
-          className="bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg transition-colors"
+          className={btnClass}
         >
           {creating ? 'Creating...' : 'New order'}<br/>
           <span className="text-sm text-gray-200">
@@ -46,7 +48,7 @@ export default function Home() {
         </button>
         <button
           disabled
-          className="bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg transition-colors ml-4"
+          className={`${btnClass} ml-4`}
         >
           See menus<br/>
           <span className="text-sm text-gray-200">

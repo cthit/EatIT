@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
 import { OrderItem } from '@/types/order';
+import { Card, useToast } from '@/components/ui';
 
 interface OrdersListProps {
   orderItems: OrderItem[];
@@ -16,12 +16,7 @@ interface GroupedItem {
 }
 
 export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }: OrdersListProps) {
-  const [toast, setToast] = useState<{ message: string; show: boolean }>({ message: '', show: false });
-
-  const showToast = (message: string) => {
-    setToast({ message, show: true });
-    setTimeout(() => setToast({ message: '', show: false }), 5000);
-  };
+  const { toast, showToast } = useToast();
 
   const handleRemove = async (item: OrderItem) => {
     try {
@@ -53,7 +48,7 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
     const nicks = orderItems
       .flatMap(item => item.nick.split(/\s*\+\s*|\s*&\s*/))
       .join('\n');
-    
+
     try {
       await navigator.clipboard.writeText(nicks);
       showToast('Copied to clipboard');
@@ -63,24 +58,16 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
     }
   };
 
-  // Group items by pizza name
-  const groupedPizzas: GroupedItem[] = orderItems
-    .reduce((acc: GroupedItem[], item) => {
-      const group = acc.find((g) => g.name === item.pizza);
-      if (group) {
-        group.items.push(item);
-      } else {
-        acc.push({ name: item.pizza, items: [item] });
-      }
+  const groupedPizzas: GroupedItem[] = Object.values(
+    orderItems.reduce<Record<string, GroupedItem>>((acc, item) => {
+      (acc[item.pizza] ??= { name: item.pizza, items: [] }).items.push(item);
       return acc;
-    }, [])
-    .sort((a, b) => b.items.length - a.items.length);
+    }, {})
+  ).sort((a, b) => b.items.length - a.items.length);
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-lg p-6 min-h-[150px]">
-        <h2 className="text-2xl font-bold mb-4">Orders</h2>
-        
+      <Card title="Orders" className="min-h-[150px]">
         {orderItems.length === 0 ? (
           <div className="flex items-center justify-center py-8">
             <p className="text-xl text-gray-500">No items have been added</p>
@@ -91,7 +78,7 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
               {groupedPizzas.map((group) => (
                 <div key={group.name} className="border rounded-lg p-4 bg-gray-50">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 
+                    <h3
                       className={`font-bold text-lg ${onPizzaClick ? 'cursor-pointer hover:text-blue-600 transition-colors' : ''}`}
                       onClick={() => handlePizzaClick(group.name)}
                       title={onPizzaClick ? 'Click to order this item' : undefined}
@@ -105,7 +92,7 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
                   <div className="space-y-2">
                     {group.items.map((item) => (
                       <div
-                        key={item._id?.toString()}
+                        key={item._id}
                         className="flex justify-between items-center bg-white p-2 rounded"
                       >
                         <span className="text-gray-700">{item.nick}</span>
@@ -127,26 +114,19 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
             <hr className="my-4" />
 
             <div className="flex justify-between items-center">
-              <p className="text-gray-700">
-                Total items: {orderItems.length}
-              </p>
+              <p className="text-gray-700">Total items: {orderItems.length}</p>
               <button
                 onClick={copyNamesToClipboard}
-                disabled={orderItems.length === 0}
-                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
               >
                 Copy names to clipboard
               </button>
             </div>
           </div>
         )}
-      </div>
+      </Card>
 
-      {toast.show && (
-        <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg">
-          {toast.message}
-        </div>
-      )}
+      {toast}
     </>
   );
 }

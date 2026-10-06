@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, forwardRef, useImperativeHandle } from 'react';
+import { Card, Field, inputClass, useToast } from '@/components/ui';
 
 interface OrderFormProps {
   orderHash: string;
@@ -15,7 +16,7 @@ export const OrderForm = forwardRef<OrderFormRef, OrderFormProps>(({ orderHash }
   const [nick, setNick] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState<{ pizza?: string; nick?: string }>({});
-  const [toast, setToast] = useState<{ message: string; show: boolean }>({ message: '', show: false });
+  const { toast, showToast } = useToast();
 
   useImperativeHandle(ref, () => ({
     setPizzaField: (pizzaName: string) => {
@@ -41,11 +42,6 @@ export const OrderForm = forwardRef<OrderFormRef, OrderFormProps>(({ orderHash }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  };
-
-  const showToast = (message: string) => {
-    setToast({ message, show: true });
-    setTimeout(() => setToast({ message: '', show: false }), 5000);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -86,42 +82,29 @@ export const OrderForm = forwardRef<OrderFormRef, OrderFormProps>(({ orderHash }
 
   return (
     <>
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Place your order</h2>
+      <Card title="Place your order">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="pizza" className="block text-sm font-medium text-gray-700 mb-1">
-              Food item
-            </label>
+          <Field label="Food item" htmlFor="pizza" error={errors.pizza}>
             <input
               id="pizza"
               type="text"
               value={pizza}
               onChange={(e) => setPizza(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
               placeholder="Enter what you want to eat"
             />
-            {errors.pizza && (
-              <p className="mt-1 text-sm text-red-600">{errors.pizza}</p>
-            )}
-          </div>
+          </Field>
 
-          <div>
-            <label htmlFor="nick" className="block text-sm font-medium text-gray-700 mb-1">
-              Nick
-            </label>
+          <Field label="Nick" htmlFor="nick" error={errors.nick}>
             <input
               id="nick"
               type="text"
               value={nick}
               onChange={(e) => setNick(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
               placeholder='Enter an identifiable name or nick (multiple names should be separated by either "+" or "&")'
             />
-            {errors.nick && (
-              <p className="mt-1 text-sm text-red-600">{errors.nick}</p>
-            )}
-          </div>
+          </Field>
 
           <button
             type="submit"
@@ -131,13 +114,9 @@ export const OrderForm = forwardRef<OrderFormRef, OrderFormProps>(({ orderHash }
             {isSubmitting ? 'Adding...' : 'Add order'}
           </button>
         </form>
-      </div>
+      </Card>
 
-      {toast.show && (
-        <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg">
-          {toast.message}
-        </div>
-      )}
+      {toast}
     </>
   );
 });

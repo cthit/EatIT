@@ -1,94 +1,45 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getOrderItems, addOrderItem, deleteOrderItem, getOrderByHash } from '@/lib/storage';
+import { withHandler, jsonError } from '@/lib/api';
 
-export async function GET(request: NextRequest) {
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const orderHash = searchParams.get('orderHash');
-
-    if (!orderHash) {
-      return NextResponse.json(
-        { error: 'orderHash parameter is required' },
-        { status: 400 }
-      );
-    }
-
-    const items = await getOrderItems(orderHash);
-    return NextResponse.json(items);
-  } catch (error) {
-    console.error('Error fetching order items:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch order items' },
-      { status: 500 }
-    );
+export const GET = withHandler('fetch order items', async (request: NextRequest) => {
+  const orderHash = request.nextUrl.searchParams.get('orderHash');
+  if (!orderHash) {
+    return jsonError('orderHash parameter is required', 400);
   }
-}
 
-export async function POST(request: NextRequest) {
-  try {
-    const { orderHash, nick, pizza } = await request.json();
+  return NextResponse.json(await getOrderItems(orderHash));
+});
 
-    if (!orderHash || !nick || !pizza) {
-      return NextResponse.json(
-        { error: 'orderHash, nick, and pizza are required' },
-        { status: 400 }
-      );
-    }
+export const POST = withHandler('create order item', async (request: NextRequest) => {
+  const { orderHash, nick, pizza } = await request.json();
 
-    // Check if order exists
-    const order = await getOrderByHash(orderHash);
-    if (!order) {
-      return NextResponse.json(
-        { error: 'Order not found' },
-        { status: 404 }
-      );
-    }
-
-    const newItem = await addOrderItem(orderHash, nick, pizza);
-    
-    if (!newItem) {
-      return NextResponse.json(
-        { error: 'Failed to add item' },
-        { status: 500 }
-      );
-    }
-
-    return NextResponse.json(newItem);
-  } catch (error) {
-    console.error('Error creating order item:', error);
-    return NextResponse.json(
-      { error: 'Failed to create order item' },
-      { status: 500 }
-    );
+  if (!orderHash || !nick || !pizza) {
+    return jsonError('orderHash, nick, and pizza are required', 400);
   }
-}
 
-export async function DELETE(request: NextRequest) {
-  try {
-    const { itemId, orderHash } = await request.json();
-
-    if (!itemId || !orderHash) {
-      return NextResponse.json(
-        { error: 'itemId and orderHash are required' },
-        { status: 400 }
-      );
-    }
-
-    const success = await deleteOrderItem(orderHash, itemId);
-
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Order item not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error('Error deleting order item:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete order item' },
-      { status: 500 }
-    );
+  if (!(await getOrderByHash(orderHash))) {
+    return jsonError('Order not found', 404);
   }
-}
+
+  const newItem = await addOrderItem(orderHash, nick, pizza);
+  if (!newItem) {
+    return jsonError('Failed to add item', 500);
+  }
+
+  return NextResponse.json(newItem);
+});
+
+export const DELETE = withHandler('delete order item', async (request: NextRequest) => {
+  const { itemId, orderHash } = await request.json();
+
+  if (!itemId || !orderHash) {
+    return jsonError('itemId and orderHash are required', 400);
+  }
+
+  if (!(await deleteOrderItem(orderHash, itemId))) {
+    return jsonError('Order item not found', 404);
+  }
+
+  return NextResponse.json({ success: true });
+});

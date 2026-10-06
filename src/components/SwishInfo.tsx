@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Order } from '@/types/order';
 import { QRCodeSVG } from 'qrcode.react';
+import { Card, ConfirmDialog, Field, inputClass } from '@/components/ui';
 
 interface SwishInfoProps {
   order: Order;
@@ -34,21 +35,6 @@ export function SwishInfo({ order, onSubmit }: SwishInfoProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!validate()) {
-      return;
-    }
-
-    setShowDialog(true);
-  };
-
-  const confirmSubmit = () => {
-    onSubmit(swishName.trim(), swishNbr.trim());
-    setShowDialog(false);
-  };
-
   const openSwish = () => {
     if (!order.swishNbr) return;
 
@@ -63,11 +49,8 @@ export function SwishInfo({ order, onSubmit }: SwishInfoProps) {
 
   // If swish info is already set, show the payment interface
   if (order.swishNbr && order.swishName) {
-    const swishQrString = `C${order.swishNbr};;${'EatIT ' + order.hash};6`;
-
     return (
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">{order.swishNbr} - {order.swishName}</h2>
+      <Card title={`${order.swishNbr} - ${order.swishName}`}>
         <div className="space-y-4">
           <button
             onClick={openSwish}
@@ -79,52 +62,45 @@ export function SwishInfo({ order, onSubmit }: SwishInfoProps) {
             Link only works on mobile devices with the Swish app installed, alternatively you can scan this code with the Swish app:
           </p>
           <div className="flex justify-center">
-            <QRCodeSVG value={swishQrString} size={200} />
+            <QRCodeSVG value={`C${order.swishNbr};;EatIT ${order.hash};6`} size={200} />
           </div>
         </div>
-      </div>
+      </Card>
     );
   }
 
   // Show the form to set swish info
   return (
     <>
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Swish</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="swishName" className="block text-sm font-medium text-gray-700 mb-1">
-              Name
-            </label>
+      <Card title="Swish">
+        <form
+          className="space-y-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (validate()) setShowDialog(true);
+          }}
+        >
+          <Field label="Name" htmlFor="swishName" error={errors.swishName}>
             <input
               id="swishName"
               type="text"
               value={swishName}
               onChange={(e) => setSwishName(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
               placeholder="Enter a name to let people know who they are paying"
             />
-            {errors.swishName && (
-              <p className="mt-1 text-sm text-red-600">{errors.swishName}</p>
-            )}
-          </div>
+          </Field>
 
-          <div>
-            <label htmlFor="swishNbr" className="block text-sm font-medium text-gray-700 mb-1">
-              Phone number
-            </label>
+          <Field label="Phone number" htmlFor="swishNbr" error={errors.swishNbr}>
             <input
               id="swishNbr"
               type="text"
               value={swishNbr}
               onChange={(e) => setSwishNbr(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className={inputClass}
               placeholder="Enter a valid phone number that is connected to swish"
             />
-            {errors.swishNbr && (
-              <p className="mt-1 text-sm text-red-600">{errors.swishNbr}</p>
-            )}
-          </div>
+          </Field>
 
           <button
             type="submit"
@@ -133,29 +109,17 @@ export function SwishInfo({ order, onSubmit }: SwishInfoProps) {
             Submit
           </button>
         </form>
-      </div>
+      </Card>
 
       {showDialog && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
-            <h3 className="text-xl font-bold mb-2">Are you sure?</h3>
-            <p className="text-gray-600 mb-6">Settings swish options cannot be undone.</p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDialog(false)}
-                className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-100"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={confirmSubmit}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                Yes
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          message="Settings swish options cannot be undone."
+          onConfirm={() => {
+            onSubmit(swishName.trim(), swishNbr.trim());
+            setShowDialog(false);
+          }}
+          onCancel={() => setShowDialog(false)}
+        />
       )}
     </>
   );
