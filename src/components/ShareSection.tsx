@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Card, useToast } from '@/components/ui';
 import { Restaurant } from '@/types/order';
@@ -8,10 +8,7 @@ import { Restaurant } from '@/types/order';
 export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {
   const [showQr, setShowQr] = useState(false);
   const { toast, showToast } = useToast();
-  const [url, setUrl] = useState('');
-
-  // Read after mount so server and client render the same markup
-  useEffect(() => setUrl(window.location.href), []);
+  const url = typeof window !== 'undefined' ? window.location.href : '';
 
   const copyToClipboard = async () => {
     try {
