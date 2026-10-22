@@ -100,7 +100,6 @@ export async function getOrderByHash(hash: string): Promise<Order | null> {
   return {
     hash: row.hash,
     timer_end: row.timer_end || undefined,
-    playEatITSong: row.play_eat_it_song === 1,
     swishNbr: row.swish_nbr || undefined,
     swishName: row.swish_name || undefined,
     restaurant: row.restaurant_name ? {
@@ -117,7 +116,6 @@ export async function updateOrder(hash: string, updates: Partial<Order>): Promis
 
   const columns: [string, SQLInputValue][] = [];
   if (updates.timer_end !== undefined) columns.push(['timer_end', updates.timer_end]);
-  if (updates.playEatITSong !== undefined) columns.push(['play_eat_it_song', updates.playEatITSong ? 1 : 0]);
   if (updates.swishNbr !== undefined) columns.push(['swish_nbr', updates.swishNbr]);
   if (updates.swishName !== undefined) columns.push(['swish_name', updates.swishName]);
   if (updates.restaurant) {

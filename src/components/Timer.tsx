@@ -7,42 +7,52 @@ interface TimerProps {
   hasOrders: boolean;
   timerStarted: boolean;
   timeEnd?: number;
-  onSetTimer: (timerEnd: number, playEatITSong: boolean) => void;
-  onExpiry: () => void;
+  onSetTimer: (timerEnd: number) => void;
 }
 
-function CountDown({ timeEnd, onExpiry }: { timeEnd: number; onExpiry: () => void }) {
-  const [timeLeft, setTimeLeft] = useState('');
-  const [expired, setExpired] = useState(false);
+const secondsUntil = (timeEnd: number) => Math.max(0, Math.ceil((timeEnd - Date.now()) / 1000));
+
+// Confetti cannons from both bottom corners, loaded only when needed
+async function fireConfetti() {
+  const { default: confetti } = await import('canvas-confetti');
+  const cannon = { particleCount: 80, spread: 55, startVelocity: 65, disableForReducedMotion: true };
+  for (const delay of [0, 400, 800]) {
+    setTimeout(() => {
+      confetti({ ...cannon, angle: 60, origin: { x: 0, y: 1 } });
+      confetti({ ...cannon, angle: 120, origin: { x: 1, y: 1 } });
+    }, delay);
+  }
+}
+
+function CountDown({ timeEnd }: { timeEnd: number }) {
+  const [secondsLeft, setSecondsLeft] = useState<number | null>(null);
 
   useEffect(() => {
-    const updateTimer = () => {
-      const now = Date.now();
-      const totalSeconds = Math.floor((timeEnd - now) / 1000);
+    setSecondsLeft(secondsUntil(timeEnd));
+    // Already done when the page was opened, so no countdown and no confetti
+    if (secondsUntil(timeEnd) === 0) return;
 
-      if (!expired && totalSeconds <= 1) {
-        setExpired(true);
-        onExpiry();
+    const intervalId = setInterval(() => {
+      const seconds = secondsUntil(timeEnd);
+      setSecondsLeft(seconds);
+      if (seconds === 0) {
+        clearInterval(intervalId);
+        fireConfetti();
       }
-
-      const sign = totalSeconds < 0 ? '-' : '';
-      const mins = Math.floor(Math.abs(totalSeconds) / 60);
-      const secs = Math.abs(totalSeconds) % 60;
-      setTimeLeft(`${sign}${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`);
-    };
-
-    updateTimer();
-    const intervalId = setInterval(updateTimer, 500);
+    }, 500);
 
     return () => clearInterval(intervalId);
-  }, [timeEnd, expired, onExpiry]);
+  }, [timeEnd]);
 
-  return <h3 className="text-4xl font-bold">{timeLeft}</h3>;
+  if (secondsLeft === null) return <h3 className="text-4xl font-bold">&nbsp;</h3>;
+
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
+  return <h3 className="text-4xl font-bold">{`${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`}</h3>;
 }
 
-export function Timer({ hasOrders, timerStarted, timeEnd, onSetTimer, onExpiry }: TimerProps) {
+export function Timer({ hasOrders, timerStarted, timeEnd, onSetTimer }: TimerProps) {
   const [minutes, setMinutes] = useState('');
-  const [playEatITSong, setPlayEatITSong] = useState(false);
   const [error, setError] = useState('');
   const [showDialog, setShowDialog] = useState(false);
 
@@ -69,7 +79,7 @@ export function Timer({ hasOrders, timerStarted, timeEnd, onSetTimer, onExpiry }
     return (
       <Card title="Time until food's ready">
         <div className="flex justify-center">
-          <CountDown timeEnd={timeEnd} onExpiry={onExpiry} />
+          <CountDown timeEnd={timeEnd} />
         </div>
       </Card>
     );
@@ -102,19 +112,6 @@ export function Timer({ hasOrders, timerStarted, timeEnd, onSetTimer, onExpiry }
             />
           </Field>
 
-          <div className="flex items-center">
-            <input
-              id="playEatITSong"
-              type="checkbox"
-              checked={playEatITSong}
-              onChange={(e) => setPlayEatITSong(e.target.checked)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-            />
-            <label htmlFor="playEatITSong" className="ml-2 block text-sm text-gray-900">
-              Play EatIT video after the timer is done
-            </label>
-          </div>
-
           <button
             type="submit"
             className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
@@ -128,7 +125,7 @@ export function Timer({ hasOrders, timerStarted, timeEnd, onSetTimer, onExpiry }
         <ConfirmDialog
           message="You cannot reverse this step."
           onConfirm={() => {
-            onSetTimer(Date.now() + parseInt(minutes, 10) * 60000, playEatITSong);
+            onSetTimer(Date.now() + parseInt(minutes, 10) * 60000);
             setShowDialog(false);
           }}
           onCancel={() => setShowDialog(false)}

@@ -4,7 +4,7 @@ import { withHandler, jsonError, isText } from '@/lib/api';
 import { Order } from '@/types/order';
 
 export const PATCH = withHandler('update order', async (request: NextRequest) => {
-  const { hash, timer_end, playEatITSong, swishNbr, swishName, restaurant } = await request.json();
+  const { hash, timer_end, swishNbr, swishName, restaurant } = await request.json();
 
   if (!hash) {
     return jsonError('Hash is required', 400);
@@ -22,7 +22,6 @@ export const PATCH = withHandler('update order', async (request: NextRequest) =>
       return jsonError('Invalid or already set timer', 400);
     }
     updates.timer_end = timer_end;
-    updates.playEatITSong = playEatITSong === true;
   }
   if (swishNbr !== undefined || swishName !== undefined) {
     if (order.swishNbr || !isText(swishNbr, 15) || !isText(swishName, 50)) {

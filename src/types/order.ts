@@ -6,7 +6,6 @@ export interface Restaurant {
 export interface Order {
   hash: string;
   timer_end?: number;
-  playEatITSong?: boolean;
   swishNbr?: string;
   swishName?: string;
   restaurant?: Restaurant;

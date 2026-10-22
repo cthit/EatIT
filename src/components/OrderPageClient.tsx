@@ -18,7 +18,6 @@ interface OrderPageClientProps {
 export default function OrderPageClient({ hash, initialOrder, initialOrderItems }: OrderPageClientProps) {
   const [order, setOrder] = useState<Order>(initialOrder);
   const [orderItems, setOrderItems] = useState<OrderItem[]>(initialOrderItems);
-  const [timerExpired, setTimerExpired] = useState(false);
   const orderFormRef = useRef<OrderFormRef>(null);
 
   useEffect(() => {
@@ -108,24 +107,10 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
           hasOrders={hasOrders}
           timerStarted={timerStarted}
           timeEnd={order.timer_end}
-          onSetTimer={(timerEnd, playEatITSong) => updateOrder({ timer_end: timerEnd, playEatITSong })}
-          onExpiry={() => setTimerExpired(true)}
+          onSetTimer={(timerEnd) => updateOrder({ timer_end: timerEnd })}
         />
 
         <ShareSection restaurant={order.restaurant} />
-
-        {timerExpired && order.playEatITSong && (
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <iframe
-              width="100%"
-              height="400"
-              src="https://www.youtube.com/embed/ZcJjMnHoIBI?autoplay=1&start=51&controls=0"
-              title="EatIT Song"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        )}
       </div>
     </div>
   );
