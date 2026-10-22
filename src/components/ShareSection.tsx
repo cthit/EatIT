@@ -21,22 +21,7 @@ export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {
   };
 
   const renderLinkToMenu = () => {
-    if (!restaurant) {
-      return (
-        <div className="space-y-2">
-          <p className="text-gray-700">Don&apos;t know what you want yet?</p>
-          <a
-            href="https://mat.chalmers.it"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 font-bold"
-            title="Mat vid campus Johanneberg"
-          >
-            mat.chalmers.it
-          </a>
-        </div>
-      );
-    }
+    if (!restaurant) return null;
 
     const menuLink = restaurant.linkToMenu.startsWith('http')
       ? restaurant.linkToMenu
