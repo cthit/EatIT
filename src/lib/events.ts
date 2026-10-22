@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events';
 
-const emitter = new EventEmitter();
+// Kept on globalThis so route handlers and the WS handler share one emitter
+const globalForEvents = globalThis as typeof globalThis & { eatitEvents?: EventEmitter };
+const emitter = (globalForEvents.eatitEvents ??= new EventEmitter());
 emitter.setMaxListeners(200);
 
 export function emitOrderEvent(orderHash: string) {

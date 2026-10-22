@@ -1,6 +1,10 @@
 import OrderPageClient from '@/components/OrderPageClient';
 import { getOrderWithItems } from '@/lib/storage';
 import { notFound } from 'next/navigation';
+import { cache } from 'react';
+
+// Deduplicates the query between the page and generateMetadata
+const getOrder = cache(getOrderWithItems);
 
 interface OrderPageProps {
   params: Promise<{ id: string }>;
@@ -10,7 +14,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
   const { id: hash } = await params;
 
   // Fetch initial data on the server
-  const { order, items } = await getOrderWithItems(hash);
+  const { order, items } = await getOrder(hash);
 
   // If order doesn't exist, return 404
   if (!order) {
@@ -22,7 +26,7 @@ export default async function OrderPage({ params }: OrderPageProps) {
 
 export async function generateMetadata({ params }: OrderPageProps) {
   const { id: hash } = await params;
-  const { order } = await getOrderWithItems(hash);
+  const { order } = await getOrder(hash);
 
   return {
     title: order ? `EatIT Order - ${hash}` : 'Order Not Found',

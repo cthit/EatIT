@@ -3,12 +3,17 @@ import { createOrder, getOrderByHash } from '@/lib/storage';
 import { withHandler, jsonError } from '@/lib/api';
 
 function randomHash(): string {
-  const hex = Math.floor(Math.random() * 0xfff).toString(16);
+  const hex = Math.floor(Math.random() * 0x1000).toString(16);
   return ('000' + hex).slice(-3);
 }
 
 export const POST = withHandler('create order', async () => {
-  return NextResponse.json(await createOrder(randomHash()));
+  // Retry on collision with an existing order
+  for (let attempt = 0; attempt < 10; attempt++) {
+    const order = await createOrder(randomHash());
+    if (order) return NextResponse.json(order);
+  }
+  return jsonError('Failed to create order', 503);
 });
 
 export const GET = withHandler('fetch order', async (request: NextRequest) => {

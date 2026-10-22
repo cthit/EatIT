@@ -25,6 +25,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
     let ws: WebSocket | null = null;
     let stopped = false;
     let retryDelay = 1000;
+    let retryTimer: ReturnType<typeof setTimeout> | undefined;
 
     const connect = () => {
       const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
@@ -32,14 +33,15 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
 
       ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
+        if (!data.order) return; // Order expired or missing
         setOrder(data.order);
         setOrderItems(data.items);
         retryDelay = 1000;
       };
 
       ws.onclose = () => {
-        if (!stopped && retryDelay < 30000) {
-          setTimeout(connect, retryDelay);
+        if (!stopped) {
+          retryTimer = setTimeout(connect, retryDelay);
           retryDelay = Math.min(retryDelay * 2, 30000);
         }
       };
@@ -49,6 +51,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
 
     return () => {
       stopped = true;
+      clearTimeout(retryTimer);
       ws?.close();
     };
   }, [hash]);
@@ -85,7 +88,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
           orderItems={orderItems}
           orderHash={hash}
           timerStarted={timerStarted}
-          onPizzaClick={(pizzaName) => orderFormRef.current?.setPizzaField(pizzaName)}
+          onPizzaClick={timerStarted ? undefined : (pizzaName) => orderFormRef.current?.setPizzaField(pizzaName)}
         />
 
         <MenuSelector

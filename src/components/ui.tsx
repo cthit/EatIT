@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useState } from 'react';
+import { ReactNode, useRef, useState } from 'react';
 
 export const inputClass =
   'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
@@ -79,10 +79,12 @@ export function ConfirmDialog({
 
 export function useToast() {
   const [message, setMessage] = useState<string | null>(null);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const showToast = (text: string) => {
     setMessage(text);
-    setTimeout(() => setMessage(null), 4000);
+    clearTimeout(timeoutRef.current);
+    timeoutRef.current = setTimeout(() => setMessage(null), 4000);
   };
 
   const toast = message ? (

@@ -8,16 +8,19 @@ const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_PATH = path.join(DATA_DIR, 'eatit.db');
 const SESSION_LIFETIME_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-let db: DatabaseSync | null = null;
+// Kept on globalThis so all route bundles and dev reloads share one connection
+const globalForDb = globalThis as typeof globalThis & { eatitDb?: Promise<DatabaseSync> };
+
+function getDb(): Promise<DatabaseSync> {
+  return (globalForDb.eatitDb ??= initDb());
+}
 
 // Initialize database
-async function getDb(): Promise<DatabaseSync> {
-  if (db) return db;
-
+async function initDb(): Promise<DatabaseSync> {
   // Ensure data directory exists
   await fs.mkdir(DATA_DIR, { recursive: true });
 
-  db = new DatabaseSync(DB_PATH);
+  const db = new DatabaseSync(DB_PATH);
   db.exec('PRAGMA journal_mode = WAL'); // Better concurrency
 
   // Create tables
@@ -65,18 +68,18 @@ export async function cleanupExpiredSessions(): Promise<void> {
   }
 }
 
-// Create a new order
-export async function createOrder(hash: string): Promise<Order> {
+// Create a new order, returns null if the hash is taken
+export async function createOrder(hash: string): Promise<Order | null> {
   const database = await getDb();
   const now = Date.now();
   const expiresAt = now + SESSION_LIFETIME_MS;
 
   const stmt = database.prepare(`
-    INSERT INTO orders (hash, created_at, expires_at, last_modified)
+    INSERT OR IGNORE INTO orders (hash, created_at, expires_at, last_modified)
     VALUES (?, ?, ?, ?)
   `);
   
-  stmt.run(hash, now, expiresAt, now);
+  if (stmt.run(hash, now, expiresAt, now).changes === 0) return null;
 
   return { hash };
 }
