@@ -11,6 +11,37 @@ const CHARS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅ�
 const FONT_SIZE = 20;
 const FRAME_MS = 33; // ~30 fps
 
+// Draws a green clown face with plain shapes, since a system missing the
+// katakana font (e.g. a bare Arch install) is likely missing emoji fonts too
+function createGreenClown() {
+  const sprite = document.createElement('canvas');
+  sprite.width = sprite.height = FONT_SIZE;
+  const ctx = sprite.getContext('2d')!;
+  const s = FONT_SIZE / 20;
+  const circle = (x: number, y: number, r: number, color: string) => {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x * s, y * s, r * s, 0, Math.PI * 2);
+    ctx.fill();
+  };
+
+  // Hair tufts, face, eyes and nose
+  circle(3.5, 7, 3.5, '#080');
+  circle(16.5, 7, 3.5, '#080');
+  circle(10, 11, 7, '#0f0');
+  circle(7.5, 9, 1.2, '#000');
+  circle(12.5, 9, 1.2, '#000');
+  circle(10, 12, 2, '#050');
+
+  // Smile
+  ctx.strokeStyle = '#000';
+  ctx.lineWidth = 1.2 * s;
+  ctx.beginPath();
+  ctx.arc(10 * s, 13 * s, 3.5 * s, 0.15 * Math.PI, 0.85 * Math.PI);
+  ctx.stroke();
+  return sprite;
+}
+
 export function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -26,18 +57,21 @@ export function MatrixRain() {
     let disposed = false;
     let chars = '0123456789';
     let font = `${FONT_SIZE}px monospace`;
+    let clown: HTMLCanvasElement | null = null;
 
     // Canvas does not wait for web fonts. Use digits until the katakana font
-    // is ready, and keep that fallback if the font cannot be loaded.
+    // is ready, and rain green clowns instead if the font cannot be loaded.
+    const useClowns = () => {
+      if (!disposed) clown = createGreenClown();
+    };
     const loadedFont = `${FONT_SIZE}px ${matrixFont.style.fontFamily}`;
     void document.fonts.load(loadedFont, CHARS).then((faces) => {
-      if (disposed || faces.length === 0) return;
+      if (disposed) return;
+      if (faces.length === 0) return useClowns();
       chars = CHARS;
       font = loadedFont;
       ctx.font = font;
-    }).catch(() => {
-      // The digit-only rain remains usable if a font request fails.
-    });
+    }).catch(useClowns);
 
     // Rendered at CSS pixel size (not devicePixelRatio) to keep the per-frame fill cheap
     const resize = () => {
@@ -68,7 +102,9 @@ export function MatrixRain() {
 
       ctx.fillStyle = '#0f0';
       for (let i = 0; i < drops.length; i++) {
-        ctx.fillText(chars[(Math.random() * chars.length) | 0], i * FONT_SIZE, drops[i] * FONT_SIZE);
+        // Text is drawn from its baseline, so the sprite goes one row up to line up with it
+        if (clown) ctx.drawImage(clown, i * FONT_SIZE, (drops[i] - 1) * FONT_SIZE);
+        else ctx.fillText(chars[(Math.random() * chars.length) | 0], i * FONT_SIZE, drops[i] * FONT_SIZE);
 
         // Send the drop back to the top at a random point after it leaves the screen
         if (drops[i] * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
