@@ -7,7 +7,7 @@ export default function Home() {
   const router = useRouter();
   const [creating, setCreating] = useState(false);
   const btnClass =
-    'bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed shadow-lg transition-colors';
+    'bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg transition-colors';
 
   const createNewOrder = async () => {
     setCreating(true);
@@ -30,9 +30,9 @@ export default function Home() {
 
   return (
     <div className="container mx-auto px-4 py-16">
-      <div className="max-w-2xl mx-auto text-center">
-        <h1 className="text-6xl font-bold mb-6">EatIT</h1>
-        <p className="text-xl text-gray-600 mb-8">
+      <div className="max-w-2xl mx-auto text-center bg-black/85 rounded-2xl p-10 shadow-2xl">
+        <h1 className="text-6xl font-bold mb-6 text-white">EatIT</h1>
+        <p className="text-xl text-gray-200 mb-8">
           Organize food orders with your friends easily
         </p>
 
@@ -56,7 +56,7 @@ export default function Home() {
           </span>
         </button>
 
-        <p className="text-gray-500 mt-4 text-sm">
+        <p className="text-gray-300 mt-4 text-sm">
           Orders are automatically deleted after 24 hours
         </p>
       </div>
