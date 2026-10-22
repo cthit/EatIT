@@ -1,45 +1,52 @@
-# EatIT 
-A system for organizing food orders. Written in ReactJS and Meteor. 
+# EatIT
 
-### Features
-* Allow people to online organize a food order (for pizza for example). 
-* Summarizes same item orders 
-* Easily shareable link to specific order.
+A web application for organizing food orders with friends. Built with Next.js.
 
-### Physical requirements
-* Phone
+## Features
 
-## Production
-Use the automated [docker image](ghcr.io/cthit/eatit:latest)
+* **Real-time Updates**: All participants see order changes instantly via websockets
+* **Order Management**: Add and remove food orders with automatic grouping
+* **Quick Order**: Click on any food item to copy it to the order form
+* **Timer/Countdown**: Set delivery time with countdown display
+* **Swish Integration**: Swedish mobile payment with QR code support
+* **Menu Selection**: Integration with Chalmers food venues
+* **Share Links**: Easily shareable URLs and QR codes for joining orders
+* **Auto-Cleanup**: Orders automatically expire after 24 hours
 
-### Example compose file
-```yml
-services:
-  db:
-    image: mongo:4.4.6
-    networks:
-    - default
-    restart: unless-stopped
+## Getting Started
 
-  eatit:
-    image: ghcr.io/cthit/eatit:latest
-    environment: 
-      ROOT_URL: https://eatit.chalmers.it
-      MONGO_URL: mongodb://db:27017
-    restart: unless-stopped
+### Prerequisites
 
+- Node.js 22.5.0+ (for built-in SQLite support)
+- pnpm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd EatIT
 ```
 
-## Development
+2. Install dependencies:
+```bash
+pnpm install
+# or
+npm install
+```
 
-### Software requirements
-* docker
-* docker-compose
+3. Run the development server:
+```bash
+pnpm dev
+# or
+npm run dev
+```
 
-### Setup
-Run the following command:
-1. `docker-compose up`
+4. Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-### Local production environment
-You can compile and build the production image with your local codebase using:
-`docker-compose -f prod.docker-compose up --build`
+That's it! No service setup required.
+
+## Production Deployment
+
+The application can be deployed using Docker.
+For data persistence, mount a volume to `/app/data`.

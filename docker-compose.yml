@@ -1,11 +1,21 @@
-version: '2.2'
+version: '3.8'
+
 services:
   eatit:
-    build:
-      context: .
-      dockerfile: dev.Dockerfile
-    image: eatit:dev
+    build: .
+    restart: unless-stopped
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
     volumes:
-      - .:/app
+      - eatit_data:/app/data
+    networks:
+      - eatit-network
+
+volumes:
+  eatit_data:
+
+networks:
+  eatit-network:
+    driver: bridge

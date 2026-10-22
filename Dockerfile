@@ -1,65 +1,33 @@
-# Dockerfile for EatIT in production
-FROM debian:bookworm AS buildStage
-MAINTAINER digIT <digit@chalmers.it>
+FROM node:26-alpine AS builder
 
-ENV METEOR_VERSION 1.6.1
-
-# Setup directories and user
-RUN mkdir /app && mkdir /output && \
-    groupadd -r meteor && useradd -m -g meteor meteor
 WORKDIR /app
 
-# Install prerequisites
-RUN apt-get update && apt-get install -y \
-    curl git
+# Copy package files
+COPY package*.json ./
+COPY pnpm-lock.yaml ./
 
-# Copy Source files
+# Install dependencies
+RUN npm install -g pnpm@10.28.0
+RUN pnpm i --frozen-lockfile
+
+# Copy application files
 COPY . .
 
-# Change ownership and su unprivileged user
-RUN chown -R meteor:meteor /app && chown -R meteor /output
-USER meteor:meteor
+# Build the application
+RUN pnpm run build
 
-# Install meteor
-RUN curl https://install.meteor.com/?release=$METEOR_VERSION | sh
-USER root:root
-RUN cp /home/meteor/.meteor/packages/meteor-tool/$METEOR_VERSION/mt-os.linux.x86_64/scripts/admin/launch-meteor /usr/bin/meteor
-USER meteor:meteor
+# Production stage
+FROM node:26-alpine
 
-# Build and extract app
-RUN meteor npm install
-RUN meteor build /output
-WORKDIR /output
-RUN tar -zxf app.tar.gz && rm app.tar.gz
+WORKDIR /app
 
+# Copy built application
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
-##########################
-#    PRODUCTION STAGE    #
-##########################
-FROM node:9.1.0 AS production
-MAINTAINER digIT <digit@chalmers.it>
+ENV NODE_ENV=production
+ENV PORT=3000
 
-# Build arguments
-ARG port=8080
+EXPOSE 3000
 
-# Copy files from the build stage
-COPY --from=buildStage /output /app
-
-# Setup and su as unprivileged user
-RUN chown -R node:node /app
-USER node:node
-
-# Install the application
-WORKDIR /app/bundle/programs/server
-RUN npm install
-
-# Setup environment
-ENV MONGO_URL mongodb://user:password@host:port/databasename
-ENV ROOT_URL https://example.com
-ENV MAIL_URL smtp://user:password@mailhost:port
-ENV PORT $port
-EXPOSE $port
-
-# Provide default command and entrypoint
-WORKDIR /app/bundle
-CMD node main.js
+CMD ["node", "server.js"]
