@@ -75,5 +75,14 @@ export class GibraltarScraper extends RestaurantScraper {
 function toPrice(amounts: number[]): MenuPrice | undefined {
   if (amounts.length === 0) return undefined;
   if (amounts.length === 1) return { kind: 'single', amount: amounts[0] };
-  return { kind: 'options', options: amounts.map((amount) => ({ amount })) };
+  // The site lists two unlabeled prices for pizzas; only pizzor have two
+  // prices. First is the normal size, second (larger) the familjepizza.
+  const labels = amounts.length === 2 ? ['Normal', 'Familjepizza'] : [];
+  return {
+    kind: 'options',
+    options: amounts.map((amount, index) => ({
+      label: labels[index],
+      amount,
+    })),
+  };
 }
