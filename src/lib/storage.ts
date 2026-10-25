@@ -1,29 +1,20 @@
 import { DatabaseSync, type SQLInputValue } from 'node:sqlite';
-import path from 'path';
-import { promises as fs } from 'fs';
 import { Order, OrderItem } from '@/types/order';
 import { emitOrderEvent } from '@/lib/events';
+import { getDb as getConnection } from '@/lib/db';
 
-const DATA_DIR = path.join(process.cwd(), 'data');
-const DB_PATH = path.join(DATA_DIR, 'eatit.db');
 const SESSION_LIFETIME_MS = 24 * 60 * 60 * 1000; // 24 hours
 
-// Kept on globalThis so all route bundles and dev reloads share one connection
-const globalForDb = globalThis as typeof globalThis & { eatitDb?: Promise<DatabaseSync> };
+let schemaReady: Promise<void> | undefined;
 
-function getDb(): Promise<DatabaseSync> {
-  return (globalForDb.eatitDb ??= initDb());
+async function getDb(): Promise<DatabaseSync> {
+  const db = await getConnection();
+  schemaReady ??= initSchema(db);
+  await schemaReady;
+  return db;
 }
 
-// Initialize database
-async function initDb(): Promise<DatabaseSync> {
-  // Ensure data directory exists
-  await fs.mkdir(DATA_DIR, { recursive: true });
-
-  const db = new DatabaseSync(DB_PATH);
-  db.exec('PRAGMA journal_mode = WAL'); // Better concurrency
-
-  // Create tables
+async function initSchema(db: DatabaseSync): Promise<void> {
   db.exec(`
     CREATE TABLE IF NOT EXISTS orders (
       hash TEXT PRIMARY KEY,
@@ -51,11 +42,16 @@ async function initDb(): Promise<DatabaseSync> {
     CREATE INDEX IF NOT EXISTS idx_orders_expires_at ON orders(expires_at);
   `);
 
-  // Delete expired sessions now and then
-  cleanupExpiredSessions().catch(console.error);
-  setInterval(() => cleanupExpiredSessions().catch(console.error), 60 * 60 * 1000);
+  // Delete expired sessions now and then (directly, to avoid re-entering getDb during init)
+  const cleanup = () => {
+    const result = db.prepare('DELETE FROM orders WHERE expires_at < ?').run(Date.now());
+    if (result.changes > 0) {
+      console.log(`Cleaned up ${result.changes} expired sessions`);
+    }
+  };
 
-  return db;
+  cleanup();
+  setInterval(cleanup, 60 * 60 * 1000);
 }
 
 // Delete expired orders (cascades to order_items)
