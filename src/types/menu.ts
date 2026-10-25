@@ -1,6 +1,11 @@
+export type MenuPrice =
+  | { kind: 'single'; amount: number }
+  | { kind: 'range'; min: number; max: number }
+  | { kind: 'options'; options: { label?: string; amount: number }[] };
+
 export interface MenuItem {
   name: string;
-  price?: string;
+  price?: MenuPrice;
   description?: string;
   /** Present on every item of a menu, or on none of them */
   ingredients?: string[];

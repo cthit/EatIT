@@ -89,18 +89,11 @@ export abstract class OrdineScraper extends RestaurantScraper {
       const price = item.current_price ?? item.price;
       section.items.push({
         name: item.name.trim(),
-        price: price != null ? formatPrice(price) : undefined,
+        price: typeof price === 'number' ? { kind: 'single', amount: price } : undefined,
         description: item.description?.trim() || undefined,
       });
     }
 
     return sections;
   }
-}
-
-function formatPrice(price: number): string {
-  const formatted = Number.isInteger(price)
-    ? String(price)
-    : price.toFixed(2).replace('.', ',');
-  return `${formatted} kr`;
 }

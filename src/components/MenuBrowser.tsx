@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Menu, RestaurantSummary } from '@/types/menu';
+import { formatPrice, formatPriceShort } from '@/lib/price';
 import { Card } from '@/components/ui';
 
 interface MenuBrowserProps {
@@ -170,7 +171,12 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                                   )}
                                 </span>
                                 {item.price && (
-                                  <span className="text-gray-500 whitespace-nowrap">{item.price}</span>
+                                  <span
+                                    className="text-gray-500 whitespace-nowrap"
+                                    title={formatPrice(item.price)}
+                                  >
+                                    {formatPriceShort(item.price)}
+                                  </span>
                                 )}
                               </button>
                             </li>

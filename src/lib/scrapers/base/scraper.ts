@@ -151,7 +151,7 @@ export abstract class RestaurantScraper {
 
       const priceMatch = line.match(PRICE_PATTERN);
       if (priceMatch) {
-        const price = priceMatch[0].trim();
+        const amount = parseAmount(priceMatch[0]);
         let name = line
           .replace(PRICE_PATTERN, '')
           .replace(/[\s:·|.,\-–]+$/, '')
@@ -169,8 +169,8 @@ export abstract class RestaurantScraper {
           name = name.replace(/\s*\([^)]+\)/, '').trim();
         }
 
-        if (isPlausibleItemName(name)) {
-          current.items.push(ingredients ? { name, price, ingredients } : { name, price });
+        if (amount !== undefined && isPlausibleItemName(name)) {
+          current.items.push({ name, price: { kind: 'single', amount }, ingredients });
         }
         continue;
       }
@@ -188,6 +188,12 @@ export abstract class RestaurantScraper {
     pushCurrent();
     return sections;
   }
+}
+
+/** Parse a human price like "129:-" or "12,50 kr" into a number */
+export function parseAmount(text: string): number | undefined {
+  const match = text.replace(',', '.').match(/(\d+(?:\.\d{1,2})?)/);
+  return match ? Number(match[1]) : undefined;
 }
 
 function isPlausibleItemName(name: string): boolean {

@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite';
-import { Menu, MenuSection, RestaurantSummary } from '@/types/menu';
+import { Menu, MenuPrice, MenuSection, RestaurantSummary } from '@/types/menu';
 import { getDb } from '@/lib/db';
 import { RestaurantScraper, ScraperRegistry, scraperRegistry, enforceIngredientsRule } from '@/lib/scrapers';
 
@@ -38,6 +38,14 @@ async function initSchema(db: DatabaseSync): Promise<void> {
   const columns = db.prepare('PRAGMA table_info(menu_items)').all() as unknown as { name: string }[];
   if (!columns.some((column) => column.name === 'ingredients')) {
     db.exec('ALTER TABLE menu_items ADD COLUMN ingredients TEXT');
+  }
+
+  // Menus are a cache: drop entries stored before prices became structured JSON
+  const legacyPrice = db
+    .prepare("SELECT 1 FROM menu_items WHERE price IS NOT NULL AND price NOT LIKE '{%' LIMIT 1")
+    .get();
+  if (legacyPrice) {
+    db.exec('DELETE FROM menu_items; DELETE FROM restaurants;');
   }
 }
 
@@ -154,7 +162,7 @@ export class SqliteMenuBrowser extends MenuBrowser {
       }
       section.items.push({
         name: item.name,
-        price: item.price ?? undefined,
+        price: item.price ? (JSON.parse(item.price) as MenuPrice) : undefined,
         description: item.description ?? undefined,
         ingredients: item.ingredients ? (JSON.parse(item.ingredients) as string[]) : undefined,
       });
@@ -198,7 +206,7 @@ export class SqliteMenuBrowser extends MenuBrowser {
             menu.restaurantId,
             section.name,
             item.name,
-            item.price ?? null,
+            item.price ? JSON.stringify(item.price) : null,
             item.description ?? null,
             item.ingredients ? JSON.stringify(item.ingredients) : null,
             position++

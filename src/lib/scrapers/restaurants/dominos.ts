@@ -1,4 +1,4 @@
-import { MenuSection } from '@/types/menu';
+import { MenuPrice, MenuSection } from '@/types/menu';
 import { RestaurantScraper } from '../base/scraper';
 
 interface LocaleString {
@@ -71,7 +71,7 @@ export class DominosScraper extends RestaurantScraper {
 
       section.items.push({
         name,
-        price: formatSizes(product.variations ?? []),
+        price: toPrice(product.variations ?? []),
         description: product.description?.sv?.trim() || undefined,
         ingredients: ingredients.length > 0 ? ingredients : undefined,
       });
@@ -81,17 +81,29 @@ export class DominosScraper extends RestaurantScraper {
   }
 }
 
-/** One price per distinct pizza size (cheapest channel), e.g. "75 kr / 141 kr / 179 kr" */
-function formatSizes(variations: DominoVariation[]): string | undefined {
-  const cheapestBySize = new Map<string, number>();
+/** One option per pizza size (cheapest channel), labeled with the diameter */
+function toPrice(variations: DominoVariation[]): MenuPrice | undefined {
+  const bySize = new Map<string, { label?: string; amount: number; diameter: number }>();
+
   for (const { size, price } of variations) {
     if (!size || typeof price !== 'number') continue;
-    const current = cheapestBySize.get(size);
-    if (current === undefined || price < current) {
-      cheapestBySize.set(size, price);
+
+    const current = bySize.get(size);
+    if (!current || price < current.amount) {
+      const diameter = Number(/(\d+)/.exec(size)?.[1] ?? Number.MAX_SAFE_INTEGER);
+      bySize.set(size, {
+        label: Number.isFinite(diameter) ? `${diameter} cm` : undefined,
+        amount: price,
+        diameter,
+      });
     }
   }
 
-  const prices = [...new Set(cheapestBySize.values())].sort((a, b) => a - b);
-  return prices.length > 0 ? prices.map((price) => `${price} kr`).join(' / ') : undefined;
+  const options = [...bySize.values()].sort((a, b) => a.diameter - b.diameter);
+  if (options.length === 0) return undefined;
+  if (options.length === 1) return { kind: 'single', amount: options[0].amount };
+  return {
+    kind: 'options',
+    options: options.map(({ label, amount }) => ({ label, amount })),
+  };
 }

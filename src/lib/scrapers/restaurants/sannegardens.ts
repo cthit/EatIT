@@ -1,7 +1,8 @@
-import { MenuSection } from '@/types/menu';
+import { MenuPrice, MenuSection } from '@/types/menu';
 import { RestaurantScraper } from '../base/scraper';
 
 interface LdOffer {
+  price?: number;
   lowPrice?: number;
   highPrice?: number;
 }
@@ -47,7 +48,7 @@ export class SannegardensScraper extends RestaurantScraper {
           .filter((item) => Boolean(item.name))
           .map((item) => ({
             name: item.name!.trim(),
-            price: formatOffer(item.offers),
+            price: toPrice(item.offers),
             description: item.description?.trim() || undefined,
           })),
       }))
@@ -85,12 +86,17 @@ export class SannegardensScraper extends RestaurantScraper {
   }
 }
 
-/** "109 kr" when low and high match, otherwise "109–220 kr" */
-function formatOffer(offers?: LdOffer): string | undefined {
-  const { lowPrice, highPrice } = offers ?? {};
-  if (typeof lowPrice !== 'number') return undefined;
-  if (typeof highPrice === 'number' && highPrice !== lowPrice) {
-    return `${lowPrice}–${highPrice} kr`;
+/** Single price, a low/high range, or a plain schema.org Offer price */
+function toPrice(offers?: LdOffer): MenuPrice | undefined {
+  const { price, lowPrice, highPrice } = offers ?? {};
+  if (typeof lowPrice === 'number') {
+    if (typeof highPrice === 'number' && highPrice !== lowPrice) {
+      return { kind: 'range', min: lowPrice, max: highPrice };
+    }
+    return { kind: 'single', amount: lowPrice };
   }
-  return `${lowPrice} kr`;
+  if (typeof price === 'number') {
+    return { kind: 'single', amount: price };
+  }
+  return undefined;
 }

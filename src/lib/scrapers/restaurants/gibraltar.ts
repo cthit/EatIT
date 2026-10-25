@@ -1,5 +1,5 @@
-import { MenuItem, MenuSection } from '@/types/menu';
-import { RestaurantScraper } from '../base/scraper';
+import { MenuItem, MenuPrice, MenuSection } from '@/types/menu';
+import { RestaurantScraper, parseAmount } from '../base/scraper';
 
 const MENU_PAGES = [
   'https://pizzeriagibraltar.com/',
@@ -50,10 +50,10 @@ export class GibraltarScraper extends RestaurantScraper {
       }
 
       if (cellClass === 'clprc' && pending) {
-        const prices = [...raw.matchAll(/class="prcitem"[^>]*>([^<]*)</g)]
-          .map((match) => match[1].trim())
-          .filter(Boolean);
-        pending.price = prices.join(' / ') || undefined;
+        const amounts = [...raw.matchAll(/class="prcitem"[^>]*>([^<]*)</g)]
+          .map((match) => parseAmount(match[1]))
+          .filter((amount): amount is number => amount !== undefined);
+        pending.price = toPrice(amounts);
         continue;
       }
 
@@ -70,4 +70,10 @@ export class GibraltarScraper extends RestaurantScraper {
     flushPending();
     return sections.filter((section) => section.items.length > 0);
   }
+}
+
+function toPrice(amounts: number[]): MenuPrice | undefined {
+  if (amounts.length === 0) return undefined;
+  if (amounts.length === 1) return { kind: 'single', amount: amounts[0] };
+  return { kind: 'options', options: amounts.map((amount) => ({ amount })) };
 }
