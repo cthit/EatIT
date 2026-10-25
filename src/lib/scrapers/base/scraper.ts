@@ -63,14 +63,26 @@ export abstract class RestaurantScraper {
 
   /** Fetch and parse the restaurant's menu */
   async scrape(url: string = this.homeUrl): Promise<Menu> {
-    const html = await this.fetchHtml(url);
+    const sections: MenuSection[] = [];
+    for (const menuUrl of this.menuUrls(url)) {
+      sections.push(...this.parseMenu(await this.fetchHtml(menuUrl), menuUrl));
+    }
+
     return {
       restaurantId: this.id,
       restaurantName: this.name,
       url,
-      sections: enforceIngredientsRule(this.parseMenu(html, url)),
+      sections: enforceIngredientsRule(sections),
       scrapedAt: Date.now(),
     };
+  }
+
+  /**
+   * All URLs that together make up the restaurant's menu.
+   * Override for restaurants that split their menu across pages.
+   */
+  protected menuUrls(url: string): string[] {
+    return [url];
   }
 
   /** Extract menu sections from the fetched HTML */
@@ -93,24 +105,29 @@ export abstract class RestaurantScraper {
     return await response.text();
   }
 
+  /** Decode common HTML entities */
+  protected decodeEntities(text: string): string {
+    return text.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (match, entity: string) => {
+      if (entity.startsWith('#x') || entity.startsWith('#X')) {
+        const code = parseInt(entity.slice(2), 16);
+        return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+      }
+      if (entity.startsWith('#')) {
+        const code = parseInt(entity.slice(1), 10);
+        return Number.isFinite(code) ? String.fromCodePoint(code) : match;
+      }
+      return NAMED_ENTITIES[entity] ?? NAMED_ENTITIES[entity.toLowerCase()] ?? ' ';
+    });
+  }
+
   /** Remove scripts/styles/tags and decode common entities, one block of text per line */
   protected stripTags(html: string): string {
-    return html
-      .replace(/<script[\s\S]*?<\/script>/gi, ' ')
-      .replace(/<style[\s\S]*?<\/style>/gi, ' ')
-      .replace(/<[^>]+>/g, '\n')
-      .replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (match, entity: string) => {
-        if (entity.startsWith('#x') || entity.startsWith('#X')) {
-          const code = parseInt(entity.slice(2), 16);
-          return Number.isFinite(code) ? String.fromCodePoint(code) : match;
-        }
-        if (entity.startsWith('#')) {
-          const code = parseInt(entity.slice(1), 10);
-          return Number.isFinite(code) ? String.fromCodePoint(code) : match;
-        }
-        return NAMED_ENTITIES[entity] ?? NAMED_ENTITIES[entity.toLowerCase()] ?? ' ';
-      })
-      .replace(/\r/g, '');
+    return this.decodeEntities(
+      html
+        .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+        .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+        .replace(/<[^>]+>/g, '\n')
+    ).replace(/\r/g, '');
   }
 
   /**
