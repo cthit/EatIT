@@ -48,12 +48,13 @@ export default function Home() {
             </span>
           </button>
           <button
-            disabled
+            onClick={() => router.push('/menus')}
+            disabled={creating}
             className={btnClass}
           >
             See menus<br/>
             <span className="text-sm text-gray-200">
-              Coming soon
+              Browse restaurants
             </span>
           </button>
         </div>

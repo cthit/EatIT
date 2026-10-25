@@ -8,6 +8,7 @@ import { Timer } from '@/components/Timer';
 import { SwishInfo } from '@/components/SwishInfo';
 import { ShareSection } from '@/components/ShareSection';
 import { MenuSelector } from '@/components/MenuSelector';
+import { MenuBrowser } from '@/components/MenuBrowser';
 
 interface OrderPageClientProps {
   hash: string;
@@ -94,6 +95,14 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
           hasOrders={hasOrders}
           hasMenu={Boolean(order.restaurant?.restaurantName)}
           onSetMenu={(restaurantName, linkToMenu) =>
+            updateOrder({ restaurant: { restaurantName, linkToMenu } })
+          }
+        />
+
+        <MenuBrowser
+          canSelectItems={!timerStarted}
+          onSelectItem={timerStarted ? undefined : (itemName) => orderFormRef.current?.setPizzaField(itemName)}
+          onSelectRestaurant={(restaurantName, linkToMenu) =>
             updateOrder({ restaurant: { restaurantName, linkToMenu } })
           }
         />
