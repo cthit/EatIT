@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Card, Field, inputClass } from '@/components/ui';
+import { RestaurantSummary } from '@/types/menu';
 
 interface MenuSelectorProps {
   hasOrders: boolean;
@@ -9,15 +10,27 @@ interface MenuSelectorProps {
   onSetMenu: (restaurantName: string, linkToMenu: string) => void;
 }
 
-const restaurants = [
-  { name: 'Sannegårdens Pizzeria', link: 'https://sannegardens.se/bestalla-online/?loc=johanneberg&change-method=takeaway' },
-  { name: 'Pizzeria Gibraltar', link: 'https://pizzeriagibraltar.com/' },
-  { name: 'Dominos', link: 'https://www.dominos.se/butiker/johanneberg/meny/pizza' },
-];
-
 export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProps) {
+  const [restaurants, setRestaurants] = useState<RestaurantSummary[]>([]);
   const [selected, setSelected] = useState('');
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch('/api/restaurants')
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data: RestaurantSummary[]) => {
+        if (!cancelled) setRestaurants(data);
+      })
+      .catch(() => {
+        if (!cancelled) setRestaurants([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Only show if there are no orders and no menu set
   if (hasOrders || hasMenu) {
@@ -30,12 +43,12 @@ export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProp
         className="space-y-4"
         onSubmit={(e) => {
           e.preventDefault();
-          const restaurant = restaurants[parseInt(selected)];
+          const restaurant = restaurants.find((r) => r.id === selected);
           if (!restaurant) {
             setError('Please select a restaurant');
             return;
           }
-          onSetMenu(restaurant.name, restaurant.link);
+          onSetMenu(restaurant.name, restaurant.url);
         }}
       >
         <Field label="Restaurang" htmlFor="restaurant" error={error}>
@@ -50,8 +63,8 @@ export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProp
               className={`${inputClass} appearance-none bg-white pr-10 cursor-pointer ${selected ? 'text-gray-900' : 'text-gray-400'}`}
             >
               <option value="">Välj restaurang från vart ni ska köpa ifrån</option>
-              {restaurants.map((restaurant, index) => (
-                <option key={index} value={index} className="text-gray-900">
+              {restaurants.map((restaurant) => (
+                <option key={restaurant.id} value={restaurant.id} className="text-gray-900">
                   {restaurant.name}
                 </option>
               ))}
