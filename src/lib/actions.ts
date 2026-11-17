@@ -8,9 +8,7 @@ import {
   getOrderByHash,
   updateOrder,
 } from '@/lib/storage';
-import { menuBrowser } from '@/lib/menu-browser';
 import type { ActionResult } from '@/types/action';
-import type { Menu } from '@/types/menu';
 import type { Order, OrderItem } from '@/types/order';
 
 function randomHash(): string {
@@ -118,9 +116,4 @@ export async function updateOrderAction(
   if (!updatedOrder) return { ok: false, error: 'Order not found' };
 
   return { ok: true, data: updatedOrder };
-}
-
-/** Stored menu for a restaurant, used when expanding it in the browser */
-export async function getMenuAction(restaurantId: string): Promise<Menu | null> {
-  return menuBrowser.getMenu(restaurantId);
 }

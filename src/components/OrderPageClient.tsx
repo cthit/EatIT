@@ -9,7 +9,6 @@ import { Timer } from '@/components/Timer';
 import { SwishInfo } from '@/components/SwishInfo';
 import { ShareSection } from '@/components/ShareSection';
 import { MenuSelector } from '@/components/MenuSelector';
-import { MenuBrowser } from '@/components/MenuBrowser';
 import { updateOrderAction } from '@/lib/actions';
 
 interface OrderPageClientProps {
@@ -64,7 +63,7 @@ export default function OrderPageClient({
     };
   }, [hash]);
 
-  const updateOrder = async (updates: Partial<Order>) => {
+  const updateOrder = async (updates: Partial<Order>): Promise<boolean> => {
     try {
       const result = await updateOrderAction({ hash, ...updates });
 
@@ -74,8 +73,10 @@ export default function OrderPageClient({
 
       // Apply immediately instead of waiting for the websocket echo
       setOrder(result.data);
+      return true;
     } catch (error) {
       console.error('Error updating order:', error);
+      return false;
     }
   };
 
@@ -100,18 +101,9 @@ export default function OrderPageClient({
 
         <MenuSelector
           restaurants={restaurants}
+          selectedRestaurant={order.restaurant}
           hasOrders={hasOrders}
-          hasMenu={Boolean(order.restaurant?.restaurantName)}
           onSetMenu={(restaurantName, linkToMenu) =>
-            updateOrder({ restaurant: { restaurantName, linkToMenu } })
-          }
-        />
-
-        <MenuBrowser
-          restaurants={restaurants}
-          canSelectItems={!timerStarted}
-          onSelectItem={timerStarted ? undefined : (itemName) => orderFormRef.current?.setPizzaField(itemName)}
-          onSelectRestaurant={(restaurantName, linkToMenu) =>
             updateOrder({ restaurant: { restaurantName, linkToMenu } })
           }
         />
@@ -128,7 +120,7 @@ export default function OrderPageClient({
           onSetTimer={(timerEnd) => updateOrder({ timer_end: timerEnd })}
         />
 
-        <ShareSection restaurant={order.restaurant} />
+        <ShareSection />
       </div>
     </div>
   );
