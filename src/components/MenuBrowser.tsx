@@ -82,11 +82,6 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                 className="text-left flex-1 min-w-0 hover:text-blue-600"
               >
                 <span className="font-medium">{restaurant.name}</span>
-                {restaurant.hasMenu && restaurant.scrapedAt && (
-                  <span className="ml-2 text-xs text-gray-500 whitespace-nowrap">
-                    updated {new Date(restaurant.scrapedAt).toLocaleString()}
-                  </span>
-                )}
               </button>
 
               {onSelectRestaurant && (

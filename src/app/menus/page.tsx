@@ -29,11 +29,6 @@ export default async function MenusPage() {
                 className="flex justify-between items-baseline gap-4 py-3 hover:text-blue-600"
               >
                 <span className="font-medium">{restaurant.name}</span>
-                <span className="text-sm text-gray-500 whitespace-nowrap">
-                  {restaurant.hasMenu && restaurant.scrapedAt
-                    ? `updated ${new Date(restaurant.scrapedAt).toLocaleString()}`
-                    : 'not scraped yet'}
-                </span>
               </Link>
             </li>
           ))}

@@ -39,7 +39,7 @@ export default async function MenuPage({ params }: MenuPageProps) {
       </div>
       <h1 className="text-4xl font-bold mt-2 mb-8 text-white">{scraper.name}</h1>
 
-      <Card title={menu ? `Menu - updated ${new Date(menu.scrapedAt).toLocaleString()}` : 'Menu'}>
+      <Card title="Menu">
         {!menu && (
           <p className="text-sm text-gray-600">
             This menu has not been fetched yet. Menus are refreshed automatically.
