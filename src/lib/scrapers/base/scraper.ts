@@ -65,7 +65,7 @@ export abstract class RestaurantScraper {
   async scrape(url: string = this.homeUrl): Promise<Menu> {
     const sections: MenuSection[] = [];
     for (const menuUrl of this.menuUrls(url)) {
-      sections.push(...this.parseMenu(await this.fetchHtml(menuUrl), menuUrl));
+      sections.push(...(await this.parseMenu(await this.fetchHtml(menuUrl), menuUrl)));
     }
 
     return {
@@ -86,7 +86,7 @@ export abstract class RestaurantScraper {
   }
 
   /** Extract menu sections from the fetched HTML */
-  protected abstract parseMenu(html: string, url: string): MenuSection[];
+  protected abstract parseMenu(html: string, url: string): MenuSection[] | Promise<MenuSection[]>;
 
   protected async fetchHtml(url: string): Promise<string> {
     const response = await fetch(url, {

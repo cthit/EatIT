@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Menu, RestaurantSummary } from '@/types/menu';
-import { formatPrice, formatPriceShort } from '@/lib/price';
+import { describePrice, formatPriceShort } from '@/lib/price';
 import { Card } from '@/components/ui';
 import { PriceChoices } from '@/components/PriceChoices';
 
@@ -194,7 +194,7 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                                         )
                                       }
                                       aria-expanded={choicesOpen}
-                                      title={formatPrice(item.price)}
+                                      title={describePrice(item.price)}
                                       className="text-sm text-gray-500 whitespace-nowrap hover:text-blue-600"
                                     >
                                       {formatPriceShort(item.price)}
@@ -211,7 +211,7 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                                     item.price && (
                                       <span
                                         className="text-sm text-gray-500 whitespace-nowrap"
-                                        title={formatPrice(item.price)}
+                                        title={describePrice(item.price)}
                                       >
                                         {formatPriceShort(item.price)}
                                       </span>

@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { menuBrowser } from '@/lib/menu-browser';
 import { scraperRegistry } from '@/lib/scrapers';
-import { formatPrice, formatPriceShort } from '@/lib/price';
+import { describePrice, formatPriceShort } from '@/lib/price';
 import { Card } from '@/components/ui';
 import { PriceChoices } from '@/components/PriceChoices';
 import { scrapeMenu } from './actions';
@@ -88,7 +88,7 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
                       item.price && (
                         <span
                           className="text-gray-500 whitespace-nowrap"
-                          title={formatPrice(item.price)}
+                          title={describePrice(item.price)}
                         >
                           {formatPriceShort(item.price)}
                         </span>
