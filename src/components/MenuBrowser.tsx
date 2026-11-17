@@ -1,42 +1,31 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Menu, RestaurantSummary } from '@/types/menu';
 import { describePrice, formatPriceShort } from '@/lib/price';
 import { Card } from '@/components/ui';
 import { PriceChoices } from '@/components/PriceChoices';
+import { getMenuAction } from '@/lib/actions';
 
 interface MenuBrowserProps {
+  restaurants: RestaurantSummary[];
   canSelectItems?: boolean;
   onSelectItem?: (itemName: string) => void;
   onSelectRestaurant?: (name: string, url: string) => void;
 }
 
-export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectRestaurant }: MenuBrowserProps) {
-  const [restaurants, setRestaurants] = useState<RestaurantSummary[]>([]);
+export function MenuBrowser({
+  restaurants,
+  canSelectItems = true,
+  onSelectItem,
+  onSelectRestaurant,
+}: MenuBrowserProps) {
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [menu, setMenu] = useState<Menu | null>(null);
   const [openChoices, setOpenChoices] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch('/api/restaurants')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data: RestaurantSummary[]) => {
-        if (!cancelled) setRestaurants(data);
-      })
-      .catch(() => {
-        if (!cancelled) setRestaurants([]);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const openRestaurant = async (restaurant: RestaurantSummary) => {
     if (expandedId === restaurant.id) {
@@ -55,10 +44,8 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/restaurants/${restaurant.id}`);
-      if (res.status === 404) return; // Never scraped successfully
-      if (!res.ok) throw new Error('Failed to load menu');
-      setMenu(await res.json());
+      const loadedMenu = await getMenuAction(restaurant.id);
+      if (loadedMenu) setMenu(loadedMenu);
     } catch {
       setError('Failed to load menu');
     } finally {

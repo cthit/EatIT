@@ -4,6 +4,8 @@ import { menuBrowser } from '@/lib/menu-browser';
 
 type Context = { params: Promise<{ id: string }> };
 
+export const dynamic = 'force-dynamic';
+
 export const GET = withHandler<Context>(
   'fetch restaurant menu',
   async (_request: NextRequest, { params }: Context) => {

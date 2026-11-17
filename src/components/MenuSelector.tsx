@@ -1,36 +1,19 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Card, Field, inputClass } from '@/components/ui';
 import { RestaurantSummary } from '@/types/menu';
 
 interface MenuSelectorProps {
+  restaurants: RestaurantSummary[];
   hasOrders: boolean;
   hasMenu: boolean;
   onSetMenu: (restaurantName: string, linkToMenu: string) => void;
 }
 
-export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProps) {
-  const [restaurants, setRestaurants] = useState<RestaurantSummary[]>([]);
+export function MenuSelector({ restaurants, hasOrders, hasMenu, onSetMenu }: MenuSelectorProps) {
   const [selected, setSelected] = useState('');
   const [error, setError] = useState('');
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch('/api/restaurants')
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data: RestaurantSummary[]) => {
-        if (!cancelled) setRestaurants(data);
-      })
-      .catch(() => {
-        if (!cancelled) setRestaurants([]);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // Only show if there are no orders and no menu set
   if (hasOrders || hasMenu) {

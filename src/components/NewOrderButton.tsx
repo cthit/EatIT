@@ -1,30 +1,28 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useTransition } from 'react';
 import { homeButtonClass } from '@/components/ui';
+import { createOrderAction } from '@/lib/actions';
 
 export function NewOrderButton() {
   const router = useRouter();
-  const [creating, setCreating] = useState(false);
+  const [creating, startTransition] = useTransition();
 
-  const createNewOrder = async () => {
-    setCreating(true);
-    try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-      });
+  const createNewOrder = () => {
+    startTransition(async () => {
+      try {
+        const result = await createOrderAction();
 
-      if (!response.ok) {
-        throw new Error('Failed to create order');
+        if (!result.ok) {
+          throw new Error(result.error);
+        }
+
+        router.push(`/${result.data}`);
+      } catch (error) {
+        console.error('Error creating order:', error);
       }
-
-      const data = await response.json();
-      router.push(`/${data.hash}`);
-    } catch (error) {
-      console.error('Error creating order:', error);
-      setCreating(false);
-    }
+    });
   };
 
   return (

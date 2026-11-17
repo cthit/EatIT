@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { Order, OrderItem } from '@/types/order';
+import { RestaurantSummary } from '@/types/menu';
 import { OrderForm, OrderFormRef } from '@/components/OrderForm';
 import { OrdersList } from '@/components/OrdersList';
 import { Timer } from '@/components/Timer';
@@ -9,14 +10,21 @@ import { SwishInfo } from '@/components/SwishInfo';
 import { ShareSection } from '@/components/ShareSection';
 import { MenuSelector } from '@/components/MenuSelector';
 import { MenuBrowser } from '@/components/MenuBrowser';
+import { updateOrderAction } from '@/lib/actions';
 
 interface OrderPageClientProps {
   hash: string;
   initialOrder: Order;
   initialOrderItems: OrderItem[];
+  restaurants: RestaurantSummary[];
 }
 
-export default function OrderPageClient({ hash, initialOrder, initialOrderItems }: OrderPageClientProps) {
+export default function OrderPageClient({
+  hash,
+  initialOrder,
+  initialOrderItems,
+  restaurants,
+}: OrderPageClientProps) {
   const [order, setOrder] = useState<Order>(initialOrder);
   const [orderItems, setOrderItems] = useState<OrderItem[]>(initialOrderItems);
   const orderFormRef = useRef<OrderFormRef>(null);
@@ -58,15 +66,14 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
 
   const updateOrder = async (updates: Partial<Order>) => {
     try {
-      const response = await fetch('/api/orders/update', {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hash, ...updates }),
-      });
+      const result = await updateOrderAction({ hash, ...updates });
 
-      if (!response.ok) {
-        throw new Error('Failed to update order');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
+
+      // Apply immediately instead of waiting for the websocket echo
+      setOrder(result.data);
     } catch (error) {
       console.error('Error updating order:', error);
     }
@@ -92,6 +99,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
         />
 
         <MenuSelector
+          restaurants={restaurants}
           hasOrders={hasOrders}
           hasMenu={Boolean(order.restaurant?.restaurantName)}
           onSetMenu={(restaurantName, linkToMenu) =>
@@ -100,6 +108,7 @@ export default function OrderPageClient({ hash, initialOrder, initialOrderItems 
         />
 
         <MenuBrowser
+          restaurants={restaurants}
           canSelectItems={!timerStarted}
           onSelectItem={timerStarted ? undefined : (itemName) => orderFormRef.current?.setPizzaField(itemName)}
           onSelectRestaurant={(restaurantName, linkToMenu) =>

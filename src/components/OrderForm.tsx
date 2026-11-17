@@ -3,6 +3,7 @@
 import { useState, forwardRef, useImperativeHandle } from 'react';
 import { Card, Field, inputClass } from '@/components/ui';
 import { useToast } from '@/components/useToast';
+import { addOrderItemAction } from '@/lib/actions';
 
 interface OrderFormProps {
   orderHash: string;
@@ -55,18 +56,14 @@ export const OrderForm = forwardRef<OrderFormRef, OrderFormProps>(({ orderHash }
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('/api/order-items', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderHash,
-          pizza: pizza.trim(),
-          nick: nick.trim(),
-        }),
+      const result = await addOrderItemAction({
+        orderHash,
+        pizza: pizza.trim(),
+        nick: nick.trim(),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to add order');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
 
       showToast(`You have added ${pizza} as ${nick}`);
