@@ -2,7 +2,8 @@
 
 import { useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Card, useToast } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { useToast } from '@/components/useToast';
 import { Restaurant } from '@/types/order';
 
 export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {

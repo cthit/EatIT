@@ -1,7 +1,8 @@
 'use client';
 
 import { useState, forwardRef, useImperativeHandle } from 'react';
-import { Card, Field, inputClass, useToast } from '@/components/ui';
+import { Card, Field, inputClass } from '@/components/ui';
+import { useToast } from '@/components/useToast';
 
 interface OrderFormProps {
   orderHash: string;

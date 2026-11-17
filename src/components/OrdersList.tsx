@@ -1,7 +1,8 @@
 'use client';
 
 import { OrderItem } from '@/types/order';
-import { Card, useToast } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { useToast } from '@/components/useToast';
 
 interface OrdersListProps {
   orderItems: OrderItem[];

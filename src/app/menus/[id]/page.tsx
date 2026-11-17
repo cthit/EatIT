@@ -29,9 +29,14 @@ export default async function MenuPage({ params }: MenuPageProps) {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <Link href="/menus" className="text-sm text-gray-300 hover:text-white">
-        &larr; All restaurants
-      </Link>
+      <div className="flex items-center gap-4">
+        <Link href="/" className="text-sm text-gray-300 hover:text-white">
+          &larr; Home
+        </Link>
+        <Link href="/menus" className="text-sm text-gray-300 hover:text-white">
+          All restaurants
+        </Link>
+      </div>
       <h1 className="text-4xl font-bold mt-2 mb-8 text-white">{scraper.name}</h1>
 
       <Card title={menu ? `Menu - updated ${new Date(menu.scrapedAt).toLocaleString()}` : 'Menu'}>

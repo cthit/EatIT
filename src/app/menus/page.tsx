@@ -15,7 +15,10 @@ export default async function MenusPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-4xl font-bold text-center mb-8 text-white">Restaurant menus</h1>
+      <Link href="/" className="text-sm text-gray-300 hover:text-white">
+        &larr; Home
+      </Link>
+      <h1 className="text-4xl font-bold text-center mb-8 mt-2 text-white">Restaurant menus</h1>
 
       <Card title="Choose a restaurant">
         <ul className="divide-y divide-gray-200">
