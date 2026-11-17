@@ -6,13 +6,11 @@ import { scraperRegistry } from '@/lib/scrapers';
 import { describePrice, formatPriceShort } from '@/lib/price';
 import { Card } from '@/components/ui';
 import { PriceChoices } from '@/components/PriceChoices';
-import { scrapeMenu } from './actions';
 
 export const dynamic = 'force-dynamic';
 
 interface MenuPageProps {
   params: Promise<{ id: string }>;
-  searchParams: Promise<{ error?: string }>;
 }
 
 export async function generateMetadata({ params }: MenuPageProps): Promise<Metadata> {
@@ -21,9 +19,8 @@ export async function generateMetadata({ params }: MenuPageProps): Promise<Metad
   return { title: `${scraper?.name ?? 'Menu'} - EatIT` };
 }
 
-export default async function MenuPage({ params, searchParams }: MenuPageProps) {
+export default async function MenuPage({ params }: MenuPageProps) {
   const { id } = await params;
-  const { error } = await searchParams;
 
   const scraper = scraperRegistry.byId(id);
   if (!scraper) notFound();
@@ -37,27 +34,11 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
       </Link>
       <h1 className="text-4xl font-bold mt-2 mb-8 text-white">{scraper.name}</h1>
 
-      {error && (
-        <p className="mb-4 text-sm text-red-400 bg-red-950/60 rounded-md px-3 py-2">
-          Failed to scrape the menu. Please try again.
-        </p>
-      )}
-
       <Card title={menu ? `Menu - updated ${new Date(menu.scrapedAt).toLocaleString()}` : 'Menu'}>
         {!menu && (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600">
-              This menu has not been scraped yet.
-            </p>
-            <form action={scrapeMenu.bind(null, id)}>
-              <button
-                type="submit"
-                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
-              >
-                Scrape menu
-              </button>
-            </form>
-          </div>
+          <p className="text-sm text-gray-600">
+            This menu has not been fetched yet. Menus are refreshed automatically.
+          </p>
         )}
 
         {menu && (
@@ -124,15 +105,6 @@ export default async function MenuPage({ params, searchParams }: MenuPageProps) 
                 </ul>
               </div>
             ))}
-
-            <form action={scrapeMenu.bind(null, id)}>
-              <button
-                type="submit"
-                className="text-sm text-blue-600 hover:underline disabled:text-gray-400"
-              >
-                Refresh menu
-              </button>
-            </form>
           </div>
         )}
       </Card>

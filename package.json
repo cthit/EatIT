@@ -13,6 +13,7 @@
     "canvas-confetti": "^1.9.4",
     "next": "16.2.11",
     "next-ws": "^2.2.9",
+    "node-schedule": "^2.1.2",
     "qrcode.react": "^4.2.0",
     "react": "^19",
     "react-dom": "^19",
@@ -21,6 +22,7 @@
   "devDependencies": {
     "@types/canvas-confetti": "^1.9.0",
     "@types/node": "^22",
+    "@types/node-schedule": "^2.1.8",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/ws": "^8.18.1",

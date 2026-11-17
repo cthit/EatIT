@@ -19,7 +19,6 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
   const [menu, setMenu] = useState<Menu | null>(null);
   const [openChoices, setOpenChoices] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [scraping, setScraping] = useState(false);
   const [error, setError] = useState('');
 
   useEffect(() => {
@@ -67,35 +66,6 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
     }
   };
 
-  const scrape = async (restaurant: RestaurantSummary) => {
-    setScraping(true);
-    setError('');
-
-    try {
-      const res = await fetch('/api/restaurants/scrape', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ restaurantId: restaurant.id }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Scrape failed');
-
-      setMenu(data);
-      setOpenChoices(null);
-      setRestaurants((prev) =>
-        prev.map((r) =>
-          r.id === restaurant.id
-            ? { ...r, hasMenu: true, scrapedAt: data.scrapedAt }
-            : r
-        )
-      );
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Scrape failed');
-    } finally {
-      setScraping(false);
-    }
-  };
-
   if (restaurants.length === 0) return null;
 
   return (
@@ -135,18 +105,9 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                 {loading && <p className="text-sm text-gray-500">Loading menu...</p>}
 
                 {!loading && !menu && (
-                  <button
-                    type="button"
-                    onClick={() => scrape(restaurant)}
-                    disabled={scraping}
-                    className="bg-blue-600 text-white text-sm py-1.5 px-3 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
-                  >
-                    {scraping
-                      ? 'Scraping...'
-                      : restaurant.hasMenu
-                        ? 'Reload menu'
-                        : 'Scrape menu'}
-                  </button>
+                  <p className="text-sm text-gray-500">
+                    This menu has not been fetched yet. Menus are refreshed automatically.
+                  </p>
                 )}
 
                 {menu && (
@@ -229,22 +190,12 @@ export function MenuBrowser({ canSelectItems = true, onSelectItem, onSelectResta
                       </div>
                     ))}
 
-                    <div className="flex items-center gap-4">
-                      <button
-                        type="button"
-                        onClick={() => scrape(restaurant)}
-                        disabled={scraping}
-                        className="text-sm text-blue-600 hover:underline disabled:text-gray-400 disabled:no-underline"
-                      >
-                        {scraping ? 'Scraping...' : 'Refresh menu'}
-                      </button>
-                      <Link
-                        href={`/menus/${restaurant.id}`}
-                        className="text-sm text-blue-600 hover:underline"
-                      >
-                        View full menu
-                      </Link>
-                    </div>
+                    <Link
+                      href={`/menus/${restaurant.id}`}
+                      className="text-sm text-blue-600 hover:underline"
+                    >
+                      View full menu
+                    </Link>
                   </div>
                 )}
               </div>
