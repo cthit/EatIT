@@ -1,14 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Card, useToast } from '@/components/ui';
-import { Restaurant } from '@/types/order';
+import { Card } from '@/components/ui';
+import { useToast } from '@/components/useToast';
 
-export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {
+export function ShareSection() {
   const [showQr, setShowQr] = useState(false);
+  const [url, setUrl] = useState('');
   const { toast, showToast } = useToast();
-  const url = typeof window !== 'undefined' ? window.location.href : '';
+
+  useEffect(() => {
+    setUrl(window.location.href);
+  }, []);
 
   const copyToClipboard = async () => {
     try {
@@ -20,39 +24,10 @@ export function ShareSection({ restaurant }: { restaurant?: Restaurant }) {
     }
   };
 
-  const renderLinkToMenu = () => {
-    if (!restaurant) return null;
-
-    const menuLink = restaurant.linkToMenu.startsWith('http')
-      ? restaurant.linkToMenu
-      : 'https://mat.chalmers.it' + restaurant.linkToMenu;
-
-    return (
-      <div className="space-y-2">
-        <p className="text-gray-700">
-          This EatIT are ordering from: <span className="font-bold">{restaurant.restaurantName}</span>
-        </p>
-        <p className="text-gray-700">
-          Link to menu:{' '}
-          <a
-            href={menuLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 font-bold"
-          >
-            {menuLink}
-          </a>
-        </p>
-      </div>
-    );
-  };
-
   return (
     <>
       <Card title="Share">
         <div className="space-y-4">
-          {renderLinkToMenu()}
-
           <div className="space-y-2">
             <p className="text-gray-700">Share this link with your friends:</p>
             <div className="flex items-center space-x-2">

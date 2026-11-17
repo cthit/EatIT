@@ -1,33 +1,8 @@
-'use client';
-
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import Link from 'next/link';
+import { homeButtonClass } from '@/components/ui';
+import { NewOrderButton } from '@/components/NewOrderButton';
 
 export default function Home() {
-  const router = useRouter();
-  const [creating, setCreating] = useState(false);
-  const btnClass =
-    'bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg transition-colors';
-
-  const createNewOrder = async () => {
-    setCreating(true);
-    try {
-      const response = await fetch('/api/orders', {
-        method: 'POST',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create order');
-      }
-
-      const data = await response.json();
-      router.push(`/${data.hash}`);
-    } catch (error) {
-      console.error('Error creating order:', error);
-      setCreating(false);
-    }
-  };
-
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-2xl mx-auto text-center bg-black/85 rounded-2xl p-10 shadow-2xl">
@@ -37,25 +12,16 @@ export default function Home() {
         </p>
 
         <div className="flex flex-col sm:flex-row sm:justify-center gap-4">
-          <button
-            onClick={createNewOrder}
-            disabled={creating}
-            className={btnClass}
-          >
-            {creating ? 'Creating...' : 'New order'}<br/>
-            <span className="text-sm text-gray-200">
-              Eat together
-            </span>
-          </button>
-          <button
-            disabled
-            className={btnClass}
+          <NewOrderButton />
+          <Link
+            href="/menus"
+            className={`${homeButtonClass} text-center`}
           >
             See menus<br/>
             <span className="text-sm text-gray-200">
-              Coming soon
+              Browse restaurants
             </span>
-          </button>
+          </Link>
         </div>
 
         <p className="text-gray-300 mt-4 text-sm">
@@ -65,4 +31,3 @@ export default function Home() {
     </div>
   );
 }
-

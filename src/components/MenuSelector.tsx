@@ -1,57 +1,107 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Card, Field, inputClass } from '@/components/ui';
+import { RestaurantSummary } from '@/types/menu';
+import { Restaurant } from '@/types/order';
+
+type SetMenuHandler = (
+  restaurantName: string,
+  linkToMenu: string
+) => void | boolean | Promise<void | boolean>;
 
 interface MenuSelectorProps {
+  restaurants: RestaurantSummary[];
+  selectedRestaurant?: Restaurant;
   hasOrders: boolean;
-  hasMenu: boolean;
-  onSetMenu: (restaurantName: string, linkToMenu: string) => void;
+  onSetMenu: SetMenuHandler;
 }
 
-const restaurants = [
-  { name: 'Sannegårdens Pizzeria', link: 'https://sannegardens.se/bestalla-online/?loc=johanneberg&change-method=takeaway' },
-  { name: 'Pizzeria Gibraltar', link: 'https://pizzeriagibraltar.com/' },
-  { name: 'Dominos', link: 'https://www.dominos.se/butiker/johanneberg/meny/pizza' },
-];
-
-export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProps) {
+export function MenuSelector({
+  restaurants,
+  selectedRestaurant,
+  hasOrders,
+  onSetMenu,
+}: MenuSelectorProps) {
   const [selected, setSelected] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  // Only show if there are no orders and no menu set
-  if (hasOrders || hasMenu) {
+  // Orders cannot pick a restaurant once people have started ordering
+  if (!selectedRestaurant && hasOrders) {
     return null;
   }
 
+  if (selectedRestaurant) {
+    const restaurant = restaurants.find(
+      (candidate) =>
+        candidate.url === selectedRestaurant.linkToMenu ||
+        candidate.name === selectedRestaurant.restaurantName
+    );
+
+    return (
+      <Card title="Restaurant">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-gray-700">
+            Ordering from{' '}
+            <span className="font-bold">{selectedRestaurant.restaurantName}</span>
+          </p>
+          <Link
+            href={restaurant ? `/menus/${restaurant.id}` : '/menus'}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 rounded-md bg-blue-600 px-4 py-2 text-center text-white hover:bg-blue-700"
+          >
+            Browse menu
+          </Link>
+        </div>
+      </Card>
+    );
+  }
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const restaurant = restaurants.find((candidate) => candidate.id === selected);
+    if (!restaurant) {
+      setError('Please select a restaurant');
+      return;
+    }
+
+    setSubmitting(true);
+    setError('');
+
+    try {
+      const success = await onSetMenu(restaurant.name, restaurant.url);
+      if (success === false) {
+        setError('Could not set the menu. Please try again.');
+      }
+    } catch {
+      setError('Could not set the menu. Please try again.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <Card title="Set what menu from Chalmers">
-      <form
-        className="space-y-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          const restaurant = restaurants[parseInt(selected)];
-          if (!restaurant) {
-            setError('Please select a restaurant');
-            return;
-          }
-          onSetMenu(restaurant.name, restaurant.link);
-        }}
-      >
-        <Field label="Restaurang" htmlFor="restaurant" error={error}>
+      <form className="space-y-4" onSubmit={handleSubmit}>
+        <Field label="Restaurant" htmlFor="restaurant" error={error}>
           <div className="relative">
             <select
               id="restaurant"
               value={selected}
-              onChange={(e) => {
-                setSelected(e.target.value);
+              onChange={(event) => {
+                setSelected(event.target.value);
                 setError('');
               }}
+              disabled={submitting}
               className={`${inputClass} appearance-none bg-white pr-10 cursor-pointer ${selected ? 'text-gray-900' : 'text-gray-400'}`}
             >
-              <option value="">Välj restaurang från vart ni ska köpa ifrån</option>
-              {restaurants.map((restaurant, index) => (
-                <option key={index} value={index} className="text-gray-900">
+              <option value="">Choose the restaurant you are ordering from</option>
+              {restaurants.map((restaurant) => (
+                <option key={restaurant.id} value={restaurant.id} className="text-gray-900">
                   {restaurant.name}
                 </option>
               ))}
@@ -69,9 +119,10 @@ export function MenuSelector({ hasOrders, hasMenu, onSetMenu }: MenuSelectorProp
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+          disabled={submitting}
+          className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
         >
-          Set menu
+          {submitting ? 'Setting...' : 'Set menu'}
         </button>
       </form>
     </Card>

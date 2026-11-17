@@ -16,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-black`}>
+    <html lang="en" className="bg-gray-950">
+      <body className={`${inter.className}`}>
         <MatrixRainToggle />
         {children}
       </body>
