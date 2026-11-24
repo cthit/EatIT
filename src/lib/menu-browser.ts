@@ -49,20 +49,13 @@ async function initSchema(db: DatabaseSync): Promise<void> {
   }
 }
 
-/**
- * Abstract browsing facade: list restaurants, load stored menus and trigger
- * scrapes. Persistence is provided by concrete implementations.
- */
 export abstract class MenuBrowser {
   protected constructor(protected readonly registry: ScraperRegistry) {}
 
-  /** All known restaurants, merged with stored scrape state */
   abstract listRestaurants(): Promise<RestaurantSummary[]>;
 
-  /** Stored menu for a restaurant, or null if never scraped */
   abstract getMenu(restaurantId: string): Promise<Menu | null>;
 
-  /** Persist a scraped menu, replacing any previous one */
   abstract saveMenu(menu: Menu): Promise<void>;
 
   getScraper(restaurantId: string): RestaurantScraper | undefined {
@@ -73,7 +66,6 @@ export abstract class MenuBrowser {
     return this.registry.find(url);
   }
 
-  /** Scrape a registered restaurant's default menu URL and store the result */
   async scrapeRestaurant(restaurantId: string): Promise<Menu> {
     const scraper = this.getScraper(restaurantId);
     if (!scraper) {
@@ -85,7 +77,6 @@ export abstract class MenuBrowser {
     return menu;
   }
 
-  /** Scrape an arbitrary URL using the scraper that handles it, and store the result */
   async scrapeUrl(url: string): Promise<Menu> {
     const scraper = this.getScraperForUrl(url);
     if (!scraper) {

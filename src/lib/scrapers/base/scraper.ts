@@ -20,20 +20,11 @@ const NAMED_ENTITIES: Record<string, string> = {
   uuml: 'ü',
 };
 
-/**
- * Abstract base for restaurant menu scrapers. Each restaurant implements
- * {@link parseMenu} with site-specific parsing, while fetching, error
- * handling and generic HTML-to-menu heuristics live here.
- */
 export abstract class RestaurantScraper {
-  /** Stable identifier used in URLs and storage */
   abstract readonly id: string;
-  /** Display name of the restaurant */
   abstract readonly name: string;
-  /** Default menu URL for this restaurant */
   abstract readonly homeUrl: string;
 
-  /** Whether this scraper is responsible for the given menu URL */
   canHandle(url: string): boolean {
     try {
       return new URL(url).hostname.replace(/^www\./, '') ===
@@ -43,7 +34,6 @@ export abstract class RestaurantScraper {
     }
   }
 
-  /** Fetch and parse the restaurant's menu */
   async scrape(url: string = this.homeUrl): Promise<Menu> {
     const sections: MenuSection[] = [];
     for (const menuUrl of this.menuUrls(url)) {
@@ -59,15 +49,10 @@ export abstract class RestaurantScraper {
     };
   }
 
-  /**
-   * All URLs that together make up the restaurant's menu.
-   * Override for restaurants that split their menu across pages.
-   */
   protected menuUrls(url: string): string[] {
     return [url];
   }
 
-  /** Extract menu sections from the fetched HTML */
   protected abstract parseMenu(html: string, url: string): MenuSection[] | Promise<MenuSection[]>;
 
   protected async fetchHtml(url: string): Promise<string> {
@@ -87,7 +72,6 @@ export abstract class RestaurantScraper {
     return await response.text();
   }
 
-  /** Decode common HTML entities */
   protected decodeEntities(text: string): string {
     return text.replace(/&(#\d+|#x[0-9a-f]+|[a-z]+);/gi, (match, entity: string) => {
       if (entity.startsWith('#x') || entity.startsWith('#X')) {
@@ -102,7 +86,6 @@ export abstract class RestaurantScraper {
     });
   }
 
-  /** Remove scripts/styles/tags and decode common entities, one block of text per line */
   protected stripTags(html: string): string {
     return this.decodeEntities(
       html
@@ -172,7 +155,6 @@ export abstract class RestaurantScraper {
   }
 }
 
-/** Parse a human price like "129:-" or "12,50 kr" into a number */
 export function parseAmount(text: string): number | undefined {
   const match = text.replace(',', '.').match(/(\d+(?:\.\d{1,2})?)/);
   return match ? Number(match[1]) : undefined;

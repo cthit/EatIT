@@ -1,6 +1,5 @@
 import { RestaurantScraper } from './scraper';
 
-/** Maps URLs and restaurant ids to the scraper that handles them */
 export class ScraperRegistry {
   private readonly scrapers: RestaurantScraper[] = [];
 

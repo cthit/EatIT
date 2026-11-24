@@ -1,6 +1,5 @@
 import { QoplaScraper } from '../platforms/qopla';
 
-/** Golly runs on the Qopla ordering platform. */
 export class GollyScraper extends QoplaScraper {
   readonly id = 'golly';
   readonly name = 'Golly - Gibraltargatan';

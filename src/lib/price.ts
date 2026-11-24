@@ -1,6 +1,5 @@
 import { MenuPrice } from '@/types/menu';
 
-/** The one place prices are turned into display strings */
 export function formatPrice(price: MenuPrice): string {
   switch (price.kind) {
     case 'single':
@@ -14,7 +13,6 @@ export function formatPrice(price: MenuPrice): string {
   }
 }
 
-/** Compact variant for tight spaces: anything with variants collapses to its cheapest */
 export function formatPriceShort(price: MenuPrice): string {
   switch (price.kind) {
     case 'single':
@@ -26,7 +24,6 @@ export function formatPriceShort(price: MenuPrice): string {
   }
 }
 
-/** Longer explanation for tooltips and accessible labels */
 export function describePrice(price: MenuPrice): string {
   switch (price.kind) {
     case 'single':

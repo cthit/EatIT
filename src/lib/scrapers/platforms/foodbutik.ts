@@ -85,7 +85,6 @@ export abstract class FoodButikScraper extends RestaurantScraper {
     }));
   }
 
-  /** Replace an aggregate price range with the product's actual variants */
   private async fetchVariationPrice(productId: string): Promise<MenuPrice | undefined> {
     const body = new URLSearchParams({
       action: 'exwoofood_booking_info',
@@ -139,7 +138,6 @@ export abstract class FoodButikScraper extends RestaurantScraper {
   }
 }
 
-/** Single price, a low/high range, or a plain schema.org Offer price */
 function toPrice(offers?: LdOffer): MenuPrice | undefined {
   const { price, lowPrice, highPrice } = offers ?? {};
   if (typeof lowPrice === 'number') {
@@ -154,7 +152,6 @@ function toPrice(offers?: LdOffer): MenuPrice | undefined {
   return undefined;
 }
 
-/** Extract the labeled variants from a WooCommerce product modal response */
 function parseVariationPrice(
   html: string,
   decode: (text: string) => string

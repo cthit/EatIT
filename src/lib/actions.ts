@@ -16,7 +16,6 @@ function randomHash(): string {
   return ('000' + hex).slice(-3);
 }
 
-/** Create a fresh order, retrying on hash collisions */
 export async function createOrderAction(): Promise<ActionResult<string>> {
   for (let attempt = 0; attempt < 10; attempt++) {
     const order = await createOrder(randomHash());

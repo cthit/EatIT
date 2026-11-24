@@ -11,7 +11,6 @@ const globalForScheduler = globalThis as typeof globalThis & {
 
 let refreshing = false;
 
-/** Scrape every registered restaurant and persist the result */
 async function refreshAllMenus(): Promise<void> {
   if (refreshing) {
     console.warn('Menu refresh already running, skipping');
