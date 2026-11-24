@@ -85,7 +85,9 @@ export default function OrderPageClient({
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-4xl font-bold text-center mb-8 text-white">EatIT Order</h1>
+      <h1 className="text-4xl font-bold text-center mb-8 text-gray-900 dark:text-gray-100">
+        EatIT Order
+      </h1>
 
       <div className="space-y-6">
         {!timerStarted && (

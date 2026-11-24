@@ -30,14 +30,22 @@ export default async function MenuPage({ params }: MenuPageProps) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <div className="flex items-center gap-4">
-        <Link href="/" className="text-sm text-gray-300 hover:text-white">
+        <Link
+          href="/"
+          className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+        >
           &larr; Home
         </Link>
-        <Link href="/menus" className="text-sm text-gray-300 hover:text-white">
+        <Link
+          href="/menus"
+          className="text-sm text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-gray-100"
+        >
           All restaurants
         </Link>
       </div>
-      <h1 className="text-4xl font-bold mt-2 mb-8 text-white">{scraper.name}</h1>
+      <h1 className="text-4xl font-bold mt-2 mb-8 text-gray-900 dark:text-gray-100">
+        {scraper.name}
+      </h1>
 
       <Card title="Menu">
         {!menu && (
