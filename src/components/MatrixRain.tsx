@@ -10,37 +10,7 @@ const matrixFont = Noto_Sans_JP({ weight: '400', preload: false, adjustFontFallb
 const CHARS = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789';
 const FONT_SIZE = 20;
 const FRAME_MS = 33; // ~30 fps
-
-// Draws a green clown face with plain shapes, since a system missing the
-// katakana font (e.g. a bare Arch install) is likely missing emoji fonts too
-function createGreenClown() {
-  const sprite = document.createElement('canvas');
-  sprite.width = sprite.height = FONT_SIZE;
-  const ctx = sprite.getContext('2d')!;
-  const s = FONT_SIZE / 20;
-  const circle = (x: number, y: number, r: number, color: string) => {
-    ctx.fillStyle = color;
-    ctx.beginPath();
-    ctx.arc(x * s, y * s, r * s, 0, Math.PI * 2);
-    ctx.fill();
-  };
-
-  // Hair tufts, face, eyes and nose
-  circle(3.5, 7, 3.5, '#080');
-  circle(16.5, 7, 3.5, '#080');
-  circle(10, 11, 7, '#0f0');
-  circle(7.5, 9, 1.2, '#000');
-  circle(12.5, 9, 1.2, '#000');
-  circle(10, 12, 2, '#050');
-
-  // Smile
-  ctx.strokeStyle = '#000';
-  ctx.lineWidth = 1.2 * s;
-  ctx.beginPath();
-  ctx.arc(10 * s, 13 * s, 3.5 * s, 0.15 * Math.PI, 0.85 * Math.PI);
-  ctx.stroke();
-  return sprite;
-}
+const FONT = `${FONT_SIZE}px ${matrixFont.style.fontFamily}`;
 
 export function MatrixRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -55,23 +25,6 @@ export function MatrixRain() {
     let lastFrame = -Infinity;
     let rafId = 0;
     let disposed = false;
-    let chars = '0123456789';
-    let font = `${FONT_SIZE}px monospace`;
-    let clown: HTMLCanvasElement | null = null;
-
-    // Canvas does not wait for web fonts. Use digits until the katakana font
-    // is ready, and rain green clowns instead if the font cannot be loaded.
-    const useClowns = () => {
-      if (!disposed) clown = createGreenClown();
-    };
-    const loadedFont = `${FONT_SIZE}px ${matrixFont.style.fontFamily}`;
-    void document.fonts.load(loadedFont, CHARS).then((faces) => {
-      if (disposed) return;
-      if (faces.length === 0) return useClowns();
-      chars = CHARS;
-      font = loadedFont;
-      ctx.font = font;
-    }).catch(useClowns);
 
     // Rendered at CSS pixel size (not devicePixelRatio) to keep the per-frame fill cheap
     const resize = () => {
@@ -86,8 +39,13 @@ export function MatrixRain() {
       // Resizing resets the canvas and its context state
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.font = font;
-      drops = Array.from({ length: Math.ceil(width / FONT_SIZE) }, (_, i) => drops[i] ?? 1);
+      ctx.font = FONT;
+      const rows = Math.ceil(height / FONT_SIZE);
+      drops = Array.from({ length: Math.ceil(width / FONT_SIZE) }, (_, i) => {
+        // Stagger fresh columns above the viewport so the rain does not start
+        // as one horizontal line dropping in lockstep.
+        return drops[i] ?? -Math.random() * rows;
+      });
     };
 
     const draw = (time: number) => {
@@ -102,9 +60,7 @@ export function MatrixRain() {
 
       ctx.fillStyle = '#0f0';
       for (let i = 0; i < drops.length; i++) {
-        // Text is drawn from its baseline, so the sprite goes one row up to line up with it
-        if (clown) ctx.drawImage(clown, i * FONT_SIZE, (drops[i] - 1) * FONT_SIZE);
-        else ctx.fillText(chars[(Math.random() * chars.length) | 0], i * FONT_SIZE, drops[i] * FONT_SIZE);
+        ctx.fillText(CHARS[(Math.random() * CHARS.length) | 0], i * FONT_SIZE, drops[i] * FONT_SIZE);
 
         // Send the drop back to the top at a random point after it leaves the screen
         if (drops[i] * FONT_SIZE > canvas.height && Math.random() > 0.975) drops[i] = 0;
@@ -112,9 +68,17 @@ export function MatrixRain() {
       }
     };
 
+    // Canvas draws with whatever font is already available, so wait for the
+    // self-hosted katakana font before starting (it is bundled, so this is quick).
+    const start = () => {
+      if (disposed) return;
+      ctx.font = FONT;
+      rafId = requestAnimationFrame(draw);
+    };
+    void document.fonts.load(FONT, CHARS).catch(() => {}).then(start);
+
     const onResize = () => { needsResize = true; };
     window.addEventListener('resize', onResize);
-    rafId = requestAnimationFrame(draw);
 
     return () => {
       disposed = true;
