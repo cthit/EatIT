@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
-    "next": "16.2.11",
+    "next": "16.4.5",
     "next-ws": "^2.2.9",
     "node-schedule": "^2.1.2",
     "qrcode.react": "^4.2.0",
