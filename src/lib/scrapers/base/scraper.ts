@@ -21,24 +21,6 @@ const NAMED_ENTITIES: Record<string, string> = {
 };
 
 /**
- * Enforce the all-or-nothing ingredients rule: a menu either lists
- * ingredients for every item or for none. Menus where at least one item
- * lacks ingredients have all ingredients stripped.
- */
-export function enforceIngredientsRule(sections: MenuSection[]): MenuSection[] {
-  const items = sections.flatMap((section) => section.items);
-  const allHaveIngredients =
-    items.length > 0 && items.every((item) => (item.ingredients?.length ?? 0) > 0);
-
-  if (allHaveIngredients) return sections;
-
-  return sections.map((section) => ({
-    ...section,
-    items: section.items.map(({ ingredients: _ingredients, ...item }) => item),
-  }));
-}
-
-/**
  * Abstract base for restaurant menu scrapers. Each restaurant implements
  * {@link parseMenu} with site-specific parsing, while fetching, error
  * handling and generic HTML-to-menu heuristics live here.
@@ -72,7 +54,7 @@ export abstract class RestaurantScraper {
       restaurantId: this.id,
       restaurantName: this.name,
       url,
-      sections: enforceIngredientsRule(sections),
+      sections,
       scrapedAt: Date.now(),
     };
   }

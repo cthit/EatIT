@@ -1,2 +1,2 @@
-export { RestaurantScraper, enforceIngredientsRule } from './scraper';
+export { RestaurantScraper } from './scraper';
 export { ScraperRegistry } from './registry';

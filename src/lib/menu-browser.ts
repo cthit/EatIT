@@ -1,7 +1,7 @@
 import { DatabaseSync } from 'node:sqlite';
 import { Menu, MenuPrice, MenuSection, RestaurantSummary } from '@/types/menu';
 import { getDb } from '@/lib/db';
-import { RestaurantScraper, ScraperRegistry, scraperRegistry, enforceIngredientsRule } from '@/lib/scrapers';
+import { RestaurantScraper, ScraperRegistry, scraperRegistry } from '@/lib/scrapers';
 
 let schemaReady: Promise<void> | undefined;
 
@@ -179,7 +179,7 @@ export class SqliteMenuBrowser extends MenuBrowser {
 
   async saveMenu(menu: Menu): Promise<void> {
     const db = await getMenuDb();
-    const sections = enforceIngredientsRule(menu.sections);
+    const sections = menu.sections;
 
     db.exec('BEGIN');
     try {

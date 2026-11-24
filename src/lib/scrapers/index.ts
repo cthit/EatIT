@@ -1,7 +1,7 @@
 import { ScraperRegistry } from './base/registry';
 import { createRestaurantScrapers } from './restaurants';
 
-export { RestaurantScraper, enforceIngredientsRule } from './base/scraper';
+export { RestaurantScraper } from './base/scraper';
 export { ScraperRegistry } from './base/registry';
 export { OrdineScraper } from './platforms/ordine';
 export { FoodButikScraper } from './platforms/foodbutik';
