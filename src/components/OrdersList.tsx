@@ -1,7 +1,9 @@
 'use client';
 
 import { OrderItem } from '@/types/order';
-import { Card, useToast } from '@/components/ui';
+import { Card } from '@/components/ui';
+import { useToast } from '@/components/useToast';
+import { removeOrderItemAction } from '@/lib/actions';
 
 interface OrdersListProps {
   orderItems: OrderItem[];
@@ -20,14 +22,10 @@ export function OrdersList({ orderItems, orderHash, timerStarted, onPizzaClick }
 
   const handleRemove = async (item: OrderItem) => {
     try {
-      const response = await fetch('/api/order-items', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ itemId: item._id, orderHash }),
-      });
+      const result = await removeOrderItemAction({ itemId: item._id, orderHash });
 
-      if (!response.ok) {
-        throw new Error('Failed to remove order item');
+      if (!result.ok) {
+        throw new Error(result.error);
       }
 
       showToast(`${item.pizza} by ${item.nick} has been removed.`);

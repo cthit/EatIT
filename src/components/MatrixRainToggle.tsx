@@ -11,12 +11,15 @@ export function MatrixRainToggle() {
 
   // Read after mount so the server render and first client render match
   useEffect(() => {
-    setEnabled(localStorage.getItem(STORAGE_KEY) === 'on');
+    const stored = localStorage.getItem(STORAGE_KEY) === 'on';
+    setEnabled(stored);
+    document.documentElement.classList.toggle('dark', stored);
   }, []);
 
   const toggle = () => {
     const next = !enabled;
     setEnabled(next);
+    document.documentElement.classList.toggle('dark', next);
     localStorage.setItem(STORAGE_KEY, next ? 'on' : 'off');
   };
 

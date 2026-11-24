@@ -1,9 +1,10 @@
-'use client';
-
-import { ReactNode, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 
 export const inputClass =
   'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500';
+
+export const homeButtonClass =
+  'bg-blue-600 text-white text-xl py-4 px-8 rounded-lg hover:bg-blue-700 disabled:bg-gray-600 disabled:cursor-not-allowed shadow-lg transition-colors';
 
 export function Card({
   title,
@@ -77,21 +78,3 @@ export function ConfirmDialog({
   );
 }
 
-export function useToast() {
-  const [message, setMessage] = useState<string | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(undefined);
-
-  const showToast = (text: string) => {
-    setMessage(text);
-    clearTimeout(timeoutRef.current);
-    timeoutRef.current = setTimeout(() => setMessage(null), 4000);
-  };
-
-  const toast = message ? (
-    <div className="fixed bottom-4 right-4 bg-gray-800 text-white px-6 py-3 rounded-lg shadow-lg">
-      {message}
-    </div>
-  ) : null;
-
-  return { toast, showToast };
-}
